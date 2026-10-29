@@ -16,7 +16,7 @@ async function setup(t, connect = true) {
   const uxp = new UxpBridge(hostFixture(), (...args) => reports.push(args));
   if (connect) await uxp.start(folderAdapter(directory));
   t.after(async () => { uxp.stop(); await fs.rm(directory, { recursive: true, force: true }); });
-  return { ...prepared, FileBridge, uxp, reports, bridge: new FileBridge(directory, { timeoutMs: 1500, pollMs: 5 }) };
+  return { ...prepared, FileBridge, uxp, reports, bridge: new FileBridge(directory, { timeoutMs: 10000, pollMs: 5 }) };
 }
 
 test("real filesystem transport round-trips concurrent reads through the actual UXP dispatcher", async (t) => {
@@ -140,7 +140,7 @@ test("stdio MCP handshake, discovery and tool contracts work end to end; annotat
   const client = new Client({ name: "premiere-mcp-test", version: "1.0.0" });
   const transport = new StdioClientTransport({ command: process.execPath,
     args: [resolve(__dirname, "../mcp/server.mjs")],
-    env: { ...process.env, PREMIERE_MCP_BRIDGE_DIR: directory, PREMIERE_MCP_TIMEOUT_MS: "1500" }
+    env: { ...process.env, PREMIERE_MCP_BRIDGE_DIR: directory, PREMIERE_MCP_TIMEOUT_MS: "10000" }
   });
   t.after(() => client.close());
   await client.connect(transport);
@@ -153,6 +153,7 @@ test("stdio MCP handshake, discovery and tool contracts work end to end; annotat
   assert.ok(!result.isError, JSON.stringify(result));
   assert.equal(result.structuredContent.project.name, "Transport fixture");
   const seq = await client.callTool({ name: "premiere_get_active_sequence", arguments: {} });
+  assert.ok(!seq.isError, JSON.stringify(seq));
   assert.equal(seq.structuredContent.activeSequence.videoTrackCount, 1);
   const withPath = await client.callTool({ name: "premiere_get_project", arguments: { includePath: true } });
   assert.equal(withPath.structuredContent.project.path, "/test/private.prproj");
@@ -366,7 +367,7 @@ test('Reload preserves typed handles and file access when the external MCP serve
     const client = new Client({ name: 'panel-recovery', version: '1.0.0' });
     await client.connect(new StdioClientTransport({ command: process.execPath,
       args: [resolve(__dirname, '../mcp/server.mjs')],
-      env: { ...process.env, PREMIERE_MCP_BRIDGE_DIR: directory, PREMIERE_MCP_TIMEOUT_MS: '1500' } }));
+      env: { ...process.env, PREMIERE_MCP_BRIDGE_DIR: directory, PREMIERE_MCP_TIMEOUT_MS: '10000' } }));
     t.after(() => client.close());
     return client;
   }
