@@ -26,7 +26,7 @@ Arrays return bounded pages with `nextOffset`; long strings return text pages. H
 
 ## Actions, draft values and direct mutations
 
-Create or duplicate a working sequence before timeline changes. `premiere_api_apply_actions` accepts 1–20 descriptors and creates/consumes every native Action inside one synchronous locked undo transaction. It supports clip movement, trimming, disabling and naming, insertion/overwrite/cloning/removal, effects, transitions, parameter values and animation, markers, track names, sequence settings and other documented action factories. This generic surface follows native semantics: overlaps, ripple and linked items depend on the exact operation and arguments. It does not apply the narrower convenience tool's no-overlap/inward-trim rules.
+Create or duplicate a working sequence before timeline changes, or obtain explicit owner instruction for an existing sequence and use the verified-backup authorization described in [commands](commands.md#explicit-existing-sequence-authorization). `premiere_api_apply_actions` accepts 1–20 descriptors and creates/consumes every native Action inside one synchronous locked undo transaction. It supports clip movement, trimming, disabling and naming, insertion/overwrite/cloning/removal, effects, transitions, parameter values and animation, markers, track names, sequence settings and other documented action factories. This generic surface follows native semantics: overlaps, ripple and linked items depend on the exact operation and arguments. It does not apply the narrower convenience tool's no-overlap/inward-trim rules.
 
 ```json
 {
@@ -44,7 +44,7 @@ Use `premiere_api_construct` for documented value constructors; pure factories s
 
 An inline selection `{"$selection":["<clip-handle>"]}` is accepted where Adobe expects TrackItemSelection. The bridge supplies the callback and keeps the selection alive through the consuming call. Selection arguments cannot smuggle clips from a protected source sequence into an edit on a copy.
 
-Timeline writes affect only bridge-created working sequences in the current session. A clip's ProjectItem points to shared source media and does not inherit its copy's timeline permission. Media writes require a uniquely identified newly imported asset; assets used by a protected source sequence and bins containing unowned children cannot be changed/deleted through this adapter. Native drafts and source references are distinct. Explicit application preferences, cache operations, Source Monitor/UI controls, ingest/scratch-disk settings, exports and saves have the side effects described by their own members. There is no automatic save.
+Timeline writes affect bridge-created working sequences and explicitly authorized existing sequences in the current session. Authorization does not make an original a deletable working copy; its retained backup remains protected. A clip's ProjectItem points to shared source media and does not inherit its copy's timeline permission. Media writes require a uniquely identified newly imported asset; assets used by any original sequence (including an explicitly authorized one) or a retained backup and bins containing unowned children cannot be changed/deleted through this adapter. Native drafts and source references are distinct. Explicit application preferences, cache operations, Source Monitor/UI controls, ingest/scratch-disk settings, exports and saves have the side effects described by their own members. There is no automatic save.
 
 ## Files, exports, transcription and events
 
@@ -60,6 +60,10 @@ For frame export, `filename` is the relative output file path and `filepath` is 
 
 ## Explicit lifecycle tools and limits
 
-The original tools remain available. Additional dedicated tools create a sequence from media or a granted `.sqp` preset, delete a bridge working sequence, explicitly save/Save As, and open/create a granted `.prproj`. Save persists the user's manual edits too; agents must never add it as an unrequested side effect. Save As may change the native Project identity. Resolve fresh context afterward. Project close, callback plumbing and unsupported native output-reference overloads remain discoverable with an explicit reason instead of accepting arbitrary code.
+The staged [API expansion](api-expansion.md) adds named project-close, AE-import,
+sequence-import and growing-media commands with pollable jobs. These additions
+remain pending live verification; callback plumbing stays internal.
+
+The original tools remain available. Additional dedicated tools create a sequence from media or a granted `.sqp` preset, delete a bridge working sequence, explicitly save/Save As, and open/create a granted `.prproj`. Save persists the user's manual edits too; agents must never add it as an unrequested side effect. Save As may change the native Project identity. Resolve fresh context afterward. The staged project close/import/growing-media tools use named adapters and pollable jobs. Callback plumbing and unsupported native output-reference overloads retain explicit reasons or declarative alternatives instead of accepting arbitrary code.
 
 Every host write needs a running bridge, exact current project ID and an operation UUID. Editing is enabled by default while connected; Stop blocks it. The client can still omit writes with PREMIERE_MCP_READ_ONLY=1. Durable receipts cover nested action plans too. After a timeout, recover with the identical operation ID and payload, even if its old handles have expired. A new ID is a new operation, never a recovery mechanism. See [live verification](live-verification-26.5.md) for what was actually exercised in Premiere.

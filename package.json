@@ -1,6 +1,6 @@
 {
   "name": "premiere-mcp-bridge",
-  "version": "0.3.4",
+  "version": "0.3.6",
   "private": true,
   "description": "An extensible local MCP bridge between AI agents and Adobe Premiere Pro UXP",
   "scripts": {
@@ -11,7 +11,9 @@
     "mcp:start": "node mcp/server.mjs",
     "mcp:smoke": "node mcp/smoke.mjs",
     "plugin:load": "node scripts/load-plugin.mjs",
-    "docs:sync": "node scripts/sync-adobe-api.mjs"
+    "docs:sync": "node scripts/sync-adobe-api.mjs",
+    "api:matrix": "npm run build && node scripts/api-coverage-matrix.mjs",
+    "test:prepare-live": "node scripts/prepare-live-verification.mjs"
   },
   "devDependencies": {
     "@adobe/premierepro": "26.5.0",

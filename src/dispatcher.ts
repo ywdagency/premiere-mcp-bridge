@@ -21,6 +21,7 @@ export function createDispatcher(
         throw new BridgeError('WRITES_DISABLED', 'This plugin instance exposes inspection only.');
       const diagnostics = command === 'import_media' ? new ImportDiagnostics() : undefined;
       try {
+        api?.ensureNoProjectOperation();
         const before =
           command === 'import_media' && api
             ? await api.importSnapshot(request.args.paths as string[], request.args.projectId, diagnostics)
@@ -129,8 +130,16 @@ export function createDispatcher(
     save_project: native('save'),
     save_project_as: native('saveAs'),
     project_open: native('openProject'),
+    import_ae_comps: native('importAEComps'),
+    import_all_ae_comps: native('importAllAEComps'),
+    import_sequences: native('importSequences'),
+    project_close: native('closeProject'),
+    close_sequence: native('closeSequence'),
+    project_set_growing_media_paused: native('setGrowingMediaPaused'),
     create_sequence: write('create_sequence'),
     duplicate_sequence: write('duplicate_sequence'),
+    authorize_sequence: write('authorize_sequence'),
+    revoke_sequence_authorization: write('revoke_sequence_authorization'),
     open_sequence: write('open_sequence'),
     import_media: write('import_media'),
     move_clip: write('move_clip'),

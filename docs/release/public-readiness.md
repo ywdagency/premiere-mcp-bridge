@@ -1,39 +1,35 @@
-# Public readiness audit — 0.3.4
+# Candidate readiness audit — 0.3.6
 
-Reviewed on 2026-10-29, America/Vancouver, for `ywdagency/premiere-uxp-bridge`. The owner selected a new private repository with a clean initial commit and GitHub noreply identity. The 0.3.4 implementation, manifest, pinned dependencies and tests are preserved from the verified working checkout. Repository/setup links and migration documentation are updated. This migration does not publish a release or activate a different Premiere runtime.
+Reviewed on 2026-10-29 for the private `ywdagency/premiere-uxp-bridge` repository. This audit applies to the release/0.3.6 source snapshot and its generated packages. It supersedes the current-status claims in the [historical 0.3.4 migration audit](migration-0.3.4.md), without changing that evidence.
 
-## Disclosure and migration scope
+## Scope and evidence
 
-Only the reviewed 100 tracked source/documentation files are eligible for transfer. A separate Git repository is initialized from their current bytes; the old `.git`, branches, tags, PR refs, workflow history and private local artifacts are excluded. The new initial commit has no parents and uses the verified account's noreply address for both author and committer. The current working directory and installed plugin are retained; no machine-specific configuration is transferred to GitHub.
-
-| Surface | Evidence and acceptance |
+| Surface | Candidate evidence |
 | --- | --- |
-| Source equivalence | Hash comparison covers every transferred file. Changes are restricted to repository/setup links, private design-reference removal and migration/release documentation. Runtime code, manifest identity, dependencies and tests are byte-identical to the working source. |
-| Git identity | One new root commit, one `main` branch, no tags or PR refs. Both author and committer use GitHub noreply. Predecessor commit objects must not resolve through the new repository; old PR #1 must not exist there. Verify these conditions in a fresh remote clone and through GitHub before accepting the replacement. |
-| Automated checks | The 0.3.4 source passes all 105 tests/build, including ownership/job-state regressions, filesystem IPC and real MCP stdio with host fixtures. Repeat the checks from the clean snapshot and confirm the new repository's macOS/Ubuntu Node 22/24 CI jobs. These are not native Premiere tests. |
-| npm archive | The package allowlist contains 108 files after building. Private configs, ignored artifacts, media/projects, Git metadata and nested audit archives are excluded. Scan the exact migration archive for credentials, owner paths and personal email. No npm publication is authorized. |
-| Existing CCX | The previously inspected 0.3.4 CCX contains seven plugin files only. Its payload matches the audited build; the parsed manifest differs only by an omitted trailing newline. No installer, raw host evidence or private archive is copied into the new Git repository. |
-| Agent setup | The unchanged actual configuration generators were exercised for Codex, Claude Desktop, Cursor and VS Code. Codex TOML parses and preserves unrelated entries. Real stdio exposes 33 full-access or 18 read-only tools; production-dependency runtime startup was checked separately. Dedicated app sessions for every client are not claimed. |
-| GitHub history | Predecessor PRs and workflow metadata are not imported. The replacement gets fresh CI against its own root commit. Inspect its new logs/metadata for credentials, owner paths and personal email before removing the predecessor. |
-| Dependencies | The lockfile is preserved. The preceding audit reported zero known vulnerabilities; repeat the time-specific dependency audit for the clean snapshot. Enable dependency alerts on the replacement and confirm read-back. |
-| Runtime | Installed 0.3.4 is recorded, but the latest MCP read reports running 0.3.3. The owner deferred plugin reload. Native 0.3.4 activation/import verification, cold startup and the completed native file-permission flow remain open. |
+| Identity | Package, lockfile, manifest, shared runtime identity and release documents identify 0.3.6. The stable manifest ID remains unchanged. |
+| Automated behavior | Fresh dependency installation, TypeScript/bundle build and 142 tests pass, including fixture/IPC/stdio, source protection, project jobs and release-stage regressions. These are not native Premiere tests. |
+| MCP clients | Real SDK stdio discovers 41 full-access or 18 read-only tools. Setup generator/merge tests cover Codex, Claude Desktop, Cursor and VS Code. Dedicated sessions in all client apps are not claimed. |
+| Plugin stage | Seven allowlisted plugin files plus a separate SHA-256 inventory; no configs, projects, logs, receipts or Node server are copied into the plugin stage. Version mismatch and accidental overwrite are rejected. This stage is not a CCX. |
+| npm archive | The exact candidate tarball contains 122 files, is unpacked and scanned, and starts with production dependencies only. SDK stdio confirms offline reference discovery in both access modes. The source/runtime archive is a review artifact, not npm publication. Use a source checkout for lockfile-based installation. |
+| Disclosure | The 114 source files, reachable candidate Git history, exact npm archive and plugin stage are checked for secrets, personal email, owner paths and private artifacts. A clean scan is bounded evidence, not a guarantee of absence. |
+| Dependencies | Fresh lockfile audit reports zero known vulnerabilities at review time. This does not prove native host or dependency code is vulnerability-free. |
+| Git | Clean replacement history is retained; new commits use the account's GitHub noreply identity. No predecessor history or private backups are imported. |
+| Installed host | Actual 0.3.5 activation and MCP reads on Premiere 26.5 are recorded separately. The candidate is 0.3.6 and has not been installed or live-verified. |
 
-The predecessor retained personal author email through merged-PR references even after branch-history rewriting. That is why the owner chose a separate repository, rather than merely renaming it or copying its Git metadata. Original history, audit logs, scan JSON, operation receipts, generated configs and backup bundles stay private in ignored local artifacts. Historical task notes refer to predecessor PR numbers; they do not create PRs in the replacement repository. Nonessential private Figma URLs are removed from transferred task documents.
+Private audit logs, generated client configs, original Git backups, host results and raw receipts remain in ignored local storage. The original shared dirty checkout is preserved while the candidate is prepared in isolation. Historical tasks keep their original scopes/results; they are not new verification evidence for 0.3.6.
 
-Delete the predecessor remote only after the replacement passes source-equivalence, clean-history, package/security and CI checks. Preserve the private local backup and the current working files. Deleting a repository is not a claim that GitHub has immediately erased every provider backup; this audit makes no such promise. See [GitHub repository deletion](https://docs.github.com/en/repositories/creating-and-managing-repositories/deleting-a-repository). No support request or external message is sent by this migration.
+## Security boundary
 
-## Repository safeguards
+The manifest still requests only `localFileSystem: request`. There is no network/fullAccess expansion, HTTP bridge listener or arbitrary-code endpoint. Current-request Node file authorization and UXP Entry validation remain independent boundaries. Native project/media resolution can access linked files according to Adobe's own permissions; granting one input file does not sandbox Premiere itself.
 
-The replacement must remain private, with no published release or tag. Configure the workflow token for read-only access without PR-review approval, and enable dependency vulnerability alerts. Keep wiki/project surfaces disabled when unused. Current private-repository eligibility can restrict secret scanning, push protection, private vulnerability reporting and main-branch protection; record actual responses and do not claim unavailable controls are enabled. No paid upgrade or public visibility is authorized.
+Writes require the running bridge, exact project identity and operation UUID. Existing-sequence editing additionally requires explicit owner instruction and a verified retained backup. Source media and original deletion remain protected. New project lifecycle/import operations are deliberate writes and do not grant import ownership. Dirty close prompts can let the human save; the bridge does not silently choose that outcome.
 
-The owner-designated private security contact is [dev@ywd.agency](mailto:dev@ywd.agency). Mail delivery was not independently tested. If GitHub's private reporting form is unavailable, use this contact. Recheck protection eligibility before any later public launch; the [security guide](../../SECURITY.md) describes data handling and reporting.
+Project/clip names, paths, requested transcripts and bounded original exception text can reach the AI client/provider and private receipts. Import messages are bounded, not redacted. Never publish raw diagnostics, private project/media files, generated configs or audit archives. The owner-designated private vulnerability contact is [dev@ywd.agency](mailto:dev@ywd.agency); delivery has not been independently tested.
 
-## Private working data and release limits
+## GitHub and publication
 
-Public bridge source does not make host/tool outputs public-safe. Project/sequence/clip names, requested paths/transcripts and original import exception messages can reach the selected MCP client/provider, its logs and durable operation receipts. Import messages are bounded, not redacted. Public bug reports require synthetic reproduction data and reviewed diagnostics.
+The repository stays private. Dependency vulnerability alerts and read-only default workflow permissions are enabled; unused wiki/project surfaces are disabled. GitHub's current private-repository eligibility does not provide all requested secret-scanning, push-protection, private-reporting or main-protection controls. Do not claim those controls are enabled. Recheck eligibility and configure available protections before a public launch.
 
-Fresh CI may create npm dependency caches. Review or clear those caches before future public PR access, following [GitHub's cache security guidance](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching). Do not transfer prior workflow caches, logs, secrets or uploaded artifacts.
+CI must pass for the exact pushed candidate on macOS/Ubuntu and Node 22/24. Logs must be reviewed before publication. Caches/artifacts can contain more than tracked source; do not upload raw host evidence and review retained caches before public PR access. No tag, release assets, merge, visibility change or npm publication is performed by this preparation.
 
-An installable release still needs actual running 0.3.4 confirmation, final-installer checks with UDT closed, cold startup, native folder approval/cancellation and safe synthetic import verification. Keep per-client and host-version claims tied to their real evidence. See [client setup](../clients.md), [native evidence](../live-verification-26.5.md) and [release gates](README.md).
-
-Public visibility, release publication and promotion each require a later explicit owner instruction. The repository migration alone does not authorize them.
+An installable public release still requires the exact final CCX and native tests in [the release gates](README.md). New sequence authorization and project adapters remain pending in [the live plan](../live-test-plan.md). Successful fixtures do not close those gates.

@@ -6,13 +6,13 @@ Built by **YWD Agency** for editors, creative technologists and developers conne
 
 [Client setup](docs/clients.md) · [Tools](docs/commands.md) · [Native API](docs/native-api.md) · [Troubleshooting](docs/troubleshooting.md) · [Documentation index](INDEX.md)
 
-**Development preview 0.3.4.** macOS is the live-test platform; recorded native checks use Premiere 26.5 on Apple Silicon. The manifest minimum is Premiere 25.6, and the Node server requires Node.js 22+. Windows host behavior is unverified. See [the exact compatibility evidence](docs/adobe-uxp-compatibility.md). Public release artifacts are being prepared; this README does not imply that a downloadable release already exists.
+**Release candidate 0.3.6 — source preview.** macOS is the live-test platform; recorded native checks use Premiere 26.5 on Apple Silicon. The manifest minimum is Premiere 25.6, and the Node server requires Node.js 22+. Windows host behavior is unverified. See [the exact compatibility evidence](docs/adobe-uxp-compatibility.md). This candidate has automated checks; it has not been installed or tested as a complete build in Premiere. The installed 0.3.5 runtime has verified connection/read checks only. No downloadable installer release is published. See [release gates](docs/release/README.md).
 
 ## What you can do
 
 Ask an agent to report the active sequence, inspect paginated clips with exact ticks/timecodes, or read existing transcript data where the host supports it. Prepare a named working copy and make deliberate clip, marker, effect or keyframe changes through documented tools. Develop a custom assistant that can discover exact native signatures and probe the installed runtime before calling them.
 
-Timeline mutations are limited to sequences created or duplicated by this bridge in the current plugin session. Shared source media stays protected. Project saves, global settings, Source Monitor changes and native export jobs are separate, explicit operations with their own side effects. See [tools and arguments](docs/commands.md).
+Timeline mutations default to sequences created or duplicated by this bridge in the current plugin session. With explicit owner instruction, `premiere_authorize_sequence` permits one existing sequence after a verified direct-clone backup; `premiere_revoke_sequence_authorization` removes that permission. Retained backups, original-sequence deletion and shared source media stay protected. Project saves, global settings, Source Monitor changes and native export jobs are separate, explicit operations with their own side effects. See [tools and arguments](docs/commands.md).
 
 ## Two components, one local connection
 
@@ -58,7 +58,7 @@ For an inspection-only client configuration, run `npm run setup -- --read-only`.
 
 ## API coverage and limits
 
-The current server exposes **33 MCP tools**: convenience project/sequence/clip operations, searchable reference tools and a typed native adapter. The pinned Adobe DOM catalog covers **73 types and 707 entries**, including 137 constants. Native evidence is recorded separately for Premiere 26.5; installation/lifecycle observations must identify the actual build tested. These counts describe this checkout, not every Premiere version or full behavioral coverage.
+The staged source server exposes **41 MCP tools**: convenience project/sequence/clip operations, searchable reference tools and a typed native adapter. Six new project import/lifecycle adapters await installation and native verification; see the [API expansion matrix and test plan](docs/api-expansion.md). Installed runtimes report their own command list through capabilities. The pinned Adobe DOM catalog covers **73 types and 707 entries**, including 137 constants. Native evidence is recorded separately for Premiere 26.5; installation/lifecycle observations must identify the actual build tested. These counts describe this checkout, not every Premiere version or full behavioral coverage.
 
 Catalog membership, execution policy, native presence and live-tested behavior are different. Search and describe work without Premiere; `premiere_api_probe` checks the running host. The [native API guide](docs/native-api.md) documents opaque handles, locked action batches, file grants, jobs and events. The [live report](docs/live-verification-26.5.md) records what actually ran.
 

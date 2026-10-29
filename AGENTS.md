@@ -18,8 +18,11 @@ Reads must not alter selection, playback or active context. Writes require the
 running bridge, exact project ID and caller-generated operation UUID.
 The owner selected default-on editing on 2026-10-29: do not reintroduce a separate
 Enable Editing toggle. Stop disables access; Launch and transport Reload enable it.
-Clip mutations are restricted to sequences created or duplicated by this bridge
-in the current plugin session. Preserve source sequences. Use documented undoable
+Clip mutations default to sequences created or duplicated by this bridge in the
+current plugin session. Owner-approved exception (2026-10-29): an exact existing
+sequence can be explicitly authorized with authorize_sequence after a verified
+direct clone backup. Never infer permission. Keep retained backups, original
+sequence deletion and shared source media protected; support revocation. Use documented undoable
 transactions with synchronous callbacks. Journal writes before invoking the host;
 never blindly retry uncertain mutations. Never save projects implicitly.
 

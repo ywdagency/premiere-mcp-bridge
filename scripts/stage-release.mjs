@@ -11,7 +11,7 @@ const manifest = JSON.parse(await readFile(join(root, 'manifest.json'), 'utf8'))
 const { PLUGIN_VERSION } = createRequire(import.meta.url)('../build/lib/bridge-protocol.cjs');
 if (process.argv.length > 2) throw new Error('Usage: node scripts/stage-release.mjs');
 if (!/^\d+\.\d+\.\d+$/.test(pkg.version)) throw new Error('Expected a numeric development version.');
-if (pkg.version !== manifest.version || (PLUGIN_VERSION !== undefined && pkg.version !== PLUGIN_VERSION))
+if (pkg.version !== manifest.version || pkg.version !== PLUGIN_VERSION)
   throw new Error('Package, manifest and built protocol versions differ. Rebuild before staging.');
 
 const files = [
@@ -37,11 +37,9 @@ for (const { path, bytes } of inputs) {
 }
 await writeFile(join(parent, 'plugin-inventory.json'), JSON.stringify({
   version: pkg.version,
-  builtProtocolVersion: PLUGIN_VERSION ?? null,
+  builtProtocolVersion: PLUGIN_VERSION,
   status: 'local-review-snapshot-not-an-installed-or-published-release',
   files: inventory,
 }, null, 2) + '\n', { flag: 'wx' });
 console.log(`Staged ${files.length} allowlisted plugin files in artifacts/release/${pkg.version}/plugin.`);
-if (PLUGIN_VERSION === undefined)
-  console.log('This runtime has no shared build-version marker. Package/manifest versions match; verify the installed build separately.');
 console.log('Package this staged manifest with UDT; inspect and test the resulting CCX separately.');

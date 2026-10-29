@@ -18,4 +18,5 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - run: node scripts/stage-release.mjs
       - run: npm pack --dry-run --json

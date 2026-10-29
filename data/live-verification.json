@@ -86,8 +86,18 @@
     "uxpDeveloperToolsRunning": false,
     "premiereRestarted": false,
     "defaultWritesEnabled": true,
-    "checks": ["installed two-control panel", "Stop blocks MCP requests", "Launch restores connection", "Reload preserves connection access", "project and active sequence reads"],
-    "limits": ["No native content mutation, project save or export was issued.", "Cold Premiere startup and the on-demand native folder picker were not exercised against the open project.", "Panel Reload restarts plugin transport; it cannot restart an exited agent-owned MCP process."]
+    "checks": [
+      "installed two-control panel",
+      "Stop blocks MCP requests",
+      "Launch restores connection",
+      "Reload preserves connection access",
+      "project and active sequence reads"
+    ],
+    "limits": [
+      "No native content mutation, project save or export was issued.",
+      "Cold Premiere startup and the on-demand native folder picker were not exercised against the open project.",
+      "Panel Reload restarts plugin transport; it cannot restart an exited agent-owned MCP process."
+    ]
   },
   "installedPluginCheck": {
     "checkedAt": "2026-10-29 America/Vancouver",
@@ -96,7 +106,12 @@
     "uxpDeveloperToolsRunning": false,
     "premiereRestarted": false,
     "writesEnabled": false,
-    "reads": ["get_capabilities", "get_project", "get_active_sequence", "get_sequence_clips"],
+    "reads": [
+      "get_capabilities",
+      "get_project",
+      "get_active_sequence",
+      "get_sequence_clips"
+    ],
     "result": "Installed CCX runtime responded with UDT closed. Reinstalling through Adobe UPIA after the development instance unloaded refreshed the installed menu registration without restarting Premiere. No timeline mutation or project save was issued."
   },
   "members": [
@@ -179,5 +194,25 @@
     "Global preferences, cache purging, project open/save/Save As and AME queue submission were not run against the owner's active editing project.",
     "Transcription, scene detection, MOGRT insertion and the full set of effects/codecs need relevant host assets/features.",
     "File checks used the plugin-owned temporary folder with real UXP Entries and the same file broker; the file-picker UX was not exercised to completion during concurrent manual editing."
-  ]
+  ],
+  "explicitSequenceAuthorization": {
+    "version": "0.3.5",
+    "checkedAt": "2026-10-29 America/Vancouver",
+    "fixtureTestsPassed": 123,
+    "liveVerified": false,
+    "runtimeActivationPending": false,
+    "limits": "Native grant/revoke/content mutations not exercised; owner is editing manually. Authorization behavior remains fixture-tested separately from installed runtime read verification.",
+    "installedVersion": "0.3.5",
+    "runningVersionFromMcp": "0.3.5",
+    "oldVersionRemoved": true,
+    "runtimeReadVerified": true,
+    "authorizationLiveVerified": false,
+    "durableReceiptsRestoredAndVerified": 178,
+    "checks": [
+      "Only0.3.5 registered in AdobeUPIA and present in installed plugin directories",
+      "Actual MCP get_capabilities reports0.3.5 and authorize/revoke commands",
+      "Project and active-sequence reads succeed; no timeline writes or implicit save",
+      "Common plugin storage restored after old-version uninstall; transport directory retained0700 permissions"
+    ]
+  }
 }

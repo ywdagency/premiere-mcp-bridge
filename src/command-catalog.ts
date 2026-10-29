@@ -1,7 +1,7 @@
 // Serializable command contracts: shared by MCP discovery and UXP validation.
 // Handlers are statically registered; never accept source code or undocumented member names.
 export interface Field {
-  type: 'string' | 'integer' | 'boolean' | 'strings' | 'json' | 'ids';
+  type: 'string' | 'integer' | 'boolean' | 'strings' | 'names' | 'json' | 'ids';
   required?: boolean;
   min?: number;
   max?: number;
@@ -45,6 +45,39 @@ const memberFields: Record<string, Field> = {
   parameters: { type: 'json' },
 };
 export const COMMANDS = {
+  close_sequence: {
+    minVersion: '26.2', readOnly: false,
+    fields: { ...operation, sequenceId: id },
+    description: 'Explicitly close a sequence tab in the exact active project, including an original sequence. Does not delete it or change timeline content. Returns jobId for api_get_job; may change active UI context. No save; no edit ownership is granted or revoked.',
+  },
+  import_ae_comps: {
+    minVersion: '25.6', readOnly: false,
+    fields: { ...operation, path: { ...id, max: 1024 },
+      compNames: { type: 'names', required: true, min: 1, max: 50 },
+      targetBin: { ...id, required: false } },
+    description: 'Start importing exact named compositions from a granted relative .aep file. Optional targetBin is a FolderItem handle; default is the root bin. Returns jobId; poll api_get_job. May invoke Dynamic Link/native dialogs and partially import on failure. Does not launch the AE MCP server, claim imported assets/sequences as editable, or save.',
+  },
+  import_all_ae_comps: {
+    minVersion: '25.6', readOnly: false,
+    fields: { ...operation, path: { ...id, max: 1024 }, targetBin: { ...id, required: false } },
+    description: 'Start importing all AE compositions from a granted relative .aep file. Optional targetBin FolderItem handle, otherwise root. Returns jobId; poll api_get_job. Native Dynamic Link/dialog side effects apply; imports remain protected and the project is not saved.',
+  },
+  import_sequences: {
+    minVersion: '25.6', readOnly: false,
+    fields: { ...operation, path: { ...id, max: 1024 },
+      sequenceIds: { type: 'ids', min: 1, max: 50 }, allSequences: { type: 'boolean' } },
+    description: 'Start importing source sequence GUIDs from a granted relative .prproj; omit sequenceIds only with explicit allSequences=true. Returns jobId; poll api_get_job. Imported sequences and shared assets remain protected: duplicate/authorize separately. Native dialogs/partial results are possible; no save.',
+  },
+  project_close: {
+    minVersion: '25.6', readOnly: false,
+    fields: { ...operation, confirm: { type: 'boolean', required: true } },
+    description: 'Deliberately close the exact active project (confirm=true), with dirty-project prompt and Cancel enabled, workspace saving and application quit disabled. Returns jobId; poll api_get_job. No automatic save or discard; the human resolves any native prompt. Refuses while known native jobs run. Confirmed close revokes this project session ownership and invalidates handles.',
+  },
+  project_set_growing_media_paused: {
+    minVersion: '25.6', readOnly: false,
+    fields: { ...operation, paused: { type: 'boolean', required: true } },
+    description: 'Explicitly pause/resume monitoring of growing captured media in the exact project. paused=true freezes refresh at current captured duration; false resumes it. Returns jobId for api_get_job. Does not pause playback, modify the media files or save.',
+  },
   api_load_text: {
     minVersion: '25.6',
     readOnly: true,
@@ -118,14 +151,14 @@ export const COMMANDS = {
     readOnly: false,
     fields: { ...operation, actions: { type: 'json', required: true } },
     description:
-      'Apply 1–20 documented create*Action descriptors inside one locked undo transaction. Each descriptor has memberId, optional target handle ID, and named parameters. Timeline changes require a bridge working sequence; shared source assets stay protected. Inline TrackItemSelection: {$selection:[clipHandleId]}. Handles in the affected scope expire after a write; reread context. No implicit saves.',
+      'Apply 1–20 documented create*Action descriptors inside one locked undo transaction. Each descriptor has memberId, optional target handle ID, and named parameters. Timeline changes require a bridge working sequence or an explicitly authorized source sequence; retained backups and shared source assets stay protected. Inline TrackItemSelection: {$selection:[clipHandleId]}. Handles in the affected scope expire after a write; reread context. No implicit saves.',
   },
   api_mutate: {
     minVersion: '25.6',
     readOnly: false,
     fields: { ...operation, ...memberFields },
     description:
-      'Invoke a documented allowlisted direct mutation or assign an owned draft value property. Use api_describe for the exact member policy. Working-sequence/owned-asset limits, panel toggle, project identity and operation receipt apply. Direct methods may not be undoable. No implicit saves.',
+      'Invoke a documented allowlisted direct mutation or assign an owned draft value property. Use api_describe for the exact member policy. Working/explicitly authorized sequence and owned-asset limits, panel toggle, project identity and operation receipt apply. Direct methods may not be undoable. No implicit saves.',
   },
   api_start_job: {
     minVersion: '25.6',
@@ -183,7 +216,7 @@ export const COMMANDS = {
   project_open: {
     minVersion: '25.6',
     readOnly: false,
-    fields: { ...operation, path: { ...id, max: 1024 }, createNew: { type: 'boolean' } },
+    fields: { ...operation, path: { ...id, max: 1024 }, createNew: { type: 'boolean' }, openOptions: { ...id, required: false } },
     description:
       'Open an existing granted .prproj file or createNew=true at a new granted relative path. Changes active UI/project context. Does not close other projects. projectId must match the current project, or none if no project is open.',
   },
@@ -192,7 +225,7 @@ export const COMMANDS = {
     readOnly: true,
     fields: {},
     description:
-      'Read plugin version, write-access state, supported commands and bridge-created working sequence IDs. No Premiere changes.',
+      'Read plugin version, write-access state, supported commands, bridge-created working IDs and explicitly authorized sequence IDs. No Premiere changes.',
   },
   get_project: {
     minVersion: '25.6',
@@ -252,6 +285,18 @@ export const COMMANDS = {
     description:
       'Duplicate a sequence into an editable working copy and rename the copy. The source timeline is preserved. Does not save the project.',
   },
+  authorize_sequence: {
+    minVersion: '25.6', readOnly: false,
+    fields: { ...operation, sequenceId: id, backupSequenceId: id,
+      confirm: { type: 'boolean', required: true, description: 'Must be true only after explicit owner instruction to edit this exact source sequence.' },
+      backupVerified: { type: 'boolean', required: true, description: 'Must be true after independently checking the backup, including settings, markers/captions and relevant effects. The bridge additionally compares clip structure and source ranges.' } },
+    description: 'Explicitly authorize timeline edits in one existing sequence for this plugin session, only after owner instruction. Requires a distinct verified backup cloned directly from it in this session. Refuses mismatched or changed clip layouts; protects the retained backup. Does not transfer shared-media ownership, permit source deletion, switch sequence or save. Never call from inferred permission.',
+  },
+  revoke_sequence_authorization: {
+    minVersion: '25.6', readOnly: false,
+    fields: { ...operation, sequenceId: id },
+    description: 'Revoke an explicit source-sequence editing authorization. Keeps its retained backup protected. No timeline changes or implicit save; plugin reload also clears authorizations.',
+  },
   open_sequence: {
     minVersion: '25.6',
     readOnly: false,
@@ -281,14 +326,14 @@ export const COMMANDS = {
     readOnly: false,
     fields: { ...target, newStartTicks: ticks },
     description:
-      'Move one clip horizontally within its current track on a bridge-created working sequence. Exact ticks; all observed timing and project-item preconditions are required. Rejects overlaps. Does not move linked audio/video automatically or ripple other clips.',
+      'Move one clip horizontally within its current track on a working or explicitly authorized sequence. Exact ticks; all observed timing and project-item preconditions are required. Rejects overlaps. Does not move linked audio/video automatically or ripple other clips.',
   },
   trim_clip: {
     minVersion: '25.6',
     readOnly: false,
     fields: { ...target, newStartTicks: ticks, newEndTicks: ticks },
     description:
-      'Trim one 1x forward clip inward, preserving its retained source content, on a bridge-created working sequence. No extension, ripple, automatic linked-item changes or source sequence edits. Exact ticks and all observed preconditions required.',
+      'Trim one 1x forward clip inward, preserving its retained source content, on a working or explicitly authorized sequence. No extension, ripple, automatic linked-item changes or unauthorized source sequence edits. Exact ticks and all observed preconditions required.',
   },
 } satisfies Record<string, CommandSpec>;
 export type BridgeCommand = keyof typeof COMMANDS;

@@ -1,8 +1,16 @@
 # Changelog
 
+## 0.3.6 — release candidate, unpublished
+
+Add six explicit, journaled project import/lifecycle adapters and typed project-open options. Imports do not grant edit ownership. Pollable jobs block competing bridge writes, retain native close prompts and distinguish false or uncertain outcomes. Add the complete per-member API coverage matrix and an assisted live verification plan. Align English release documentation and build/package version checks. These contracts pass local tests; this candidate has not been installed or live-verified.
+
+## 0.3.5 — development candidate
+
+Add explicit, session-scoped authorization of an existing sequence with a verified direct-clone backup and revocation. Compare structural state and detect source changes before granting permission. Keep the backup protected, original deletion blocked and shared media protected even when its original timeline is authorized. No implicit save or context switch. Fixture checks are separate from pending live installation/verification.
+
 ## 0.3.4 — development candidate
 
-Preserve import failures across preparation, file validation, native execution and result registration. Return bounded original exception type/code/message and whether native import started through durable receipts and MCP, including same-operation recovery. Historical receipts remain unchanged. Local tests pass; installation and live import verification are pending owner authorization.
+Preserve import failures across preparation, file validation, native execution and result registration. Return bounded original exception type/code/message and whether native import started through durable receipts and MCP, including same-operation recovery. Historical receipts remain unchanged. Local tests pass. The later 0.3.5 runtime was activated successfully; a synthetic native import still awaits separate verification.
 
 ## Unreleased — release preparation
 
