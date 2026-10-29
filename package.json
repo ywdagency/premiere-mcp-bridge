@@ -5,7 +5,7 @@
   "description": "An extensible local MCP bridge between AI agents and Adobe Premiere Pro UXP",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "npm run build && node --test tests/*.test.cjs",
+    "test": "npm run build && node --test --test-concurrency=2 tests/*.test.cjs",
     "setup": "npm run build && node scripts/setup.mjs",
     "mcp:prepare": "node mcp/server.mjs --prepare",
     "mcp:start": "node mcp/server.mjs",

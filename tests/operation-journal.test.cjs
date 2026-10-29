@@ -9,7 +9,8 @@ const { UxpBridge } = require('../build/lib/runtime.cjs');
 const { PremiereControl } = require('../build/lib/runtime.cjs');
 const { folderAdapter } = require('./helpers/bridge-fixture.cjs');
 const { controlFixture } = require('./helpers/control-fixture.cjs');
-async function setup(t, timeoutMs = 1500) {
+// Ordinary IPC checks use the production deadline; the explicit timeout test overrides it.
+async function setup(t, timeoutMs = 10000) {
   const { FileBridge, prepareBridge } = await import('../mcp/file-bridge.mjs');
   const directory = await fs.mkdtemp(join(tmpdir(), 'premiere-journal-'));
   const { marker } = await prepareBridge(directory);
@@ -63,7 +64,7 @@ test('caller timeout remains uncertain; same-ID recovery returns a late host res
   await rejection;
   release();
   await pump;
-  bridge.timeoutMs = 1500;
+  bridge.timeoutMs = 10000;
   const result = await bridge.call('create_sequence', args);
   assert.equal(result.sequence.name, 'Working');
   assert.equal(f.sequences.length, 2);

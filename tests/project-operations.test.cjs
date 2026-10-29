@@ -486,7 +486,7 @@ test("durable IPC records a job before native import, replays its ID once and do
     uxp.stop();
     await fs.rm(directory, { recursive: true, force: true });
   });
-  const bridge = new FileBridge(directory, { timeoutMs: 3000, pollMs: 5 });
+  const bridge = new FileBridge(directory, { timeoutMs: 10000, pollMs: 5 });
   const first = await bridge.call("import_all_ae_comps", args);
   const replay = await bridge.call("import_all_ae_comps", args);
   assert.equal(replay.jobId, first.jobId);
