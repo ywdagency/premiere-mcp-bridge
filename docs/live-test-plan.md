@@ -2,10 +2,15 @@
 
 This is a **plan**, not evidence. No native writes, project import/close/save,
 installation, reload or AE operation were performed by the API-expansion work.
-The owner deferred live operation to a separate assisted session. Do not schedule
-it or infer permission to start merely because a date has arrived.
+The owner subsequently requested final build checks. Execute only the authorized
+Premiere fixture scope; this does not authorize work in the separate AE bridge,
+changes to private projects or application controls through a fallback UI route.
 
 ## Fixtures and evidence
+
+Premiere operation and verification use MCP data only. Do not inspect application
+windows, capture screenshots or export/extract frames as a visual-verification
+substitute. Picture, motion appearance and audible quality require owner review.
 
 Confirm host/plugin versions and that manual editing is stopped. Use separate
 disposable Premiere and AE projects, never the owner's real work for lifecycle,
@@ -39,12 +44,12 @@ names or run files. Promote sanitized verified claims into
 | P01 | Project context, selected/all AE imports, selected/all sequence imports, pauseGrowing, explicit open/save/Save As/close | Inventories match chosen scope; imported content protected; no unsolicited save; Cancel preserves dirty project; reopening invalidates ownership/handles. Close only a disposable project after jobs finish. |
 | P02 | Create/clone/from-media/from-preset/subsequence; settings, work area, selection | Correct ownership, preserved input/backup and settings; context changes only by explicit commands. Test nesting/shared media independently. |
 | P03 | Video insert/overwrite/clone/move/trim/remove/ripple/speed/reverse | Exact ticks, retained source ranges, track, gaps/overlaps, ripple extent and linked A/V offsets. Native Actions differ from narrower convenience tools. |
-| P04 | Audio tracks/items, mute and exposed audio parameters | Timing/channel/track state; listen to actual audio for audible claims. |
-| P05 | Effect add/order/remove and typed parameter values | IDs/counts, clamped values, source protection and rendered frames/audio. |
+| P04 | Audio tracks/items, mute and exposed audio parameters | Timing/channel/track state; audible-quality claims require owner-supplied listening review. |
+| P05 | Effect add/order/remove and typed parameter values | IDs/counts, clamped values, source protection through MCP; rendered appearance/audio remain owner-reviewed. |
 | P06 | Scalar/point animation and supported interpolation | Key count/ticks/values, sampled values, animation enable/disable and interpolation. |
-| P07 | Transition creation/options/add/remove | Match name, alignment, duration, placement and actual frames at boundaries. |
+| P07 | Transition creation/options/add/remove | Match name, alignment, duration, placement and structural boundary metadata; appearance remains owner-reviewed. |
 | P08 | Media/bins/subclips/proxy/relink/interpretation/LUT/metadata | Only intended owned assets change; shared sources/unowned descendants rejected; invalid grants/paths never reach native file operations. |
-| P09 | File/library MOGRT insertion and exposed parameters | Correct template/time, parameter types and rendered output. Probe version-dependent classes; missing fonts/assets recorded. |
+| P09 | File/library MOGRT insertion and exposed parameters | Correct template/time, parameter types through MCP; rendered appearance remains owner-reviewed. Probe version-dependent classes; missing fonts/assets recorded. |
 | P10 | Caption inventory/items/mute/rename | Actual exposed data distinguished from empty/unsupported results; no unproven caption text authoring. |
 | P11 | Marker types/color/text/timing/removal | Exact read-back, intended IDs only; returned text remains data. |
 | P12 | Transcript reads/export/languages/transcribe/import | Actual text/segments/language and owned asset identity; shared source protected. |

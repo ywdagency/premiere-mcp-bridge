@@ -2,7 +2,7 @@
 
 This is an unpublished source-preview candidate for `ywdagency/premiere-uxp-bridge`. The repository remains private. Package, lockfile, manifest and runtime identity agree on 0.3.6. The candidate combines explicit sequence authorization from 0.3.5 with six new project import/lifecycle adapters, typed project-open options and the per-member verification matrix. The installed 0.3.5 runtime is a different build: its activation and MCP reads are recorded, while its sequence-authorization behavior remains unverified.
 
-Automated fixture, real filesystem IPC and SDK stdio checks cover this candidate. They do not establish native Premiere behavior. Candidate 0.3.6 has not been installed or run in Premiere. Historical native checks retain their original build versions in [the live report](../live-verification-26.5.md).
+Automated fixture, real filesystem IPC and SDK stdio checks cover this candidate. They do not establish native Premiere behavior. The seven-file candidate CCX has passed archive/hash/permission scans and was installed through Adobe's official installer. MCP still reports executing 0.3.5, so 0.3.6 activation/native checks remain pending. Historical native checks retain their original build versions in [the live report](../live-verification-26.5.md).
 
 ## Review materials
 
@@ -38,9 +38,9 @@ A CCX installs only the UXP plugin. The local Node server and client configurati
 | Gate | Status |
 | --- | --- |
 | Version, English onboarding, client generators, contracts and automated tests | Prepared for this candidate; see the audit. |
-| Minimal plugin stage and npm source/runtime package | Audited separately; neither is an installed CCX. |
+| Minimal plugin stage, npm archive and exact CCX | Audited separately; CCX installed successfully. |
 | Candidate branch and four-platform/version CI | Required for the exact pushed candidate; inspect its latest checks. |
-| Final CCX archive and installed 0.3.6 identity | Pending; preserve durable receipts and avoid interrupting manual work. |
+| Final CCX archive and installed 0.3.6 identity | Archive and installer listing verified; actual JavaScript activation pending. |
 | UDT-closed launch, cold startup, folder approval/cancel, synthetic import | Pending assisted verification. |
 | Explicit sequence authorization/revocation and six new project adapters | Pending native tests using disposable synthetic projects. |
 | All client applications and Windows Premiere | Unverified; generator/stdio tests are narrower evidence. |

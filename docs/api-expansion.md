@@ -7,8 +7,9 @@ General UXP/OS APIs and UI-only features are outside this catalog.
 
 Release candidate 0.3.6 exposes **41 tools** (38 native/bridge commands and three
 offline reference tools). Six new commands are implemented and locally
-tested, but **not installed or live-verified by this work**. Existing runtimes and
-clients retain their previous surface until their normal update/reconnection.
+tested. Candidate 0.3.6 is now installed through Adobe's installer, but MCP still
+reports the older 0.3.5 runtime: activation and native verification remain pending.
+Clients retain their previous surface until the normal update/reconnection.
 
 ## New named adapters
 

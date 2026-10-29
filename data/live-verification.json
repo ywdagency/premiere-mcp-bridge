@@ -214,5 +214,28 @@
       "Project and active-sequence reads succeed; no timeline writes or implicit save",
       "Common plugin storage restored after old-version uninstall; transport directory retained0700 permissions"
     ]
+  },
+  "releaseCandidate036": {
+    "checkedAt": "2026-10-29 America/Vancouver",
+    "version": "0.3.6",
+    "payloadCommit": "e4163e165daf71b9a8890a2cf6d88cc9650eb9b9",
+    "ccxSha256": "037960f6dd13f6b3710992180c632f228a6aa6267de9b63711c34b7debdfa558",
+    "packager": "Adobe UDT 2.3.0 bundled offline PackageCommand",
+    "ccxFiles": 7,
+    "payloadMatchesStage": true,
+    "installer": "Adobe Unified Plugin Installer Agent",
+    "installedVersion": "0.3.6",
+    "installerConfirmedEnabled": true,
+    "runningVersionFromMcp": "0.3.5",
+    "runningHostVersion": "26.5.0",
+    "runningCommandCount": 32,
+    "runtimeActivationPending": true,
+    "candidateNativeVerified": false,
+    "coldStartupVerified": false,
+    "durableTransportFilesUnchanged": 179,
+    "transportDirectoryMode": "0700",
+    "nativeWritesPerformed": false,
+    "limits": "The owner cannot restart Premiere now. Runtime activation, cold startup and native candidate tests are deferred; no restart/UI fallback or candidate native project/timeline operation was attempted.",
+    "ownerDeferredRestart": true
   }
 }

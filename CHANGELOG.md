@@ -2,7 +2,7 @@
 
 ## 0.3.6 — release candidate, unpublished
 
-Add six explicit, journaled project import/lifecycle adapters and typed project-open options. Imports do not grant edit ownership. Pollable jobs block competing bridge writes, retain native close prompts and distinguish false or uncertain outcomes. Add the complete per-member API coverage matrix and an assisted live verification plan. Align English release documentation and build/package version checks. These contracts pass local tests; this candidate has not been installed or live-verified.
+Add six explicit, journaled project import/lifecycle adapters and typed project-open options. Imports do not grant edit ownership. Pollable jobs block competing bridge writes, retain native close prompts and distinguish false or uncertain outcomes. Add the complete per-member API coverage matrix and an assisted live verification plan. Align English release documentation and build/package version checks. These contracts pass local tests. The candidate CCX is installed, but activation and native verification remain pending; MCP still reports 0.3.5.
 
 ## 0.3.5 — development candidate
 
