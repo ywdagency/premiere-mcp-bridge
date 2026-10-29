@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Premiere MCP Bridge</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="panel-shell" aria-label="Premiere MCP Bridge">
+      <section class="controls" aria-label="Bridge controls">
+        <div id="connection-control" class="action">
+          <button id="toggle-connection" type="button">Stop</button>
+          <span id="connection-label" class="action-face" aria-hidden="true">Stop</span>
+        </div>
+        <div id="reload-control" class="action reload">
+          <button id="reload-bridge" type="button">Reload</button>
+          <span class="action-face" aria-hidden="true">Reload</span>
+        </div>
+      </section>
+      <section id="bridge-status" class="status-box" aria-label="Bridge status">
+        <div class="status-copy">
+          <p id="status" role="status" aria-live="polite">Starting…</p>
+          <p id="error" class="error" role="alert"></p>
+        </div>
+        <p id="plugin-version" class="version" aria-label="Plugin version"></p>
+      </section>
+    </main>
+    <script src="dist/main.js"></script>
+  </body>
+</html>

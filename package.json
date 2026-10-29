@@ -1,0 +1,56 @@
+{
+  "name": "premiere-mcp-bridge",
+  "version": "0.3.4",
+  "private": true,
+  "description": "An extensible local MCP bridge between AI agents and Adobe Premiere Pro UXP",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && node --test tests/*.test.cjs",
+    "setup": "npm run build && node scripts/setup.mjs",
+    "mcp:prepare": "node mcp/server.mjs --prepare",
+    "mcp:start": "node mcp/server.mjs",
+    "mcp:smoke": "node mcp/smoke.mjs",
+    "plugin:load": "node scripts/load-plugin.mjs",
+    "docs:sync": "node scripts/sync-adobe-api.mjs"
+  },
+  "devDependencies": {
+    "@adobe/premierepro": "26.5.0",
+    "@modelcontextprotocol/client": "2.4.0",
+    "esbuild": "0.25.5",
+    "typescript": "5.8.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "zod": "4.6.7"
+  },
+  "license": "MIT",
+  "bin": {
+    "premiere-mcp-bridge": "mcp/server.mjs"
+  },
+  "files": [
+    "src/",
+    "dist/main.js",
+    "build/lib/",
+    "mcp/",
+    "scripts/",
+    "docs/",
+    ".github/ISSUE_TEMPLATE/",
+    ".github/pull_request_template.md",
+    "examples/",
+    "tests/",
+    "manifest.json",
+    "index.html",
+    "styles.css",
+    "tsconfig.json",
+    "AGENTS.md",
+    "INDEX.md",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "LICENSE",
+    "data/"
+  ]
+}

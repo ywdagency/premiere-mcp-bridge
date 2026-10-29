@@ -1,0 +1,20 @@
+.DS_Store
+node_modules/
+dist/
+build/
+artifacts/
+.codex/
+.cursor/mcp.json
+.vscode/mcp.json
+.mcp.json
+.env
+.env.*
+*.log
+.premiere-mcp-bridge/
+Premiere MCP Bridge/
+*.prproj
+*.prlock
+*.pem
+*.key
+*.ccx
+*.tgz

@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "importDiagnosticsInstallation": {
+    "checkedAt": "2026-10-29 America/Vancouver",
+    "ownerAuthorized": true,
+    "installer": "Adobe Unified Plugin Installer Agent",
+    "installedVersion": "0.3.4",
+    "installerConfirmedEnabled": true,
+    "runningVersionFromMcp": "0.3.3",
+    "freshStdioClientAgrees": true,
+    "durableFilesVerifiedUnchanged": 10,
+    "runtimeActivationPending": true,
+    "patchedImportLiveVerified": false,
+    "limits": "No UI control, host restart, import test, timeline mutation, save or export. Owner-side plugin runtime reload required; MCP provides no such command."
+  },
+  "importDiagnosticsInvestigation": {
+    "checkedAt": "2026-10-29 America/Vancouver",
+    "installedBridgeVersion": "0.3.3",
+    "hostVersion": "26.5.0",
+    "uxpVersion": "9.3.0-local",
+    "method": "MCP reads only",
+    "checks": [
+      "Capabilities and exact project identity read successfully",
+      "Native context, complete paginated root inventory and ProjectItem identity read successfully",
+      "Current root inventory differs from the historical snapshot; no state was restored"
+    ],
+    "patchedImportLiveVerified": false,
+    "historicalPrimaryCause": "unknown; original exception was not retained",
+    "limits": [
+      "New diagnostics tested through local fixtures, real IPC and MCP stdio only",
+      "No import retry, timeline mutation, save, export, UI inspection, reload, plugin installation or Premiere restart"
+    ]
+  },
+  "bridgeVersion": "0.3.0",
+  "hostVersion": "26.5.0",
+  "platform": "macOS ARM64",
+  "checkedAt": "2026-10-28 America/Vancouver",
+  "report": "docs/live-verification-26.5.md",
+  "coloredControlsCheck": {
+    "checkedAt": "2026-10-29 America/Vancouver",
+    "version": "0.3.3",
+    "storageChannel": "External",
+    "uxpDeveloperToolsRunning": false,
+    "premiereRestarted": false,
+    "checks": [
+      "Native red Stop and blue Reload show one opaque face with consistent 5px corners",
+      "Standard native buttons remain exposed through Accessibility",
+      "Native pointer Stop blocks requests with PLUGIN_NOT_LOADED after discovery expiry",
+      "Final capabilities and project reads succeed with default editing available",
+      "73 npm tests passed; 320/360px preview, green Launch, pointer activation, Enter activation, reload waiting/error/recovery passed in browser fixture"
+    ],
+    "limits": [
+      "Full native keyboard activation could not be reliably confirmed during concurrent manual Premiere use; browser keyboard verification is separate.",
+      "No project content mutation, save, export or host restart was issued."
+    ]
+  },
+  "panelStatusCheck": {
+    "checkedAt": "2026-10-29 America/Vancouver",
+    "version": "0.3.2",
+    "storageChannel": "External",
+    "uxpDeveloperToolsRunning": false,
+    "premiereRestarted": false,
+    "defaultWritesEnabled": true,
+    "checks": [
+      "Native equal controls, Running status and dynamic v0.3.2 shown",
+      "Native button labels remain accessible after custom styling",
+      "Stop blocks a read with BRIDGE_TIMEOUT",
+      "Launch and Reload restore successful capabilities, project and sequence reads",
+      "Project ID, active-sequence ID and sequence count match the pre-update observations"
+    ],
+    "fixtureChecks": [
+      "73 npm tests passed",
+      "Deferred Reloading, waiting without an IPC folder, concise failure and recovery states",
+      "Responsive preview at 320px and 360px, equal controls and no horizontal overflow"
+    ],
+    "limits": [
+      "No native content mutation, save, export or Premiere restart was issued.",
+      "Running reports plugin transport readiness, not agent-process liveness.",
+      "Cold startup, native error injection and file approval were not exercised against the open project."
+    ]
+  },
+  "lifecyclePanelCheck": {
+    "checkedAt": "2026-10-29 America/Vancouver",
+    "version": "0.3.1",
+    "storageChannel": "External",
+    "uxpDeveloperToolsRunning": false,
+    "premiereRestarted": false,
+    "defaultWritesEnabled": true,
+    "checks": ["installed two-control panel", "Stop blocks MCP requests", "Launch restores connection", "Reload preserves connection access", "project and active sequence reads"],
+    "limits": ["No native content mutation, project save or export was issued.", "Cold Premiere startup and the on-demand native folder picker were not exercised against the open project.", "Panel Reload restarts plugin transport; it cannot restart an exited agent-owned MCP process."]
+  },
+  "installedPluginCheck": {
+    "checkedAt": "2026-10-29 America/Vancouver",
+    "version": "0.3.0",
+    "storageChannel": "External",
+    "uxpDeveloperToolsRunning": false,
+    "premiereRestarted": false,
+    "writesEnabled": false,
+    "reads": ["get_capabilities", "get_project", "get_active_sequence", "get_sequence_clips"],
+    "result": "Installed CCX runtime responded with UDT closed. Reinstalling through Adobe UPIA after the development instance unloaded refreshed the installed menu registration without restarting Premiere. No timeline mutation or project save was issued."
+  },
+  "members": [
+    "AudioClipTrackItem#getProjectItem",
+    "AudioFilterFactory.getDisplayNames",
+    "AudioTrack#getTrackItems",
+    "ClipProjectItem.cast",
+    "Component#getDisplayName",
+    "Component#getParam",
+    "Component#getParamCount",
+    "ComponentParam#createAddKeyframeAction",
+    "ComponentParam#createKeyframe",
+    "ComponentParam#createSetTimeVaryingAction",
+    "ComponentParam#createSetValueAction",
+    "ComponentParam#getKeyframeListAsTickTimes",
+    "ComponentParam#getStartValue",
+    "EncoderManager.getManager",
+    "EventManager.addGlobalEventListener",
+    "EventManager.removeGlobalEventListener",
+    "Exporter.exportSequenceFrame",
+    "FolderItem#getItems",
+    "Keyframe@position",
+    "Keyframe@value",
+    "Markers#createAddMarkerAction",
+    "Markers#getMarkers",
+    "Markers.getMarkers",
+    "Project#deleteSequence",
+    "Project#getActiveSequence",
+    "Project#getRootItem",
+    "Project#getSequences",
+    "Project.getActiveProject",
+    "ProjectItem#createSetNameAction",
+    "ProjectItem.cast",
+    "Sequence#createCloneAction",
+    "Sequence#getAudioTrack",
+    "Sequence#getCaptionTrackCount",
+    "Sequence#getSettings",
+    "Sequence#getVideoTrack",
+    "SequenceEditor#createRemoveItemsAction",
+    "SequenceEditor.getEditor",
+    "TickTime.createWithTicks",
+    "Transcript.querySupportedLanguages",
+    "Transcript.hasTranscript",
+    "Transcript.exportToJSON",
+    "TransitionFactory.getVideoTransitionMatchNames",
+    "VideoClipTrackItem#createSetDisabledAction",
+    "VideoClipTrackItem#getComponentChain",
+    "VideoClipTrackItem#getInPoint",
+    "VideoClipTrackItem#getStartTime",
+    "VideoClipTrackItem#isDisabled",
+    "VideoComponentChain#createAppendComponentAction",
+    "VideoComponentChain#getComponentAtIndex",
+    "VideoComponentChain#getComponentCount",
+    "VideoFilterFactory.createComponent",
+    "VideoFilterFactory.getMatchNames",
+    "VideoTrack#getTrackItems",
+    "new AddTransitionOptions",
+    "new Color",
+    "new FrameRate"
+  ],
+  "unavailable": [
+    {
+      "id": "TickTime.timeToTimecode",
+      "hostVersion": "26.5.0",
+      "reason": "Absent from the tested native runtime despite Since 25.6 on the current reference page; the official sample groups these APIs under 27.0."
+    },
+    {
+      "id": "TickTime.timecodeToTime",
+      "hostVersion": "26.5.0",
+      "reason": "Absent from the tested native runtime despite Since 25.6 on the current reference page; the official sample groups these APIs under 27.0."
+    },
+    {
+      "id": "new MogrtText",
+      "hostVersion": "26.5.0",
+      "reason": "Absent from the tested native runtime despite Since 25.6 on the current reference page; the official sample groups these APIs under 27.0."
+    }
+  ],
+  "limitations": [
+    "Catalog and static execution policy are broader than live test coverage.",
+    "Global preferences, cache purging, project open/save/Save As and AME queue submission were not run against the owner's active editing project.",
+    "Transcription, scene detection, MOGRT insertion and the full set of effects/codecs need relevant host assets/features.",
+    "File checks used the plugin-owned temporary folder with real UXP Entries and the same file broker; the file-picker UX was not exercised to completion during concurrent manual editing."
+  ]
+}

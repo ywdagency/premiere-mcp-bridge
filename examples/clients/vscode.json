@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "premiere": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/absolute/path/to/premiere-uxp-bridge/mcp/server.mjs"]
+    }
+  }
+}

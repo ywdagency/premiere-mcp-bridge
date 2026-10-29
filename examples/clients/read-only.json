@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "premiere": {
+      "command": "node",
+      "args": ["/absolute/path/to/premiere-uxp-bridge/mcp/server.mjs"],
+      "env": { "PREMIERE_MCP_READ_ONLY": "1" }
+    }
+  }
+}

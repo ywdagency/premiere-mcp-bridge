@@ -1,0 +1,40 @@
+# Command contract
+
+The executable schemas in `src/command-catalog.ts` are authoritative. MCP discovery exposes those schemas and descriptions. Outer schemas and named native parameters are strict; documented dictionaries remain bounded JSON data. Unknown command fields are rejected by both Node and UXP. All indices are zero-based. Tool names have the `premiere_` prefix.
+
+## Read tools
+
+`get_capabilities` reports plugin/host versions, registered commands, editing state and current working-sequence IDs. `get_project` accepts optional `includePath: boolean` and otherwise omits the project file path. `get_active_sequence` takes no arguments. Missing active context returns null rather than selecting another project or sequence.
+
+`get_sequences` accepts optional `offset` and `limit` (1–50), returning identities, the total count, a next-page offset and whether each sequence is editable in this plugin session. `get_sequence_clips` accepts `mediaType` (`all`, `video`, `audio`), optional `trackIndex`, `offset`, `limit` (1–20), and `sequenceId` as an active-context guard. A track filter requires an explicit video/audio media type. See [timing semantics](clip-inspection.md).
+
+## Common write arguments
+
+Every write requires `projectId` matching the active project and a caller-generated UUID v4 `operationId`. The bridge must be running; editing is enabled by default on connection. Check capabilities before starting. A server configured read-only omits write tools.
+
+For a timeout or `OPERATION_OUTCOME_UNKNOWN`, submit exactly the same command, arguments and operation ID to recover its receipt. A completed operation is replayed without another host call and has `operationReplayed: true`. A started operation without a completed receipt remains uncertain. Inspect Premiere before any new operation; changing the UUID is not recovery. Receipts survive reload, but working-sequence ownership is session-scoped. Panel transport Reload preserves that session; actual plugin unload does not.
+
+| Command | Additional arguments | Effect |
+| --- | --- | --- |
+| `create_sequence` | `name` (1–128 characters) | Empty working sequence using the default Premiere preset |
+| `duplicate_sequence` | `sequenceId`, `name` | Clone and rename a working copy; source content preserved |
+| `open_sequence` | `sequenceId` | Open/activate a sequence; no clip edits |
+| `import_media` | `paths` (1–10 relative paths) | Import granted media into the root bin; no timeline insertion |
+| `move_clip` | Clip preconditions and `newStartTicks` | Horizontal, single-item move on the same track; no overlap/ripple |
+| `trim_clip` | Clip preconditions, `newStartTicks`, `newEndTicks` | Inward trim, only 1x forward items; no expansion/ripple |
+
+Clip preconditions are `sequenceId`, `trackType`, `trackIndex`, `clipIndex`, `expectedProjectItemId`, `expectedStartTicks`, `expectedEndTicks`, `expectedInTicks`, `expectedOutTicks`. Take these from a fresh clip read. Timing values are decimal strings of integer ticks. Do not send display timecodes as ticks.
+
+Move/trim affect a single track item. They do not coordinate linked video/audio counterparts, ripple the sequence, switch tracks or edit an existing source sequence. Reread after each mutation because ordering and clip indices can change. A clone remains editable only for this running plugin session; after actual plugin unload/reload, make a new working copy rather than silently adopting an existing sequence. The panel transport Reload preserves session ownership.
+
+Import paths are relative to the user-granted media folder. Absolute paths, traversal and executable input are rejected. Supported extension allowlisting is implemented in `src/main.ts`; an extension does not guarantee Premiere supports that particular codec. Imports can partially succeed before a native failure, so never repeat an uncertain import with a new operation ID. UXP checks the granted Entries and the local Node broker independently rejects symlinks/traversal and verifies actual path containment.
+
+Only the explicitly named `save_project` and `save_project_as` tools save the project; no tool saves as a side effect. Timeline actions use named undoable transactions; native creation/import/open APIs have their own Premiere behavior and are not represented as one synthetic transaction.
+
+## Complete native API surface
+
+The [native API guide](native-api.md) documents `api_search`, `api_describe`, `api_coverage` and reference resources; `api_context`, `api_read`, `api_construct`, `api_probe`, `api_release`, `api_load_text`; `api_apply_actions`, `api_mutate`; `api_start_job`, `api_get_job`; and `api_subscribe_events`, `api_poll_events`, `api_unsubscribe_events`.
+
+Additional lifecycle tools are `sequence_from_media` (`items`: ClipProjectItem handle IDs), `sequence_from_preset` (relative `.sqp` path, Premiere 26.3+), `delete_working_sequence`, `save_project`, `save_project_as` and `project_open` (relative `.prproj` path, optional `createNew`). They all require the common write fields. `project_open` accepts `projectId: "none"` when there is no active project. Exact schemas are returned through MCP discovery.
+
+The catalog exposes every documented member, including reference-only callback/lifecycle APIs and newer APIs absent from the connected host. This is not a claim that every API is callable or live-tested. Dedicated property assignment accepts `parameters: {"value": ...}` only for owned draft/value objects. All Native Action creation/consumption remains within the bridge's synchronous lock/transaction. Timeline edits stay on working copies; shared source media is protected. Global UI/application settings and explicit saves have their own documented side effects. Source Monitor commands may seek/play/change its UI. Native sequence creation may activate the new sequence according to Premiere behavior.

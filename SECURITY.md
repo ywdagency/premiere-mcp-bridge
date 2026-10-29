@@ -1,0 +1,29 @@
+# Trust and security
+
+This is a trusted-local-user development bridge. It is not a sandbox against other processes running as the same macOS/Windows user, and it supplies no remote HTTP endpoint. Do not put its storage on a shared drive or expose it through a remote file share.
+
+Node accepts only registered commands, documented member IDs, typed native references, bounded JSON, UUIDs and deadlines. No arbitrary code, callbacks, shell, QE, ExtendScript or property traversal is accepted. UXP validates again before host dispatch. Private IPC storage, owner/type checks and atomic publication reduce accidental cross-process mixups. Reads omit project paths by default. Most unclassified host errors use a normalized message. Import diagnostics deliberately retain bounded original exception type/code/message; these fields may contain private paths, filenames or other host data and are not automatically redacted.
+
+Editing is enabled by default when the bridge connects, as explicitly selected by the owner. Stop blocks access; Launch and connection Reload enable it again. Only session-created working sequences may receive clip mutations. Imports require a separate user-granted media folder. No project is saved implicitly. Operation receipts prevent blind replay; they do not guarantee rollback or immunity to concurrent manual edits. Keep Premiere idle during commands and inspect uncertain outcomes.
+
+Report vulnerabilities privately to [dev@ywd.agency](mailto:dev@ywd.agency), the maintainer-designated security contact. If GitHub private vulnerability reporting becomes available and is enabled, its private reporting form may also be used. Do not attach private projects, media paths, tokens or full diagnostic dumps to public issues. Review both the outer message and `error.diagnostics.originalError`, and use synthetic reproductions; bounded length is not redaction.
+
+The broad native adapter separates static catalog knowledge, execution policy, native presence and live tests. Opaque handles do not grant ownership. Shared source assets reached through a copy remain protected; imported assets used by protected sequences and bins with unowned children cannot be changed through the asset adapter. Direct/global APIs may have non-undoable side effects; explicit save/open/preferences/cache/AME commands must be invoked deliberately.
+
+External inputs/outputs require a separate folder grant. UXP resolves Entries; the current-request Node broker independently checks filesystem containment, real lstat and output existence because Premiere 26.5 UXP lstat follows links. Native path-based exports have a check/use interval and cannot guarantee atomic no-overwrite against another local process. Keep granted working folders trusted. Text inputs and native names/event strings remain untrusted data. Event forwarding omits native object pointers and media paths. Transcription/export jobs may continue after plugin reload; never use a new operation ID to repeat an unknown job.
+
+The bridge code is MIT; bundled Adobe documentation is Apache-2.0 with retained notices. Private source projects/media, temporary in-host verification builds and local client configurations are excluded from Git and package contents.
+
+## Data handling
+
+The bridge has no telemetry service, remote account or cloud relay. The production plugin requests local filesystem access only; the client starts Node locally over stdio. Installing dependencies or refreshing Adobe documentation can use the network during development, separately from host IPC.
+
+Tool responses can disclose project/sequence/clip names and IDs, timing, effect metadata, requested transcript text and original import exception messages to the MCP client. Project paths are omitted by default, not all identifying metadata. Your AI client's model provider, retention and organization policies apply to those responses. Read-only mode prevents host-content writes; it is not a privacy filter.
+
+Plugin-owned local storage contains discovery heartbeats, transient requests/responses and durable operation receipts. Receipts retain the command payload and outcome for recovery and may contain names or relative paths. Session handles, job records and bounded events are held in memory. The bridge supplies no receipt-retention/deletion interface. Treat this storage and client logs as private; do not manually remove receipts while an operation might be pending or uncertain. Removing a plugin/installation is not evidence that Adobe/AME jobs were cancelled or that every local file was deleted.
+
+External file access is limited to an approved folder and current-request checks, but explicit project/global/UI/job APIs can still have their documented side effects. Do not treat working-copy protection as a guarantee that every operation is timeline-only or undoable. Inspect [the API policy](docs/native-api.md) before enabling a workflow.
+
+## Reporting availability
+
+The owner confirmed `dev@ywd.agency` for private security reports on 2026-10-29. GitHub private vulnerability reporting returned unavailable while this repository remains private; use the email contact instead. Mail delivery and response time have not been independently tested or guaranteed. No security audit certification is claimed.
