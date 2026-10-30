@@ -1,5 +1,7 @@
 # Premiere 26.5 live verification
 
+The subsequent 0.3.7 file-access diagnostic patch is officially installed and preserves all 339 current durable transport files at mode 0700. Actual MCP still executes 0.3.6; doctor correctly rejects the version and missing diagnostic command. The owner-controlled runtime restart is pending. See [0.3.7 status](release/candidate-0.3.7.md).
+
 Current candidate status on 2026-10-29: after the owner restarted Premiere and opened the installed panel, MCP confirms **executing 0.3.6**, Premiere **26.5.0**, UXP **9.3.0-local**, all **38 host commands** and **41 server tools**. Doctor, protected project/context reads, bounded clip paging, six sequence getters and all 16 exact-time assertions pass. No candidate content write, import, save, close, export or UI operation has been performed. Disposable native workflows await the owner-confirmed granted-folder path. See the [bounded candidate report](release/native-check-0.3.6.md); this does not relabel historical member checks as a complete 0.3.6 regression run.
 
 ## Historical observations

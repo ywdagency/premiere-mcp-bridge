@@ -263,6 +263,21 @@
     "ccxFiles": 7,
     "payloadMatchesStage": true,
     "fixtureTestsPassed": 153,
-    "sourceFilesAudited": 128
+    "sourceFilesAudited": 128,
+    "payloadCommit": "948be72",
+    "installedVersion": "0.3.7",
+    "installer": "Adobe Unified Plugin Installer Agent",
+    "installerConfirmedSuccess": true,
+    "durableTransportFilesUnchanged": 339,
+    "transportDirectoryMode": "0700",
+    "runningCommandCount": 38,
+    "expectedHostCommands": 39,
+    "mcpToolCount": 42,
+    "doctorPassed": false,
+    "doctorCode": "RUNTIME_VERSION_MISMATCH",
+    "missingCommands": [
+      "premiere_get_file_access"
+    ],
+    "fileAccessNativeVerified": false
   }
 }

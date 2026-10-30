@@ -2,7 +2,7 @@
 
 This unpublished Premiere-only patch adds non-prompting file-access diagnostics to the verified CLI onboarding path. The source exposes 42 tools (39 host commands and three offline reference tools), or 19 in read-only mode. It preserves automatic connection, the lifecycle-only panel, request-only filesystem permission and per-file Entry/Node checks. See [current patch status](candidate-0.3.7.md).
 
-The owner activated the earlier 0.3.6 build; doctor and bounded native read/time checks pass for that exact payload. Those results are recorded in the [0.3.6 report](native-check-0.3.6.md). They do not certify the new 0.3.7 payload or native write behavior. The [historical onboarding audit](onboarding.md) and [historical readiness audit](public-readiness.md) retain their original versions and checksums. A new 0.3.7 installer/hash and runtime check are required before its fixture workflows can proceed.
+The owner activated the earlier 0.3.6 build; doctor and bounded native read/time checks pass for that exact payload. Those results are recorded in the [0.3.6 report](native-check-0.3.6.md). They do not certify the new 0.3.7 payload or native write behavior. The [historical onboarding audit](onboarding.md) and [historical readiness audit](public-readiness.md) retain their original versions and checksums. The new 0.3.7 CCX is audited and officially installed; its runtime activation is still pending, as the actual host continues executing 0.3.6.
 
 ## Review materials
 
@@ -38,8 +38,8 @@ A CCX installs only the UXP plugin. The local Node server and client configurati
 | Gate | Status |
 | --- | --- |
 | 0.3.7 identity, strict file diagnostics and documentation | Prepared; record the final full-suite and CI results for the exact head. |
-| Exact seven-file 0.3.7 CCX/checksum and disclosure audit | Required; earlier 0.3.6 assets are a different payload. |
-| Official installation and executing 0.3.7 command inventory | Required; earlier executing runtime was 0.3.6. |
+| Exact seven-file 0.3.7 CCX/checksum and disclosure audit | Verified against built source; request-only permissions, 153 tests and source/stage secret/path/link checks pass. |
+| Official installation and executing 0.3.7 command inventory | Official installation succeeds and 339 durable files are preserved. Actual host remains 0.3.6; owner restart/activation pending. |
 | Native diagnostic with restored grant, UDT-closed launch, native approval/cancel | Pending assisted verification; never infer a pass from fixtures. |
 | Disposable import, edits/backups, authorization/recovery, saves/lifecycle/exports | Pending isolated native workflows. |
 | All client applications and Windows Premiere | Unverified; generator/stdio tests are narrower evidence. |
