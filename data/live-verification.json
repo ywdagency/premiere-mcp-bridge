@@ -249,5 +249,20 @@
     "ownerReportedRestart": true,
     "nativeReadReport": "docs/release/native-check-0.3.6.md",
     "nativeTimeAssertionsPassed": 16
+  },
+  "releaseCandidate037": {
+    "version": "0.3.7",
+    "checkedAt": "2026-10-29 America/Vancouver",
+    "runningVersionFromMcp": "0.3.6",
+    "runtimeActivationPending": true,
+    "candidateNativeVerified": false,
+    "nativeWritesPerformed": false,
+    "report": "docs/release/candidate-0.3.7.md",
+    "reason": "Add non-prompting, opt-in-path diagnostics for the existing restored file grant; automatic IPC and per-file authorization unchanged.",
+    "ccxSha256": "dd2a86e98a3d6a98448788cd9b6593918db8224d2353c25b4d86edcbfcafd18d",
+    "ccxFiles": 7,
+    "payloadMatchesStage": true,
+    "fixtureTestsPassed": 153,
+    "sourceFilesAudited": 128
   }
 }

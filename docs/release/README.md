@@ -1,14 +1,8 @@
-# Release candidate 0.3.6
+# Release candidate 0.3.7
 
-The [clone-to-install gate](onboarding.md) adds exact-version CLI downloads,
-verified CCX installation, first-run agent instructions and privacy-preserving
-doctor checks. Exact candidate activation is now confirmed; offline tests and
-bounded native reads remain separate from pending native write workflows.
-No public tag/release is created by these commands.
+This unpublished Premiere-only patch adds non-prompting file-access diagnostics to the verified CLI onboarding path. The source exposes 42 tools (39 host commands and three offline reference tools), or 19 in read-only mode. It preserves automatic connection, the lifecycle-only panel, request-only filesystem permission and per-file Entry/Node checks. See [current patch status](candidate-0.3.7.md).
 
-This is an unpublished source-preview candidate for `ywdagency/premiere-uxp-bridge`. The repository remains private. Package, lockfile, manifest and runtime identity agree on 0.3.6. The candidate combines explicit sequence authorization from 0.3.5 with six new project import/lifecycle adapters, typed project-open options and the per-member verification matrix. The executing installed runtime is now 0.3.6. Its doctor, project/context reads and bounded time tests pass; sequence-authorization behavior remains unverified in the native host.
-
-Automated fixture, real filesystem IPC and SDK stdio checks cover this candidate. They do not establish native Premiere behavior. The seven-file candidate CCX has passed archive/hash/permission scans and was installed through Adobe's official installer. After the owner's restart, MCP reports executing 0.3.6 and all 38 host commands; the server exposes 41 tools. See the [candidate read-check report](native-check-0.3.6.md). Disposable native write workflows remain pending. Historical native checks retain their original build versions in [the live report](../live-verification-26.5.md).
+The owner activated the earlier 0.3.6 build; doctor and bounded native read/time checks pass for that exact payload. Those results are recorded in the [0.3.6 report](native-check-0.3.6.md). They do not certify the new 0.3.7 payload or native write behavior. The [historical onboarding audit](onboarding.md) and [historical readiness audit](public-readiness.md) retain their original versions and checksums. A new 0.3.7 installer/hash and runtime check are required before its fixture workflows can proceed.
 
 ## Review materials
 
@@ -33,7 +27,7 @@ node scripts/stage-release.mjs
 npm pack --dry-run --json
 ```
 
-CI runs the same build/tests, plugin staging and npm inventory on macOS/Ubuntu with Node 22/24. The staging helper checks package/manifest/built-protocol identity, copies exactly seven plugin files to `artifacts/release/0.3.6/plugin`, and records relative-path SHA-256 hashes beside it. A missing/mismatched built identity is rejected. Existing stages are never overwritten. It does not install, launch, reload, save or publish anything.
+CI runs the same build/tests, plugin staging and npm inventory on macOS/Ubuntu with Node 22/24. The staging helper checks package/manifest/built-protocol identity, copies exactly seven plugin files to `artifacts/release/0.3.7/plugin`, and records relative-path SHA-256 hashes beside it. A missing/mismatched built identity is rejected. Existing stages are never overwritten. It does not install, launch, reload, save or publish anything.
 
 Build a CCX with Adobe's UXP Developer Tools Package operation against that staged manifest, then inspect the actual archive and its generated metadata. Do not package the repository root or load a duplicate plugin ID. Keep the stable installation ID for upgrades. Adobe recommends UDT packaging; see [Adobe's package guide](https://developer.adobe.com/premiere-pro/uxp/plugins/distribution/package/). This project makes no Marketplace, signing or notarization claim.
 
@@ -43,14 +37,12 @@ A CCX installs only the UXP plugin. The local Node server and client configurati
 
 | Gate | Status |
 | --- | --- |
-| Version, English onboarding, client generators, contracts and automated tests | Prepared for this candidate; see the audit. |
-| Minimal plugin stage, npm archive and exact CCX | Audited separately; CCX installed successfully. |
-| Candidate branch and four-platform/version CI | Implementation b4b61aa passes all eight push/PR jobs on macOS/Ubuntu with Node 22/24, 150 tests per job. Recheck the latest documentation head before publication. |
-| Final CCX archive and installed 0.3.6 identity | Archive/installer verified; executing 0.3.6, complete command inventory and doctor now pass. |
-| UDT-closed launch, cold startup, folder approval/cancel, synthetic import | Pending assisted verification. |
-| Explicit sequence authorization/revocation and six new project adapters | Pending native tests using disposable synthetic projects. |
+| 0.3.7 identity, strict file diagnostics and documentation | Prepared; record the final full-suite and CI results for the exact head. |
+| Exact seven-file 0.3.7 CCX/checksum and disclosure audit | Required; earlier 0.3.6 assets are a different payload. |
+| Official installation and executing 0.3.7 command inventory | Required; earlier executing runtime was 0.3.6. |
+| Native diagnostic with restored grant, UDT-closed launch, native approval/cancel | Pending assisted verification; never infer a pass from fixtures. |
+| Disposable import, edits/backups, authorization/recovery, saves/lifecycle/exports | Pending isolated native workflows. |
 | All client applications and Windows Premiere | Unverified; generator/stdio tests are narrower evidence. |
-| Public visibility and applicable GitHub protections | Await owner instruction; recheck available controls before changing visibility. |
-| Tag, release assets and publication | Await final native evidence and explicit owner instruction. |
+| Public visibility, protections, tag/assets and release | Await completed native evidence and explicit owner instruction. |
 
-The [live plan](../live-test-plan.md) includes native close/save prompts, import partial outcomes and jobs that may outlive plugin reload. It is a plan, not permission to execute it. Keep final artifacts tied to the reviewed commit, record their checksums and promote only sanitized actual evidence. Public visibility, merging, tagging and release publication have not been performed by this preparation.
+Keep raw host evidence private. No merge, public visibility, tag, upload, npm publication or automatic updater is part of preparation. The [assisted plan](../live-test-plan.md) is not blanket permission for private-project, AE or destructive global operations.

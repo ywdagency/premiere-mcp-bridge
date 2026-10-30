@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.3.7 — release candidate, unpublished
+
+Add read-only file-access diagnostics so agents can discover an existing restored folder grant. Omit the private absolute path unless explicitly requested; never expose saved tokens, enumerate files, open a picker or change permission. Preserve automatic connection, the compact lifecycle-only panel and per-file Entry/Node validation. This patch requires an updated plugin; earlier 0.3.6 activation/read evidence is separate from its pending native verification.
+
 ## 0.3.6 — release candidate, unpublished
 
-Add six explicit, journaled project import/lifecycle adapters and typed project-open options. Imports do not grant edit ownership. Pollable jobs block competing bridge writes, retain native close prompts and distinguish false or uncertain outcomes. Add the complete per-member API coverage matrix and an assisted live verification plan. Align English release documentation and build/package version checks. These contracts pass local tests. The candidate CCX is installed, but activation and native verification remain pending; MCP still reports 0.3.5.
+Add six explicit, journaled project import/lifecycle adapters and typed project-open options. Imports do not grant edit ownership. Pollable jobs block competing bridge writes, retain native close prompts and distinguish false or uncertain outcomes. Add the complete per-member API coverage matrix and an assisted live verification plan. Align English release documentation and build/package version checks. These contracts pass local tests. The candidate was installed and its 0.3.6 runtime activated; doctor and bounded read/time checks pass. Disposable native write verification remains pending.
 
 ## 0.3.5 — development candidate
 

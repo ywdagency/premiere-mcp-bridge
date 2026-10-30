@@ -226,6 +226,23 @@ async function bundledPanel(t, options = {}) {
     pickerCalls: () => pickerCalls };
 }
 
+test('bundled plugin reports absent and restored file access without adding controls or opening a picker', async (t) => {
+  const fresh = await bundledPanel(t);
+  const none = await fresh.bridge.call('get_file_access', { includePath: true });
+  assert.equal(none.granted, false);
+  assert.equal(none.pathIncluded, false);
+  assert.equal(fresh.pickerCalls(), 0);
+  assert.equal(fresh.saved.size, 0);
+  const restored = await bundledPanel(t, { savedMedia: true });
+  const summary = await restored.bridge.call('get_file_access');
+  assert.equal(summary.granted, true);
+  assert.equal('nativePath' in summary.folder, false);
+  const detail = await restored.bridge.call('get_file_access', { includePath: true });
+  assert.equal(detail.folder.nativePath, restored.directory);
+  assert.equal(restored.pickerCalls(), 0);
+  assert.equal(restored.saved.size, 1);
+});
+
 test('bridge launches with editing enabled, exposes only lifecycle controls and Stop revokes access', async (t) => {
   const { bridge, FileBridge, directory, elements, entrypoints, saved, pickerCalls } = await bundledPanel(t);
   assert.equal((await bridge.call('get_capabilities')).writesEnabled, true);

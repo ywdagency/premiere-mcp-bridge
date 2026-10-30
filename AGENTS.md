@@ -17,6 +17,10 @@ candidate alternative. No sudo, uninstall, plugin-data deletion or hidden restar
 Setup only generates local client configuration; it does not contact Premiere.
 Respect project trust and client reconnect requirements. Non-Codex configurations
 are returned for manual merge, never reported as already configured.
+For authorized file work, use premiere_get_file_access (includePath=true only when
+the private root is needed) instead of asking the owner to recall a hidden folder.
+This diagnostic never prompts or grants access. Preserve deliberate native folder
+approval for actual file requests and both per-file validation boundaries.
 Run npm run doctor after the user opens the installed panel. A version mismatch
 or missing command is a failure, even if Adobe reports successful installation.
 Doctor proves connection/version only. Keep native release tests separate and

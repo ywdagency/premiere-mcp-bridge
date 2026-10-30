@@ -26,7 +26,7 @@ Load the UXP plugin separately in Premiere, open its panel once, then restart/re
 | Cursor | `mcpServers` JSON | Format and locations checked against official guidance; no dedicated end-to-end client session recorded here. |
 | VS Code | `servers` JSON with `type: "stdio"` | VS Code format checked against official guidance; agent harness configuration differs. No dedicated end-to-end client session recorded here. |
 
-Candidate 0.3.6 exercises the configuration generators, Codex TOML preservation and real SDK stdio discovery in automated tests: 41 full-access tools or 18 inspection-only tools. These tests use host fixtures and do not install the candidate. The running 0.3.5 runtime has separate MCP connection/read evidence. The 0.3.6 CCX is installed, with actual runtime activation pending the owner-controlled restart. These are local integration paths, not vendor certification or full native verification. Source pages below were checked on 2026-10-29.
+Candidate 0.3.7 adds a read-only file-access diagnostic to the existing portable generators and SDK stdio surface: 42 full-access tools or 19 inspection-only tools. The earlier 0.3.6 runtime has confirmed activation and bounded native read/time evidence; this new revision still needs installation/activation and disposable native write tests. These are local integration paths, not vendor certification or full native verification. Source pages below were checked on 2026-10-29.
 
 ## Codex
 

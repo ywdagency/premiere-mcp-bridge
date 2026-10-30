@@ -29,3 +29,10 @@ sequence if relevant. Report the actual executing version. Never create/import/
 edit/export/save as a connection probe. Follow documented backup/ownership and
 operation-UUID recovery rules for later editing tasks. A doctor pass is a
 connection/version result, not certification of every API member.
+
+For an authorized file task, call premiere_get_file_access first. Use
+includePath=true only when the native root is needed to prepare/map local files.
+Do not ask the owner to remember a hidden saved folder or restore a removed panel
+setting. The diagnostic does not open a picker or grant access. If no grant
+exists, explain the native approval required by the deliberate file request;
+connection/setup alone must not trigger it. Never bypass the normal path checks.

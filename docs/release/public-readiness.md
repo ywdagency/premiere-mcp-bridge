@@ -1,4 +1,6 @@
-# Candidate readiness audit — 0.3.6
+# Historical candidate readiness audit — 0.3.6
+
+This audit describes the 0.3.6 snapshot, not the subsequent 0.3.7 patch. See [current candidate status](candidate-0.3.7.md).
 
 Reviewed on 2026-10-29 for the private `ywdagency/premiere-uxp-bridge` repository. This audit applies to the release/0.3.6 source snapshot and its generated packages. It supersedes the current-status claims in the [historical 0.3.4 migration audit](migration-0.3.4.md), without changing that evidence.
 

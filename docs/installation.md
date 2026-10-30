@@ -8,7 +8,7 @@ not an end-user prerequisite for the CCX route.
 
 ## Candidate status
 
-Version 0.3.6 is still a private, unmerged candidate. No public tag/release asset is
+Version 0.3.7 is still a private, unmerged candidate. No public tag/release asset is
 available yet. The commands below become the public path only after the matching
 source commit and release assets are published. For present candidate review,
 clone with `--branch release/0.3.6` and use the reviewed local installer path.
@@ -17,7 +17,7 @@ Do not use default main's older source with a newer CCX.
 ## Public path after the release is published
 
 ```sh
-git clone --branch v0.3.6 https://github.com/ywdagency/premiere-uxp-bridge.git
+git clone --branch v0.3.7 https://github.com/ywdagency/premiere-uxp-bridge.git
 cd premiere-uxp-bridge
 npm ci
 npm run onboard -- --release
@@ -32,8 +32,8 @@ this CLI before publication. Prerequisites and Adobe/client confirmation cannot
 be bypassed by a shell command.
 
 The downloader reads only this repository's published matching GitHub release
-and exact assets `premiere-mcp-bridge-0.3.6.ccx` and
-`premiere-mcp-bridge-0.3.6.ccx.sha256`. Missing/draft assets fail explicitly.
+and exact assets `premiere-mcp-bridge-0.3.7.ccx` and
+`premiere-mcp-bridge-0.3.7.ccx.sha256`. Missing/draft assets fail explicitly.
 No API token is required for public downloads; private candidate downloads are
 not supported by this automatic route.
 

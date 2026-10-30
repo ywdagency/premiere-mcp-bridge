@@ -5,6 +5,7 @@ import { AutoConnection } from './auto-connection';
 import { PremiereApi } from './api-runtime';
 import { PremiereControl } from './premiere-control';
 import { PLUGIN_VERSION } from './identity';
+import { describeFileAccess } from './file-access';
 
 declare function require(name: string): any;
 interface GrantedFolder extends UxpFolder {
@@ -191,6 +192,7 @@ const bridge = new UxpBridge(
     name: host.name,
     version: host.version,
     uxpVersion: versions.uxp,
+    getFileAccess: (includePath) => describeFileAccess(mediaFolder, includePath),
     clipConstants: {
       clipType: ppro.Constants.TrackItemType.CLIP,
       displayFormats: ppro.Constants.VideoDisplayFormatType,

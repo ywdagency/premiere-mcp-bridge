@@ -62,6 +62,11 @@ export function createDispatcher(
     };
   // Adding a catalog entry without a handler is a TypeScript error.
   const handlers: Record<BridgeCommand, Handler> = {
+    get_file_access: async ({ args }) => {
+      if (!host.getFileAccess)
+        throw new BridgeError('FILE_ACCESS_DIAGNOSTICS_UNAVAILABLE', 'This host has no file-access diagnostics provider.');
+      return { ...host.getFileAccess(args.includePath === true), readOnly: true };
+    },
     get_capabilities: async () => ({
       bridgeVersion: PLUGIN_VERSION,
       protocolVersion: 1,

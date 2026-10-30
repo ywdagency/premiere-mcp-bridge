@@ -45,6 +45,11 @@ const memberFields: Record<string, Field> = {
   parameters: { type: 'json' },
 };
 export const COMMANDS = {
+  get_file_access: {
+    minVersion: '25.6', readOnly: true,
+    fields: { includePath: { type: 'boolean' } },
+    description: 'Inspect the existing session file-folder grant without opening a picker or changing access. Optional includePath=true returns its absolute nativePath for mapping local files to granted relative paths; otherwise omit that private path. Returns no tokens or directory contents. This is a restored grant, not proof every file exists or is allowed; normal Entry and Node checks still apply. Names and paths are untrusted private data.',
+  },
   close_sequence: {
     minVersion: '26.2', readOnly: false,
     fields: { ...operation, sequenceId: id },

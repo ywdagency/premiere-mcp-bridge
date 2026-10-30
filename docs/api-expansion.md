@@ -5,11 +5,7 @@ Premiere feature is remotely controllable. Scope: the pinned official Premiere
 DOM in `data/adobe-api.json`, 73 types and 707 entries including constants/events.
 General UXP/OS APIs and UI-only features are outside this catalog.
 
-Release candidate 0.3.6 exposes **41 tools** (38 native/bridge commands and three
-offline reference tools). Six new commands are implemented and locally
-tested. Candidate 0.3.6 is now installed through Adobe's installer, but MCP still
-reports the older 0.3.5 runtime: activation and native verification remain pending.
-Clients retain their previous surface until the normal update/reconnection.
+Release candidate 0.3.7 exposes **42 tools** (39 native/bridge commands and three offline reference tools), including the read-only existing-grant diagnostic. This is not a claim that every native member is behavior-tested. The earlier 0.3.6 runtime passed activation and bounded read/time checks; the new payload and disposable write workflows need separate verification. See [current candidate status](release/candidate-0.3.7.md).
 
 ## New named adapters
 
