@@ -1,30 +1,13 @@
-# Candidate 0.3.8 — serialized file authorization
+# Candidate 0.3.8 — verified core, unpublished preview
 
-This unpublished Premiere-only patch follows actual [0.3.7 native tests](native-check-0.3.7.md).
-A single media import worked, while a batch failed before native import with UXP
-filesystem error-2. Native proof creation/polling/cleanup overlapped within one
-request. File authorization now uses a request-bound serial queue; a failed or
-ended request cannot start its queued checks or hold the next request indefinitely.
-The UXP Entry grant and independent Node path checks are unchanged.
+Installed and executing on Premiere 26.5.0 / UXP 9.3.0-local, macOS Apple Silicon. Doctor passes; SDK stdio exposes 42 tools / 39 host commands, or 19 read-only tools. See the [native regression report](native-check-0.3.8.md) and versioned [0.3.7 workflows](native-check-0.3.7.md).
 
-Full-argument Comment markers worked, but sparse middle optional arguments
-caused a native action error. The adapter now rejects that known unsafe form
-before host invocation, at the MCP and UXP boundaries. It supplies no invented
-Adobe defaults and still permits trailing omissions according to the catalog.
+Actual tests found a batch preflight failure in 0.3.7 and unsafe sparse marker arguments. The plugin now serializes request-bound file-proof lifecycles and rejects that argument form before native action invocation. The Node budget is 30 seconds: the verified ten-file batch took about 15 seconds, exceeding the previous 10 seconds. Historical matching marker receipts remain recoverable despite stricter new-call validation. Node-only budget/recovery changes do not require another Premiere installation or change the plugin payload.
 
-The source retains 42 MCP tools /39 host commands,19 read-only tools and the pinned
-707-entry reference. No manifest permissions, network listener, arbitrary-code
-endpoint, extra panel setting or automatic updater is added. The installed 0.3.7
-runtime's successful synthetic operations are versioned evidence, not proof this
-patch is running. A new 0.3.8 CCX/hash, official install and actual activation must
-be verified before repeating the batch scenario.
+The seven-file CCX SHA-256 is `7153825fb11b08423a138b37833ef557f7e7280d7c01293a4a896b5cca0218b1`; it matches the rebuilt source payload. Official Adobe installation/enabled listing confirmed 0.3.8; all 487 preserved durable transport files stayed byte-identical at directory mode 0700. Source/fixture checks pass all 157 tests. The 132-file source, 140-file unpacked npm archive and history/disclosure checks are recorded separately. Production-only npm dependencies start the server with 42 tools and offline reference access. No archive is published.
 
-Native follow-up must exercise a maximum-size batch, failure recovery/queue
-release, sparse-marker rejection and successful full-argument marker creation
-on disposable fixtures. Retain the verified 0.3.7 backups and keep the user's
-original project untouched. Broader native fixtures and explicit authorization
-remain separate gates. Do not claim a public functional release is ready yet.
+Native checks include maximum-size import, denial/recovery, backups, aligned moves, markers, effect parameters/two-key animation and readable XML/OTIO outputs. Earlier versioned checks include explicit Save/Save As, sequence import and clean lifecycle/ownership reset. Results are saved in isolated synthetic projects; backups retained and original context restored. No owner-project content/save/close operation, UI/screenshot, AE work, preference/cache change or existing AME queue action occurred.
 
-Prepared evidence: all 156 automated tests pass; six focused proof/marker tests pass after the final build. The 131-file source and seven-file CCX pass path, secret and local-link checks. The CCX matches the built stage; SHA-256 `7153825fb11b08423a138b37833ef557f7e7280d7c01293a4a896b5cca0218b1`. Native patch verification remains pending.
+Positive existing-sequence authorization is pending the owner's explicit approval of the named synthetic fixture. On resume, reopen that test project and create/verify a fresh current-session direct backup; a saved backup name alone is not authorization provenance. Dirty-prompt choices, preset/MOGRT/transcription/AME fixtures, other client apps, Windows and visual/audio/interchange fidelity remain separately unverified. Catalog coverage is not 707-member behavioral certification.
 
-Actual activation and native batch/guard regression now pass; see the [0.3.8 report](native-check-0.3.8.md). The 10-file call takes about 15 seconds, so Node defaults to 30 seconds. Matching older marker receipts remain recoverable despite stricter new-call validation. These Node-only improvements leave the audited CCX unchanged. Final source suite: 157 tests pass.
+The repository stays private, draft and unmerged. Core tests are suitable evidence for a scoped preview; do not call the broader API production-certified or close the remaining authorization gate. Public visibility, merge, tag/assets and release require the owner's publication decision. No automatic updater is introduced.
