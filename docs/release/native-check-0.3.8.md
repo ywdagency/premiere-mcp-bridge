@@ -32,3 +32,5 @@ Those prior results retain their actual build. No every-member 707-entry or
 production certification is inferred. Positive explicit source authorization,
 dirty-prompt choices and fixture-dependent preset/MOGRT/transcription/AME paths
 remain separate gates; the exact test-source authorization is awaiting the owner.
+
+Additional native checks: a discovered bundled Mosaic component appends to WORK, its numeric value reads back as 42, and time-varying keyframes at ticks 0 and 508032000000 read back as 42 and 80. INPUT/BACKUP component-chain counts remain unchanged. The synthetic project is explicitly saved and closed, restoring the owner project context. Visual appearance is unreviewed. The named authorization fixture is saved; reopening requires a fresh current-session direct backup before any grant.

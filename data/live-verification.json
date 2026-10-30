@@ -299,7 +299,7 @@
     "ccxFiles": 7,
     "payloadMatchesStage": true,
     "fixtureTestsPassed": 157,
-    "sourceFilesAudited": 131,
+    "sourceFilesAudited": 132,
     "sourcePrivatePathFindings": 0,
     "sourceSecretFindings": 0,
     "checkedAt": "2026-10-30 America/Vancouver",
@@ -318,6 +318,11 @@
     "markerGuardAndFullArgumentsVerified": true,
     "historicalMarkerRecoveryVerified": true,
     "ownerProjectWritesPerformed": false,
-    "explicitAuthorizationNativeVerified": false
+    "explicitAuthorizationNativeVerified": false,
+    "effectParameterAndTwoKeysNativeVerified": true,
+    "sourceAndBackupEffectChainsPreserved": true,
+    "syntheticProjectSavedAndClosed": true,
+    "ownerContextRestored": true,
+    "npmFilesAudited": 140
   }
 }
