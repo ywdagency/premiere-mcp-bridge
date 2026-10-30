@@ -4,6 +4,26 @@ This project is a local, agent-independent MCP bridge for Adobe Premiere desktop
 The previous autonomous edit-plan product has been removed by the owner's request.
 Do not reintroduce an automatic editor, content-analysis service or editorial policy.
 
+## First-run installation requests
+
+For a user asking to install/connect this repository, read docs/installation.md
+and docs/agent-quickstart.md first. Use the checkout's exact version, npm ci and
+npm run onboard. Validation is the default; --install explicitly invokes Adobe
+UPIA and configures the selected client. Only --release downloads a published
+matching release; never silently fall back to a floating latest binary or claim
+unpublished assets exist. A reviewed local CCX plus its trusted checksum is the
+candidate alternative. No sudo, uninstall, plugin-data deletion or hidden restart.
+
+Setup only generates local client configuration; it does not contact Premiere.
+Respect project trust and client reconnect requirements. Non-Codex configurations
+are returned for manual merge, never reported as already configured.
+Run npm run doctor after the user opens the installed panel. A version mismatch
+or missing command is a failure, even if Adobe reports successful installation.
+Doctor proves connection/version only. Keep native release tests separate and
+use disposable fixtures; never use the user's working timeline as an install test.
+This onboarding is Premiere-only. Do not configure another Adobe application or
+combine bridge servers as part of installation.
+
 Read INDEX.md and docs/premiere-control-reference.md before Premiere API work.
 Verify exact methods against Adobe's current official UXP documentation and record
 minimum versions. The baseline is Premiere 25.6; pages mentioning 27.0 do not

@@ -1,5 +1,10 @@
 # Release candidate 0.3.6
 
+The [clone-to-install gate](onboarding.md) adds exact-version CLI downloads,
+verified CCX installation, first-run agent instructions and privacy-preserving
+doctor checks. Offline tests remain separate from pending native candidate
+activation. No public tag/release is created by these commands.
+
 This is an unpublished source-preview candidate for `ywdagency/premiere-uxp-bridge`. The repository remains private. Package, lockfile, manifest and runtime identity agree on 0.3.6. The candidate combines explicit sequence authorization from 0.3.5 with six new project import/lifecycle adapters, typed project-open options and the per-member verification matrix. The installed 0.3.5 runtime is a different build: its activation and MCP reads are recorded, while its sequence-authorization behavior remains unverified.
 
 Automated fixture, real filesystem IPC and SDK stdio checks cover this candidate. They do not establish native Premiere behavior. The seven-file candidate CCX has passed archive/hash/permission scans and was installed through Adobe's official installer. MCP still reports executing 0.3.5, so 0.3.6 activation/native checks remain pending. Historical native checks retain their original build versions in [the live report](../live-verification-26.5.md).

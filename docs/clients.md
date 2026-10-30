@@ -1,6 +1,6 @@
 # MCP client setup
 
-The UXP plugin and the MCP client must run on the same computer and user account. Each client starts `mcp/server.mjs` as a local Node process over stdio. This is not a URL connector for a cloud-only agent. Install/load the Premiere plugin using [the README](../README.md); client configuration alone does not load it.
+The UXP plugin and the MCP client must run on the same computer and user account. Each client starts `mcp/server.mjs` as a local Node process over stdio. This is not a URL connector for a cloud-only agent. Install the matching reviewed CCX using [CLI onboarding](installation.md); UDT is an optional development alternative. Client configuration alone does not load the plugin.
 
 From the clone, run `npm ci` and `npm run build` before generating configuration. Node.js 22+ is required. Generated configurations use the current Node executable and absolute server path, avoiding GUI PATH differences. Regenerate after moving the clone or changing Node. Do not share generated machine-specific files or commit them.
 

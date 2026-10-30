@@ -27,12 +27,41 @@ flowchart LR
 
 The client receives tool results, which may include project names, clip names and requested transcript text. Its model provider and data policies still apply. A local transport does not make the AI client offline. Read [security and data handling](SECURITY.md).
 
-## Install from source on macOS
+## Install and connect on macOS
+
+The CCX route uses Adobe Creative Cloud's installer; end users do not need UXP
+Developer Tools. See [CLI installation](docs/installation.md) and
+[first-run agent instructions](docs/agent-quickstart.md).
+
+**The candidate is not published yet.** For private review, use the matching
+branch and independently reviewed local CCX/checksum:
+
+```sh
+git clone --branch release/0.3.6 https://github.com/ywdagency/premiere-uxp-bridge.git
+cd premiere-uxp-bridge
+npm ci
+npm run onboard -- --ccx /path/to/reviewed.ccx --sha256 REVIEWED_HASH
+# Once verified, repeat with --install to invoke Adobe and configure Codex.
+npm run doctor
+```
+
+Validation does not install or configure anything. Explicit --install creates
+project-local Codex configuration; other clients receive JSON for manual merge.
+Open the installed panel and reconnect the client. Doctor requires the expected
+version and commands to be executing; installer success alone is insufficient.
+
+After matching tagged source/assets are published,
+`npm run onboard -- --release --install` downloads/checks the checkout's exact
+release and installs/configures it. Missing releases fail, without a latest-version
+fallback. The [installation guide](docs/installation.md) distinguishes this future
+public route from today's local candidate; no public release exists yet.
+
+## Development loading with UDT
 
 Install Node.js 22+, Adobe Premiere 25.6+ and Adobe UXP Developer Tools (UDT). Adobe documents Premiere support from UDT 2.2; this project's developer-load shortcut was tested with UDT 2.3.0. Premiere 26.5 is the current native reference host. A working Adobe installation/license is required separately.
 
 ```sh
-git clone https://github.com/ywdagency/premiere-uxp-bridge.git
+git clone --branch release/0.3.6 https://github.com/ywdagency/premiere-uxp-bridge.git
 cd premiere-uxp-bridge
 npm ci
 npm run setup
@@ -72,7 +101,7 @@ npm run build
 npm pack --dry-run --json
 ```
 
-Automated tests cover contracts, ownership guards, real local IPC and MCP SDK stdio with host fixtures; they do not constitute native Premiere checks. See [CONTRIBUTING.md](CONTRIBUTING.md) for the command example, version gates and verification workflow. The [architecture](docs/mcp-bridge.md) covers discovery, receipts and uncertain writes. Premiere and After Effects remain separate bridges. The [adapter contract](docs/adapter-contract.md) defines future composition without combining the hosts.
+Automated tests cover contracts, ownership guards, real local IPC and MCP SDK stdio with host fixtures; they do not constitute native Premiere checks. See [CONTRIBUTING.md](CONTRIBUTING.md) for the command example, version gates and verification workflow. The [architecture](docs/mcp-bridge.md) covers discovery, receipts and uncertain writes. Installation and this release are Premiere-only.
 
 Native UXP button rendering can vary by host. Release review materials and outstanding gates are in [docs/release](docs/release/README.md).
 

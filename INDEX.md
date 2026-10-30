@@ -3,6 +3,8 @@
 | Topic | Document |
 | --- | --- |
 | Installation and overview | [README](README.md) |
+| CLI installation and executing-version diagnosis | [Installation](docs/installation.md) |
+| First-run agent instructions | [Agent quickstart](docs/agent-quickstart.md) |
 | Codex, Claude, Cursor, VS Code | [Client setup](docs/clients.md) |
 | Full native API catalog and typed control | [Native API guide](docs/native-api.md) |
 | API expansion list and exhaustive per-member matrix | [Expansion coverage](docs/api-expansion.md) |
@@ -10,7 +12,6 @@
 | Native checks vs fixtures | [Premiere 26.5 live verification](docs/live-verification-26.5.md) |
 | Tools, arguments and behavior | [Command reference](docs/commands.md) |
 | Discovery, IPC, receipts and failure recovery | [Bridge architecture](docs/mcp-bridge.md) |
-| Future composition with the separate After Effects bridge | [Adapter contract](docs/adapter-contract.md) |
 | Clip timing and pagination | [Clip inspection](docs/clip-inspection.md) |
 | Version gates and live verification | [Compatibility](docs/adobe-uxp-compatibility.md) |
 | Official Adobe API sources | [Control reference](docs/premiere-control-reference.md) |
