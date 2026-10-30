@@ -278,6 +278,10 @@
     "missingCommands": [
       "premiere_get_file_access"
     ],
-    "fileAccessNativeVerified": false
+    "fileAccessNativeVerified": false,
+    "installerConfirmedEnabled": true,
+    "npmFilesAudited": 136,
+    "npmPrivatePathFindings": 0,
+    "npmSecretFindings": 0
   }
 }

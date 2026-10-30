@@ -26,7 +26,9 @@ assertions. It is not evidence that this patch is installed. The fresh 0.3.7 CCX
 passes archive/path/secret checks. Its SHA-256 is
 `dd2a86e98a3d6a98448788cd9b6593918db8224d2353c25b4d86edcbfcafd18d`.
 All 153 automated tests pass; the 128-file source has no broken local Markdown
-links, private paths or Gitleaks findings. Official Adobe installation succeeds, and all 339 preserved durable transport
+links, private paths or Gitleaks findings. The unpacked 136-file npm archive
+also excludes private/native artifacts and passes path/secret checks; it is a
+review artifact, not npm publication. Official Adobe installation and the enabled-extension listing confirm 0.3.7, and all 339 preserved durable transport
 files remain byte-identical with directory mode 0700. The local Codex configuration
 was updated; other clients are not claimed configured. Post-install MCP still
 executes 0.3.6 with 38 host commands. Doctor correctly fails with expected 0.3.7
