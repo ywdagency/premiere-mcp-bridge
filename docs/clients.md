@@ -26,7 +26,7 @@ Load the UXP plugin separately in Premiere, open its panel once, then restart/re
 | Cursor | `mcpServers` JSON | Format and locations checked against official guidance; no dedicated end-to-end client session recorded here. |
 | VS Code | `servers` JSON with `type: "stdio"` | VS Code format checked against official guidance; agent harness configuration differs. No dedicated end-to-end client session recorded here. |
 
-Candidate 0.3.7 adds a read-only file-access diagnostic to the existing portable generators and SDK stdio surface: 42 full-access tools or 19 inspection-only tools. The earlier 0.3.6 runtime has confirmed activation and bounded native read/time evidence; this new revision still needs installation/activation and disposable native write tests. These are local integration paths, not vendor certification or full native verification. Source pages below were checked on 2026-10-29.
+Candidate 0.3.8 retains 42 full-access or 19 inspection-only tools and the portable client generators. Actual 0.3.7 synthetic workflow evidence is recorded separately; its batch preflight failure led to the current patch. Current patch activation and native regression checks remain pending. These are local integration paths, not vendor certification. Source pages below were checked on 2026-10-29.
 
 ## Codex
 

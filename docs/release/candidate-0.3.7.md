@@ -1,5 +1,7 @@
 # Candidate 0.3.7 — file-access diagnostics
 
+This is the historical preparation record for 0.3.7. Actual execution is now covered by the [native workflow report](native-check-0.3.7.md); the [current patch is 0.3.8](candidate-0.3.8.md).
+
 This unpublished Premiere-only patch closes a first-run diagnostic gap found
 during the 0.3.6 release checks. Automatic bridge discovery worked, and the host
 restored a file-folder grant, but the agent could only see a boolean. Asking a

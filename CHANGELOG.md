@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.8 — release candidate, unpublished
+
+Serialize request-bound UXP file proof lifecycles after an actual batch-import preflight failure. Release the queue on error/expiry/context end and prevent queued checks from outliving the request. Reject sparse marker argument prefixes before native calls at both boundaries. Preserve exact UUID recovery, file permissions and all 42 tools. Automated regression checks do not replace the pending native batch recheck.
+
 ## 0.3.7 — release candidate, unpublished
 
 Add read-only file-access diagnostics so agents can discover an existing restored folder grant. Omit the private absolute path unless explicitly requested; never expose saved tokens, enumerate files, open a picker or change permission. Preserve automatic connection, the compact lifecycle-only panel and per-file Entry/Node validation. This patch requires an updated plugin; earlier 0.3.6 activation/read evidence is separate from its pending native verification.

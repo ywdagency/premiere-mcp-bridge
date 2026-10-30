@@ -1,4 +1,4 @@
-import { BridgeError, object, onlyKeys } from './bridge-protocol';
+import { BridgeError, object, onlyKeys, validateMarkerParameterPrefix } from './bridge-protocol';
 import { ApiType, ApiHandle, ApiMember } from './api-types';
 export interface ValueResolver {
   handle(id: string): ApiHandle;
@@ -157,6 +157,7 @@ export function resolveValue(value: unknown, schema: ApiType, resolver: ValueRes
   return bad(`Expected documented type ${schema.name ?? schema.kind}.`);
 }
 export function parametersFor(member: ApiMember, value: unknown, resolver: ValueResolver): any[] {
+  validateMarkerParameterPrefix(member.id, value);
   const args = object(value);
   onlyKeys(
     args,

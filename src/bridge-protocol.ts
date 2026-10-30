@@ -90,6 +90,17 @@ export function onlyKeys(value: Record<string, unknown>, keys: string[]): void {
   }
 }
 
+export function validateMarkerParameterPrefix(memberId: unknown, value: unknown): void {
+  if (memberId !== 'Markers#createAddMarkerAction') return;
+  const args = object(value);
+  let omitted = false;
+  for (const key of ['name', 'markerType', 'startTime', 'duration', 'comments']) {
+    if (args[key] === undefined) omitted = true;
+    else if (omitted)
+      throw new BridgeError('INVALID_API_ARGUMENT', 'Marker creation requires every preceding argument when a later optional argument is supplied.');
+  }
+}
+
 export function validateArgs(command: unknown, value: unknown): BridgeArgs {
   const spec = COMMAND_LIST.find((item) => item.command === command);
   if (!spec)
@@ -154,6 +165,12 @@ export function validateArgs(command: unknown, value: unknown): BridgeArgs {
         'INVALID_REQUEST',
         `Invalid ${key}. Consult this command's input schema.`,
       );
+  }
+  if (command === 'api_apply_actions' && Array.isArray(args.actions)) {
+    for (const action of args.actions) {
+      if (action && typeof action === 'object' && !Array.isArray(action))
+        validateMarkerParameterPrefix(action.memberId, action.parameters);
+    }
   }
   if (
     command === 'get_sequence_clips' &&
