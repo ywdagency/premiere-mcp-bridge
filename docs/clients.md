@@ -87,7 +87,7 @@ For every generator, `--read-only` sets `PREMIERE_MCP_READ_ONLY=1`. That server 
 | Environment variable | Default | Purpose |
 | --- | --- | --- |
 | `PREMIERE_MCP_READ_ONLY` | unset | `1` omits all write tools from this server |
-| `PREMIERE_MCP_TIMEOUT_MS` | `10000` | Request deadline, 50–30000 milliseconds |
+| `PREMIERE_MCP_TIMEOUT_MS` | `30000` | Request deadline, 50–30000 milliseconds; serialized maximum-size file batches can exceed 10 seconds |
 | `PREMIERE_MCP_HOST_VERSION` | unset | Select a host storage major version when multiple Premiere versions run |
 | `PREMIERE_MCP_BRIDGE_DIR` | `auto` | Advanced transport/test override; ordinary installations use automatic discovery |
 

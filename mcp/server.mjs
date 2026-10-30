@@ -3,7 +3,7 @@ import { McpServer } from '@modelcontextprotocol/server';
 import { serveStdio } from '@modelcontextprotocol/server/stdio';
 import * as z from 'zod/v4';
 import { pathToFileURL } from 'node:url';
-import { FileBridge, DEFAULT_BRIDGE_DIR, prepareBridge } from './file-bridge.mjs';
+import { FileBridge, DEFAULT_BRIDGE_DIR, prepareBridge, isLegacyMarkerValidation } from './file-bridge.mjs';
 import { registerReference } from './reference.mjs';
 import { formatClipPage } from './timecode.mjs';
 import catalog from '../build/lib/command-catalog.cjs';
@@ -50,7 +50,7 @@ function inputSchema(fields) {
 }
 export function createServer(
   bridge = new FileBridge(process.env.PREMIERE_MCP_BRIDGE_DIR ?? DEFAULT_BRIDGE_DIR, {
-    timeoutMs: Number(process.env.PREMIERE_MCP_TIMEOUT_MS ?? 10000),
+    timeoutMs: Number(process.env.PREMIERE_MCP_TIMEOUT_MS ?? 30000),
   }),
   { readOnly = process.env.PREMIERE_MCP_READ_ONLY === '1' } = {},
 ) {
@@ -77,7 +77,12 @@ export function createServer(
       },
       async (args, extra) => {
         try {
-          protocol.validateArgs(spec.command, args);
+          try {
+            protocol.validateArgs(spec.command, args);
+          } catch (error) {
+            // Only the concrete local transport can recover a matching old receipt.
+            if (!(bridge instanceof FileBridge) || !isLegacyMarkerValidation(spec.command, error)) throw error;
+          }
           const raw = await bridge.call(spec.command, args, extra.mcpReq.signal);
           const result = spec.command === 'get_sequence_clips' ? formatClipPage(raw) : raw;
           return {
