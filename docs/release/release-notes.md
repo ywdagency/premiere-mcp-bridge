@@ -1,6 +1,6 @@
 # Premiere MCP Bridge 0.3.7 — source preview candidate
 
-Status: unpublished draft. This patch adds read-only diagnostics for the existing file-folder grant, including opt-in native-path disclosure. Its installer/runtime and disposable native workflows still require verification; do not describe it as a tested public installer release.
+Status: unpublished draft. This patch adds read-only diagnostics for the existing file-folder grant, including opt-in native-path disclosure. Its CCX is audited and officially installed; runtime activation and disposable native workflows still require verification; do not describe it as a tested public installer release.
 
 Premiere MCP Bridge by YWD Agency connects local MCP clients to Adobe Premiere through a UXP plugin and Node stdio server. Use the agent you choose to inspect a project and request explicit edits. Start with [source installation](../../README.md) and [client configuration](../clients.md).
 
