@@ -10,6 +10,7 @@ Task TASK-8EDB4D39BE96. Premiere-only, based on release/0.3.6.
 - [x] Supply offline/live doctor without project names or media paths.
 - [x] Align README, AGENTS and client/agent installation instructions.
 - [x] Fresh clone of implementation 28341e6: npm ci, all 150 tests, local configuration generation and offline/version checks.
-- [ ] Pass remote CI on the final candidate head.
-- [ ] Activate installed 0.3.6 with owner's normal restart and verify disposable native workflows.
+- [x] Pass remote CI at b4b61aa: all eight jobs, 150 tests per job; recheck any later publication head.
+- [x] Activate installed 0.3.6 with owner's normal restart; exact-version doctor and complete command inventory pass.
+- [ ] Complete disposable native workflows under TASK-2BFAF9DBED1E; see the candidate native report.
 - [ ] Publish only after owner's release decision.

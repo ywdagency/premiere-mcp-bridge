@@ -30,13 +30,16 @@ doctor results. Record clean-clone full tests and CI for the final commit.
 
 Implementation 28341e6 passed npm ci and all 150 tests in a new clone whose path
 contains spaces. Setup generated local read-only configuration without contacting
-Premiere. These are source/fixture checks; candidate activation remains pending.
+Premiere. These are source/fixture checks, separate from native behavior.
 
-The actual read-only doctor observed running 0.3.5 while expecting 0.3.6, with six
-commands missing. It correctly failed. No reinstall, restart or project mutation
-was issued here. Owner-controlled Premiere restart/installed-panel activation
-and the [native release plan](../tasks/final-build-0.3.6.md) remain required.
-A future doctor pass proves connection/version only, not all API behavior.
+Before the owner's restart, the actual read-only doctor correctly rejected the
+older 0.3.5 runtime and its six missing commands. After the owner restarted
+Premiere and opened the panel, doctor passes: executing 0.3.6, all 38 host
+commands present, project and active-sequence reads successful. Direct MCP also
+exposes 41 tools. No reinstall, automatic restart or project mutation was issued
+by this onboarding check. Doctor proves connection/version only. Bounded native
+read/time checks are recorded in the [candidate report](native-check-0.3.6.md);
+the [disposable native release plan](../tasks/final-build-0.3.6.md) remains open.
 
 Keep private/unmerged until the owner chooses publication. Do not configure
 another Adobe application or join bridge servers in this release.

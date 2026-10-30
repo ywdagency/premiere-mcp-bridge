@@ -226,16 +226,28 @@
     "installer": "Adobe Unified Plugin Installer Agent",
     "installedVersion": "0.3.6",
     "installerConfirmedEnabled": true,
-    "runningVersionFromMcp": "0.3.5",
+    "runningVersionFromMcp": "0.3.6",
     "runningHostVersion": "26.5.0",
-    "runningCommandCount": 32,
-    "runtimeActivationPending": true,
+    "runningCommandCount": 38,
+    "runtimeActivationPending": false,
     "candidateNativeVerified": false,
     "coldStartupVerified": false,
     "durableTransportFilesUnchanged": 179,
     "transportDirectoryMode": "0700",
     "nativeWritesPerformed": false,
-    "limits": "The owner cannot restart Premiere now. Runtime activation, cold startup and native candidate tests are deferred; no restart/UI fallback or candidate native project/timeline operation was attempted.",
-    "ownerDeferredRestart": true
+    "limits": "Executing0.3.6 and bounded read/time checks confirmed after owner-reported restart; no observed full cold-start/prompt test, native content write, import, save, close, export or UI operation. Granted synthetic-files folder path requested before disposable workflows. No complete API or visual/audio verification is claimed.",
+    "ownerDeferredRestart": false,
+    "postInstallObservation": {
+      "runningVersionFromMcp": "0.3.5",
+      "runningCommandCount": 32,
+      "ownerDeferredRestart": true,
+      "note": "Historical observation before the owner restarted Premiere; not the current runtime."
+    },
+    "mcpToolCount": 41,
+    "runtimeReadVerified": true,
+    "doctorPassed": true,
+    "ownerReportedRestart": true,
+    "nativeReadReport": "docs/release/native-check-0.3.6.md",
+    "nativeTimeAssertionsPassed": 16
   }
 }

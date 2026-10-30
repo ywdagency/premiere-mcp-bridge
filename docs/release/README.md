@@ -2,12 +2,13 @@
 
 The [clone-to-install gate](onboarding.md) adds exact-version CLI downloads,
 verified CCX installation, first-run agent instructions and privacy-preserving
-doctor checks. Offline tests remain separate from pending native candidate
-activation. No public tag/release is created by these commands.
+doctor checks. Exact candidate activation is now confirmed; offline tests and
+bounded native reads remain separate from pending native write workflows.
+No public tag/release is created by these commands.
 
-This is an unpublished source-preview candidate for `ywdagency/premiere-uxp-bridge`. The repository remains private. Package, lockfile, manifest and runtime identity agree on 0.3.6. The candidate combines explicit sequence authorization from 0.3.5 with six new project import/lifecycle adapters, typed project-open options and the per-member verification matrix. The installed 0.3.5 runtime is a different build: its activation and MCP reads are recorded, while its sequence-authorization behavior remains unverified.
+This is an unpublished source-preview candidate for `ywdagency/premiere-uxp-bridge`. The repository remains private. Package, lockfile, manifest and runtime identity agree on 0.3.6. The candidate combines explicit sequence authorization from 0.3.5 with six new project import/lifecycle adapters, typed project-open options and the per-member verification matrix. The executing installed runtime is now 0.3.6. Its doctor, project/context reads and bounded time tests pass; sequence-authorization behavior remains unverified in the native host.
 
-Automated fixture, real filesystem IPC and SDK stdio checks cover this candidate. They do not establish native Premiere behavior. The seven-file candidate CCX has passed archive/hash/permission scans and was installed through Adobe's official installer. MCP still reports executing 0.3.5, so 0.3.6 activation/native checks remain pending. Historical native checks retain their original build versions in [the live report](../live-verification-26.5.md).
+Automated fixture, real filesystem IPC and SDK stdio checks cover this candidate. They do not establish native Premiere behavior. The seven-file candidate CCX has passed archive/hash/permission scans and was installed through Adobe's official installer. After the owner's restart, MCP reports executing 0.3.6 and all 38 host commands; the server exposes 41 tools. See the [candidate read-check report](native-check-0.3.6.md). Disposable native write workflows remain pending. Historical native checks retain their original build versions in [the live report](../live-verification-26.5.md).
 
 ## Review materials
 
@@ -44,8 +45,8 @@ A CCX installs only the UXP plugin. The local Node server and client configurati
 | --- | --- |
 | Version, English onboarding, client generators, contracts and automated tests | Prepared for this candidate; see the audit. |
 | Minimal plugin stage, npm archive and exact CCX | Audited separately; CCX installed successfully. |
-| Candidate branch and four-platform/version CI | Required for the exact pushed candidate; inspect its latest checks. |
-| Final CCX archive and installed 0.3.6 identity | Archive and installer listing verified; actual JavaScript activation pending. |
+| Candidate branch and four-platform/version CI | Implementation b4b61aa passes all eight push/PR jobs on macOS/Ubuntu with Node 22/24, 150 tests per job. Recheck the latest documentation head before publication. |
+| Final CCX archive and installed 0.3.6 identity | Archive/installer verified; executing 0.3.6, complete command inventory and doctor now pass. |
 | UDT-closed launch, cold startup, folder approval/cancel, synthetic import | Pending assisted verification. |
 | Explicit sequence authorization/revocation and six new project adapters | Pending native tests using disposable synthetic projects. |
 | All client applications and Windows Premiere | Unverified; generator/stdio tests are narrower evidence. |

@@ -6,7 +6,7 @@ Built by **YWD Agency** for editors, creative technologists and developers conne
 
 [Client setup](docs/clients.md) · [Tools](docs/commands.md) · [Native API](docs/native-api.md) · [Troubleshooting](docs/troubleshooting.md) · [Documentation index](INDEX.md)
 
-**Release candidate 0.3.6 — source preview.** macOS is the live-test platform; recorded native checks use Premiere 26.5 on Apple Silicon. The manifest minimum is Premiere 25.6, and the Node server requires Node.js 22+. Windows host behavior is unverified. See [the exact compatibility evidence](docs/adobe-uxp-compatibility.md). This candidate has automated checks and its CCX is installed, but MCP still reports the older 0.3.5 JavaScript runtime. Candidate activation and complete native tests remain pending. The older runtime has verified connection/read checks only. No downloadable installer release is published. See [release gates](docs/release/README.md).
+**Release candidate 0.3.6 — source preview.** macOS is the live-test platform; recorded native checks use Premiere 26.5 on Apple Silicon. The manifest minimum is Premiere 25.6, and the Node server requires Node.js 22+. Windows host behavior is unverified. See [the exact compatibility evidence](docs/adobe-uxp-compatibility.md). The installed JavaScript runtime now reports 0.3.6, with all 38 host commands and 41 MCP tools available; doctor and bounded native read/time checks pass. Disposable import, editing, save and export tests remain pending. No downloadable installer release is published. See [the current native evidence](docs/release/native-check-0.3.6.md) and [release gates](docs/release/README.md).
 
 ## What you can do
 
