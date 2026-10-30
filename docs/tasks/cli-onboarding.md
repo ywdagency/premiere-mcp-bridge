@@ -9,6 +9,7 @@ Task TASK-8EDB4D39BE96. Premiere-only, based on release/0.3.6.
 - [x] Pin downloads to the exact published tag and expected assets.
 - [x] Supply offline/live doctor without project names or media paths.
 - [x] Align README, AGENTS and client/agent installation instructions.
-- [ ] Verify final commit from a fresh clone and run full suite/CI.
+- [x] Fresh clone of implementation 28341e6: npm ci, all 150 tests, local configuration generation and offline/version checks.
+- [ ] Pass remote CI on the final candidate head.
 - [ ] Activate installed 0.3.6 with owner's normal restart and verify disposable native workflows.
 - [ ] Publish only after owner's release decision.

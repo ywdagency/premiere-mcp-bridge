@@ -28,6 +28,10 @@ They cover version pinning, missing/draft assets, hash/payload/entry rejection,
 explicit install, client configuration, non-installing checks and privacy-safe
 doctor results. Record clean-clone full tests and CI for the final commit.
 
+Implementation 28341e6 passed npm ci and all 150 tests in a new clone whose path
+contains spaces. Setup generated local read-only configuration without contacting
+Premiere. These are source/fixture checks; candidate activation remains pending.
+
 The actual read-only doctor observed running 0.3.5 while expecting 0.3.6, with six
 commands missing. It correctly failed. No reinstall, restart or project mutation
 was issued here. Owner-controlled Premiere restart/installed-panel activation
