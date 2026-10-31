@@ -22,7 +22,6 @@ cd premiere-uxp-bridge
 npm ci
 npm run onboard -- --release
 npm run onboard -- --release --install --read-only
-npm run doctor
 ```
 
 The first onboard call downloads/checks only. The second explicitly invokes Adobe
@@ -61,11 +60,19 @@ or save a project. Adobe may show its own confirmation or permission dialog.
 If Creative Cloud/UPIA is missing, install/repair Creative Cloud normally.
 
 Open Window → UXP Plugins → Premiere MCP Bridge once. Enable Developer Mode in
-Premiere's plugin preferences if required by the host. Reconnect/restart the AI
+Premiere's plugin preferences before connecting, as required by Adobe. Reconnect/restart the AI
 client's MCP process and trust this project where the client requires it. If an
 old JavaScript runtime is still loaded, save work yourself and normally quit/reopen
 Premiere when convenient, with UDT closed, then open the installed panel.
 Transport Reload does not activate newly installed JavaScript.
+
+After the installed panel is open, open/trust this clone in the chosen client and reconnect its MCP process. Only then run:
+
+```sh
+npm run doctor
+```
+
+See the [final private review](release/final-review-0.3.8.md) for the exact fresh-checkout and existing-host verification scope. A fresh source checkout on the maintainer's Mac is distinct from a pristine macOS account with no prior plugin installation.
 
 ## Clients and first read
 

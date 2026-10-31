@@ -41,14 +41,12 @@ git clone --branch release/0.3.6 https://github.com/ywdagency/premiere-uxp-bridg
 cd premiere-uxp-bridge
 npm ci
 npm run onboard -- --ccx /path/to/reviewed.ccx --sha256 REVIEWED_HASH
-# Once verified, repeat with --install to invoke Adobe and configure Codex.
-npm run doctor
+# Once verified, repeat with --install --read-only to invoke Adobe and configure Codex.
 ```
 
 Validation does not install or configure anything. Explicit --install creates
 project-local Codex configuration; other clients receive JSON for manual merge.
-Open the installed panel and reconnect the client. Doctor requires the expected
-version and commands to be executing; installer success alone is insufficient.
+Enable Premiere Developer Mode in Preferences → Plugins, open Window → UXP Plugins → Premiere MCP Bridge, and reconnect the client from this trusted clone. Then run `npm run doctor`. It requires the expected version and commands to be executing; installer success alone is insufficient. First-run client paths and remaining installation limits are recorded in the [final private review](docs/release/final-review-0.3.8.md).
 
 After matching tagged source/assets are published,
 `npm run onboard -- --release --install` downloads/checks the checkout's exact

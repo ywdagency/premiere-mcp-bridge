@@ -30,6 +30,7 @@ The staging helper checks source/build version identity and copies exactly seven
 | Positive explicit authorization and revocation | Native grant, one-frame A/V edit, revoke, protection rejection and retained-backup checks pass on an owner-approved synthetic fixture. |
 | Dirty prompt choices, preset/MOGRT/transcription/AME fixtures | Not native-verified by this run; keep their limits explicit. |
 | Other clients, Windows host, visual/audio/interchange fidelity | Unverified beyond documented fixture/structural checks. |
-| Exact-head CI, public protections, publication | Recheck CI; public visibility, merge, tag/assets and release need the owner's decision after native gates. |
+| Current private source/onboarding/disclosure review | See the [final private review](final-review-0.3.8.md); local checks only while Actions usage is restricted. |
+| Public protections and publication | Account-only controls and the anonymous published-download check remain publication-time steps. No merge, tag/assets, visibility change or release is performed here. |
 
 Keep raw projects, paths, receipts and run files private. Retain backups and saved synthetic results. No AE operation, owner-project save, global cache/preference change, existing AME queue work, arbitrary-code endpoint or automatic updater is part of preparation. Historical [0.3.6 audit](public-readiness.md) and [CLI report](onboarding.md) retain their original scopes.

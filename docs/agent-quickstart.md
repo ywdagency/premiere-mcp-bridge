@@ -19,7 +19,7 @@ client JSON must be merged in the documented location while preserving unrelated
 servers. Inform the user of project trust and MCP reconnect needs; do not invent
 a desktop Restart button. The AI client's own authentication is independent.
 
-After the installed panel is open, run doctor. Treat runtime mismatch, missing
+Enable Premiere Developer Mode, then open the installed panel. Reconnect the client from the trusted clone; generated Codex setup uses a 45-second tool timeout above the 30-second native request deadline. After the panel is open, run doctor. Treat runtime mismatch, missing
 commands or connection failure as unfinished setup. Request the owner's normal
 Premiere restart only if activation needs it; preserve manual work and session
 receipts. Once reads pass, the user may legitimately have no active project.

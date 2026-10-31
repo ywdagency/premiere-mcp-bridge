@@ -19,6 +19,7 @@
 | Adding commands | [Contributing](CONTRIBUTING.md) |
 | Trust boundary and reporting | [Security](SECURITY.md) |
 | Release preparation | [Review and release gates](docs/release/README.md) |
+| Current fresh-checkout and disclosure review | [Final private review 0.3.8](docs/release/final-review-0.3.8.md) |
 | Troubleshooting and known issues | [Troubleshooting](docs/troubleshooting.md) |
 | Product copy and promotion options | [Positioning](docs/release/positioning.md) |
 | Synthetic-data demo and screenshots | [Demo brief](docs/release/demo.md) |

@@ -1,6 +1,6 @@
 # Clone-to-install release gate — historical 0.3.6 check
 
-The subsequent 0.3.7 patch changes the plugin payload and needs its own installer/hash/activation checks. See [current status](candidate-0.3.7.md).
+The subsequent 0.3.7 patch changes the plugin payload and needs its own installer/hash/activation checks. See [current status](candidate-0.3.8.md) and the [final fresh-checkout review](final-review-0.3.8.md).
 
 This addition changes CLI/docs only, not the seven-file Premiere payload.
 The reviewed 0.3.6 CCX SHA-256 remains

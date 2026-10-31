@@ -298,7 +298,7 @@
     "ccxSha256": "7153825fb11b08423a138b37833ef557f7e7280d7c01293a4a896b5cca0218b1",
     "ccxFiles": 7,
     "payloadMatchesStage": true,
-    "fixtureTestsPassed": 157,
+    "fixtureTestsPassed": 158,
     "sourceFilesAudited": 132,
     "sourcePrivatePathFindings": 0,
     "sourceSecretFindings": 0,
@@ -327,6 +327,8 @@
     "explicitRevocationNativeVerified": true,
     "retainedAuthorizationBackupVerified": true,
     "postRevocationWriteRejected": true,
-    "nativeVerificationScope": "Scoped core release workflows on synthetic fixtures in macOS Premiere 26.5; not every catalog member, client, platform or visual/audio fidelity."
+    "nativeVerificationScope": "Scoped core release workflows on synthetic fixtures in macOS Premiere 26.5; not every catalog member, client, platform or visual/audio fidelity.",
+    "finalPrivateReview": "docs/release/final-review-0.3.8.md",
+    "generatedCodexToolTimeoutSeconds": 45
   }
 }

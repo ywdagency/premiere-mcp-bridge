@@ -5,7 +5,8 @@ import { DEFAULT_BRIDGE_DIR } from '../mcp/file-bridge.mjs';
 
 export function clientConfig(client, { nodePath, serverPath, directory, readOnly = false }) {
   const env = { ...(directory && directory !== 'auto' ? { PREMIERE_MCP_BRIDGE_DIR: directory } : {}), ...(readOnly ? { PREMIERE_MCP_READ_ONLY: '1' } : {}) };
-  if (client === 'codex') return `[mcp_servers.premiere_bridge]\ncommand = ${JSON.stringify(nodePath)}\nargs = [${JSON.stringify(serverPath)}]\nstartup_timeout_sec = 10\ntool_timeout_sec = 20\n\n[mcp_servers.premiere_bridge.env]\n${Object.entries(env).map(([key, value]) => `${key} = ${JSON.stringify(value)}`).join('\n')}\n`;
+  // Leave client/IPC overhead above the bridge's 30-second request deadline.
+  if (client === 'codex') return `[mcp_servers.premiere_bridge]\ncommand = ${JSON.stringify(nodePath)}\nargs = [${JSON.stringify(serverPath)}]\nstartup_timeout_sec = 10\ntool_timeout_sec = 45\n\n[mcp_servers.premiere_bridge.env]\n${Object.entries(env).map(([key, value]) => `${key} = ${JSON.stringify(value)}`).join('\n')}\n`;
   const server = { command: nodePath, args: [serverPath], env };
   if (client === 'vscode') return JSON.stringify({ servers: { premiere: { type: 'stdio', ...server } } }, null, 2) + '\n';
   if (['json', 'claude', 'cursor'].includes(client)) return JSON.stringify({ mcpServers: { premiere: server } }, null, 2) + '\n';

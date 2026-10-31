@@ -26,7 +26,7 @@ Load the UXP plugin separately in Premiere, open its panel once, then restart/re
 | Cursor | `mcpServers` JSON | Format and locations checked against official guidance; no dedicated end-to-end client session recorded here. |
 | VS Code | `servers` JSON with `type: "stdio"` | VS Code format checked against official guidance; agent harness configuration differs. No dedicated end-to-end client session recorded here. |
 
-Candidate 0.3.8 retains 42 full-access or 19 inspection-only tools and the portable client generators. Actual 0.3.7 synthetic workflow evidence is recorded separately; its batch preflight failure led to the current patch. Current patch activation and native regression checks remain pending. These are local integration paths, not vendor certification. Source pages below were checked on 2026-10-29.
+Candidate 0.3.8 retains 42 full-access or 19 inspection-only tools and the portable client generators. Actual 0.3.7 synthetic workflow evidence is recorded separately; its batch preflight failure led to the current patch. Executing 0.3.8, maximum-size imports, file denial/recovery, marker guards, effects/keyframes and explicit source authorization/revocation are verified on the documented synthetic scope. Fresh-checkout results are recorded in the [final private review](release/final-review-0.3.8.md). These are local integration paths, not vendor certification. Source pages below were checked on 2026-10-29.
 
 ## Codex
 
@@ -35,6 +35,8 @@ npm run setup
 ```
 
 This builds the plugin and creates/updates `.codex/config.toml` in this clone. It preserves unrelated registrations and replaces this bridge's current/legacy project-local entries. Open the clone as a trusted project; Codex ignores project-local configuration for untrusted projects. Restart/reconnect the client's MCP process after configuration changes. For CLI diagnosis, `codex mcp list` lists registrations and `/mcp` in the Codex TUI shows active servers. No particular desktop button name is assumed.
+
+Generated Codex configuration sets `tool_timeout_sec = 45`, leaving room above the bridge's 30-second deadline. Regenerate older configurations that set it to 20 seconds. This changes the client wait limit, not the native request budget.
 
 To inspect only, run `npm run setup -- --read-only`. Do not copy the generated personal paths into another installation. Setup does not start Premiere or grant external-folder access.
 
