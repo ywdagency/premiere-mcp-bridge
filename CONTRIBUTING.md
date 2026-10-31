@@ -70,6 +70,8 @@ Review `src/api-policy.ts` for new native methods. An exact generated signature 
 
 ## Contribution license
 
+For official user-guide metadata, run npm run manual:sync and review the title/topic/URL catalog and provenance. Cached refresh preserves the original retrieval time. Keep raw HTML/article bodies in ignored build/artifact folders. The manual source extends existing search/describe tools only; retain API defaults, tool counts, explicit reference-only status and URL/retrieval boundaries. See [manual reference](docs/manual-reference.md).
+
 Bridge contributions are submitted under the repository's MIT license. Retain existing copyright/license notices and identify the source/license of any new third-party material. Adobe-derived catalog/contracts keep their separate Apache-2.0 notices. See [the open-source model](OPEN_SOURCE.md).
 
 ## Maintained files

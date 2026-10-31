@@ -8,4 +8,6 @@ Catalog provenance is embedded in `data/adobe-api.json`. `npm run docs:sync` ref
 
 Node dependencies retain their own licenses in their installed distributions. The development Premiere SDK supplies types; it does not grant rights to Premiere software, user media, codecs or other Adobe assets. Dependency installation and the user's Adobe/AI-client accounts remain separate from the bridge's license. Do not bundle private media/projects, SDK account material or third-party assets into demo/release files.
 
+The separate data/premiere-manual.json contains Adobe Help navigation metadata and canonical source links with Adobe attribution, not copied article bodies. User-guide text is retrieved from Adobe on demand; the DOM reference's Apache-2.0 notice does not relicense the Help website. The Node HTML parser parse5 is an MIT-licensed dependency and retains its own distribution license; it is not added to the UXP installer. Raw downloaded HTML stays in ignored developer artifacts/build caches.
+
 The minimal plugin stage includes MIT and Adobe notices. A source/runtime package must include these same notices as well as the generated reference it distributes. See [release packaging](release/README.md) for the archive review process.

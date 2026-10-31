@@ -15,6 +15,7 @@
     "mcp:smoke": "node mcp/smoke.mjs",
     "plugin:load": "node scripts/load-plugin.mjs",
     "docs:sync": "node scripts/sync-adobe-api.mjs",
+    "manual:sync": "node scripts/sync-premiere-manual.mjs",
     "api:matrix": "npm run build && node scripts/api-coverage-matrix.mjs",
     "test:prepare-live": "node scripts/prepare-live-verification.mjs"
   },
@@ -29,6 +30,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.4.0",
+    "parse5": "8.0.1",
     "zod": "4.6.7"
   },
   "license": "MIT",
