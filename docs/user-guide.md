@@ -48,6 +48,8 @@ Existing-source edits require your explicit instruction for that exact sequence 
 
 Connection alone does not need a folder. A deliberate import/output operation needs a separate native media-folder approval. The agent can inspect the existing grant with premiere_get_file_access; it requests its private path only when needed. Approve the intended working folder in Adobe's dialog. Commands use paths relative to that folder and still validate each file. Do not grant an entire disk just to connect.
 
+There is no folder/path setting in the panel. An agent should reuse an existing approval and determine its path itself. The saved project's folder can be the preferred destination when it is inside the approved folder, but saving a project there does not itself grant the plugin file access. With no existing approval, a deliberate file request opens Adobe's native dialog; ordinary timeline work does not need it.
+
 Saving is a separate instruction. For example: “Save this exact project now; keep all backups.” Saves persist current manual changes too. Export/transcription/analysis jobs are also separate requests with file/preset/host requirements. A queued job is not always a finished render, and reloading the plugin does not cancel Adobe/AME work.
 
 ## If a command fails

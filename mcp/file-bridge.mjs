@@ -239,7 +239,7 @@ export class FileBridge {
       }
       throw new BridgeError(
         'BRIDGE_TIMEOUT',
-        'No UXP response. Open Premiere, load the plugin and connect Premiere MCP Bridge to the prepared folder.',
+        'No UXP response. Open the Premiere MCP Bridge panel and check Launch. Connection is automatic; there is no bridge-folder selection or path setting.',
       );
     } catch (error) {
       if (

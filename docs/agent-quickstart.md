@@ -33,7 +33,10 @@ connection/version result, not certification of every API member.
 For an authorized file task, call premiere_get_file_access first. Use
 includePath=true only when the native root is needed to prepare/map local files.
 Do not ask the owner to remember a hidden saved folder or restore a removed panel
-setting. The diagnostic does not open a picker or grant access. If no grant
+setting. If granted:true, reuse the existing approval without another selection.
+For a default destination, derive the saved .prproj parent from get_project with
+includePath:true only when needed and use it only within the approved root.
+The project path alone is not permission. The diagnostic does not open a picker or grant access. If no grant
 exists, explain the native approval required by the deliberate file request;
 connection/setup alone must not trigger it. Never bypass the normal path checks.
 

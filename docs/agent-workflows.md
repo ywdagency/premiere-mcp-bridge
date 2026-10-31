@@ -30,6 +30,8 @@ Authorization does not transfer ownership of shared ProjectItems/media, permit o
 
 For an authorized file task, read premiere_get_file_access first; includePath:true only when mapping the private granted root is necessary. Do not ask the human to remember a hidden folder. With no grant, explain the native approval needed by the actual operation, then follow its preflight result. Never request a folder as a connection probe or bypass UXP Entry/Node broker validation. Use bounded relative paths and unique output names.
 
+There is no file-path setting or folder button in the panel. If granted:true, reuse the existing approval without asking for another selection. For a default destination, read premiere_get_project with includePath:true and prefer the saved .prproj parent only when contained in the current grant; map to grant-relative paths. Do not silently replace another approved folder, assume the media is beside the project or invent a directory for an unsaved project. A known project path is not an access grant. If approval is missing, explain Adobe's native dialog triggered by the actual file operation, not a panel configuration step.
+
 Only perform saves, project open/close, UI/Source Monitor/global preference/cache operations or export/analysis jobs when their side effects match the human's instruction. Do not use them as hidden implementation details. Saving an active project persists manual changes too. No source/backup deletion or backup cleanup is implied by finishing a task.
 
 ## Jobs, timeouts and recovery

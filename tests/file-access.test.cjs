@@ -50,3 +50,39 @@ test('MCP and UXP both validate read-only file diagnostics without reading a pro
   folder = undefined;
   assert.equal((await dispatch({ command: 'get_file_access', args: {} })).granted, false);
 });
+
+test('MCP file discovery and diagnostics distinguish a reusable approval from nonexistent panel settings', async (t) => {
+  const { Client, InMemoryTransport } = await import('@modelcontextprotocol/client');
+  const { createServer } = await import('../mcp/server.mjs');
+  let granted = true;
+  const calls = [];
+  const server = createServer({ async call(command, args) {
+    calls.push(command);
+    assert.equal(command, 'get_file_access', 'No project lookup or file operation is implicit');
+    return describeFileAccess(granted ? { name: 'Approved fixture', nativePath: '/private/fixture' } : undefined,
+      args.includePath === true);
+  } }, { readOnly: false });
+  const client = new Client({ name: 'file-guidance-test', version: '1' });
+  t.after(async () => { await client.close(); await server.close(); });
+  const [a, b] = InMemoryTransport.createLinkedPair();
+  await server.connect(b); await client.connect(a);
+  const { tools } = await client.listTools();
+  assert.equal(calls.length, 0, 'Tool discovery must not prompt or contact the host');
+  const media = tools.find(tool => tool.name === 'premiere_import_media');
+  assert.doesNotMatch(media.inputSchema.properties.paths.description, /granted in the plugin panel/);
+  const read = async () => JSON.parse((await client.callTool({
+    name: 'premiere_get_file_access', arguments: {},
+  })).content[0].text);
+  const existing = await read();
+  assert.equal(existing.granted, true);
+  assert.equal(existing.approvalRequiredOnFileRequest, false);
+  assert.equal(existing.guidance.panelFolderSettingAvailable, false);
+  assert.equal(existing.guidance.pathBase, 'approved-folder');
+  assert.match(existing.guidance.nextAction, /Reuse this grant/);
+  assert.equal(JSON.stringify(existing).includes('/private/fixture'), false);
+  granted = false;
+  const missing = await read();
+  assert.equal(missing.approvalRequiredOnFileRequest, true);
+  assert.match(missing.guidance.nextAction, /actual authorized file operation/);
+  assert.deepEqual(calls, ['get_file_access', 'get_file_access']);
+});
