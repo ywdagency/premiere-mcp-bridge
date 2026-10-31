@@ -24,6 +24,7 @@
 | Publication handoff | [Maintainer checklist](docs/release/publish-checklist.md) |
 | Versioned fresh-checkout and disclosure review | [Final private review 0.3.8](docs/release/final-review-0.3.8.md) |
 | Troubleshooting and known issues | [Troubleshooting](docs/troubleshooting.md) |
+| Daily version checks and release metadata | [Updates](docs/updates.md) |
 | License boundaries and Adobe material | [Third-party notices](docs/third-party-notices.md) |
 
 Current local candidate: [0.3.10 file-approval persistence](docs/release/candidate-0.3.10.md).

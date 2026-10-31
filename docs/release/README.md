@@ -1,6 +1,8 @@
 # Release verification and maintenance
 
-The public preview is [v0.3.8](https://github.com/ywdagency/premiere-uxp-bridge/releases/tag/v0.3.8). The current local build is **0.3.10**, installed and executing on the reference Mac but not publicly released. It exposes 43 MCP tools (40 host commands and three offline references), or 19 tools in inspection-only mode.
+The public preview is [v0.3.8](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.8). The current unreleased source is **0.3.10**, combining remembered file approval and the daily update indicator. The earlier file-approval-only build was installed and read-verified on the reference Mac; the combined source has not yet received a native installer check. It exposes 43 MCP tools (40 host commands and three offline references), or 19 tools in inspection-only mode.
+
+The combined source passed 178 local automated tests after integration. This is source/build/fixture verification, not a new native installation or full Premiere regression. The feed and public installer remain 0.3.8.
 
 ## Evidence
 

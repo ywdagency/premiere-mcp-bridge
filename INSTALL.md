@@ -4,7 +4,7 @@
 This checkout is unpublished candidate 0.3.10; use the [candidate guide](docs/release/candidate-0.3.10.md) for local CCX validation. Public v0.3.8 installation examples below remain pinned to that release. Its native runtime has the earlier Stop behavior; the new persistent-grant behavior requires the matching candidate runtime.
 Give your local agent this repository URL and ask:
 
-> Study https://github.com/ywdagency/premiere-uxp-bridge and help me install Premiere MCP Bridge and connect it to this agent. Follow the installation instructions, start in read-only mode, and do not change my edit during setup.
+> Study https://github.com/ywdagency/premiere-mcp-bridge and help me install Premiere MCP Bridge and connect it to this agent. Follow the installation instructions, start in read-only mode, and do not change my edit during setup.
 
 This guide is the installation entrypoint for an agent receiving that request. Read [AGENTS.md](AGENTS.md), [detailed installation](docs/installation.md). Install only what the human requested; examples do not authorize native editing.
 
@@ -19,8 +19,8 @@ Check macOS, Git, Node.js 22+, Creative Cloud Desktop/UPIA and the intended Prem
 Choose a new folder, preserving existing checkouts and work. For this preview:
 
 ```sh
-git clone --branch v0.3.8 --depth 1 https://github.com/ywdagency/premiere-uxp-bridge.git
-cd premiere-uxp-bridge
+git clone --branch v0.3.8 --depth 1 https://github.com/ywdagency/premiere-mcp-bridge.git
+cd premiere-mcp-bridge
 npm ci
 npm run onboard -- --release
 ```

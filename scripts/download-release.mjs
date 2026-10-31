@@ -2,7 +2,7 @@ import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
-const REPOSITORY = "ywdagency/premiere-uxp-bridge";
+const REPOSITORY = "ywdagency/premiere-mcp-bridge";
 async function bounded(response, maximum) {
   if (!response.ok)
     throw new Error(

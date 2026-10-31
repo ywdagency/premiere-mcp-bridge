@@ -1,6 +1,6 @@
 # Local 0.3.10 verification — remembered file approval
 
-Status: installed and executing on the reference Mac, not publicly released. The public preview remains v0.3.8. This build exposes 43 full MCP tools (40 host commands) or 19 inspection-only tools.
+Report scope: the file-approval-only payload from source commit `55c22c1`, installed and executing on the reference Mac, without a public installer release. The later combined source also includes the daily update indicator; the checksum, packaging and native observations below apply to the earlier payload only. Rebuild, repackage and verify the combined source before a new installer release. The public preview remains v0.3.8. This build exposes 43 full MCP tools (40 host commands) or 19 inspection-only tools.
 
 ## Behavior and boundaries
 
@@ -20,4 +20,4 @@ Native Stop/Launch itself was not automated; its race/retention behavior is cove
 
 ## Installation identity
 
-Validate the reviewed local CCX/checksum against this exact built checkout before explicit installation. No public 0.3.10 release exists, so onboard --release must fail instead of falling back to 0.3.8. Preserve plugin data/identity during an update, then confirm the executing version through doctor. When upgrading from 0.3.8, close that runtime normally: its old Stop still clears approval. An uninstall, moved folder or Adobe/OS invalidation can require renewed consent.
+Validate the reviewed local CCX/checksum against its exact recorded source/build, not the later combined checkout before explicit installation. No public 0.3.10 release exists, so onboard --release must fail instead of falling back to 0.3.8. Preserve plugin data/identity during an update, then confirm the executing version through doctor. When upgrading from 0.3.8, close that runtime normally: its old Stop still clears approval. An uninstall, moved folder or Adobe/OS invalidation can require renewed consent.

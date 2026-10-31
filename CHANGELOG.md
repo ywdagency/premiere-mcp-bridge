@@ -1,8 +1,10 @@
 # Changelog
 
-## 0.3.10 — local candidate, unpublished
+## Unreleased — source 0.3.10
 
-Preserve approved external-folder tokens across Stop/Launch, plugin/Premiere restarts and normal same-ID upgrades. Restore without prompting; retain tokens across temporary restoration failures. Add explicit journaled file-access revocation without panel settings; stale picker/restoration completions cannot silently regrant permission. Keep request-only filesystem permissions and per-file Entry/Node checks. Correct obsolete panel-folder guidance. Native activation/upgrade remains unverified for this candidate.
+Preserve approved external-folder tokens across Stop/Launch, plugin/Premiere restarts and normal same-ID upgrades. Restore without prompting; retain tokens across temporary restoration failures. Add explicit journaled file-access revocation without panel settings; stale picker/restoration completions cannot silently regrant permission. Keep request-only filesystem access and per-file Entry/Node checks. Correct obsolete panel-folder guidance. The file-approval build's activation/restored grant was verified; the combined source with the update indicator has not yet received a native installer check.
+
+Add daily GitHub updates.json checks and a plain clickable version: gray opens the repository, yellow opens a newer compatible release, red opens an explicitly critical update. No automatic install or telemetry. Rename the repository to premiere-mcp-bridge and update active installation, package and release URLs.
 
 ## 0.3.8 — public preview
 

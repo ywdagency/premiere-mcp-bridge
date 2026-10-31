@@ -45,6 +45,8 @@
     }
   ],
   "requiredPermissions": {
-    "localFileSystem": "request"
+    "localFileSystem": "request",
+    "network": { "domains": ["https://raw.githubusercontent.com"] },
+    "launchProcess": { "schemes": ["https"] }
   }
 }

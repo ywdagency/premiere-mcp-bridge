@@ -47,6 +47,7 @@
     "examples/",
     "tests/",
     "manifest.json",
+    "updates.json",
     "index.html",
     "styles.css",
     "tsconfig.json",
@@ -62,10 +63,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ywdagency/premiere-uxp-bridge.git"
+    "url": "git+https://github.com/ywdagency/premiere-mcp-bridge.git"
   },
-  "homepage": "https://github.com/ywdagency/premiere-uxp-bridge#readme",
+  "homepage": "https://github.com/ywdagency/premiere-mcp-bridge#readme",
   "bugs": {
-    "url": "https://github.com/ywdagency/premiere-uxp-bridge/issues"
+    "url": "https://github.com/ywdagency/premiere-mcp-bridge/issues"
   }
 }

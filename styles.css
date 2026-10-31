@@ -15,5 +15,8 @@ button, .action-face { position: absolute; top: 0; left: 0; width: 100%; height:
 .action[data-focus="true"] .action-face { border: 2px solid #aab8ff; }
 .status-box { display: flex; align-items: flex-start; min-height: 44px; padding: 11px 12px; border: 1px solid #3b3b3b; border-radius: 5px; background: #242424; color: #c8c8c8; font-size: 12px; line-height: 20px; }
 .status-copy { flex-grow: 1; flex-basis: 0; min-width: 0; overflow-wrap: break-word; }
-.version { margin-left: 12px; flex-shrink: 0; color: #8b8b8b; white-space: nowrap; }
+.version { margin-left: 12px; flex-shrink: 0; color: #8b8b8b; white-space: nowrap; text-decoration: none; cursor: pointer; }
+.version[data-update="update"] { color: #e8c15a; }
+.version[data-update="critical"] { color: #ff7b72; }
+.version:focus { outline: 1px solid #aab8ff; outline-offset: 3px; }
 .error { display: none; color: #ffb8b0; }
