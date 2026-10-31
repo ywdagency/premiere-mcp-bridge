@@ -292,7 +292,7 @@
     "version": "0.3.8",
     "runningVersionFromMcp": "0.3.8",
     "runtimeActivationPending": false,
-    "candidateNativeVerified": false,
+    "candidateNativeVerified": true,
     "report": "docs/release/candidate-0.3.8.md",
     "nativeRegressionReport": "docs/release/native-check-0.3.8.md",
     "ccxSha256": "7153825fb11b08423a138b37833ef557f7e7280d7c01293a4a896b5cca0218b1",
@@ -318,11 +318,15 @@
     "markerGuardAndFullArgumentsVerified": true,
     "historicalMarkerRecoveryVerified": true,
     "ownerProjectWritesPerformed": false,
-    "explicitAuthorizationNativeVerified": false,
+    "explicitAuthorizationNativeVerified": true,
     "effectParameterAndTwoKeysNativeVerified": true,
     "sourceAndBackupEffectChainsPreserved": true,
     "syntheticProjectSavedAndClosed": true,
     "ownerContextRestored": true,
-    "npmFilesAudited": 140
+    "npmFilesAudited": 140,
+    "explicitRevocationNativeVerified": true,
+    "retainedAuthorizationBackupVerified": true,
+    "postRevocationWriteRejected": true,
+    "nativeVerificationScope": "Scoped core release workflows on synthetic fixtures in macOS Premiere 26.5; not every catalog member, client, platform or visual/audio fidelity."
   }
 }

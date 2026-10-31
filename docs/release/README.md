@@ -27,7 +27,8 @@ The staging helper checks source/build version identity and copies exactly seven
 | Exact 0.3.8 CCX/hash and disclosure audit | Verified seven-file payload; final source/npm/history disclosure checks recorded separately. |
 | Official install and actual executing 0.3.8 | Enabled installation and actual runtime/doctor confirmed. |
 | Maximum batch, failed-request queue release and marker guard | Native tests pass with the 30-second Node budget. |
-| Positive explicit authorization, dirty prompt choices, preset/MOGRT/transcription/AME fixtures | Not native-verified by this run; keep their limits explicit. |
+| Positive explicit authorization and revocation | Native grant, one-frame A/V edit, revoke, protection rejection and retained-backup checks pass on an owner-approved synthetic fixture. |
+| Dirty prompt choices, preset/MOGRT/transcription/AME fixtures | Not native-verified by this run; keep their limits explicit. |
 | Other clients, Windows host, visual/audio/interchange fidelity | Unverified beyond documented fixture/structural checks. |
 | Exact-head CI, public protections, publication | Recheck CI; public visibility, merge, tag/assets and release need the owner's decision after native gates. |
 
