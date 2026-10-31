@@ -12,7 +12,7 @@ The source tag and matching CCX/checksum are published as v0.3.12, a prerelease.
 
 The release is checked on macOS with native Node 24.7.0. All 198 local automated tests pass (no failures or skips). They cover contracts, IPC/SDK fixtures, portable ZIP validation, Windows installer arguments/location resolution, APPDATA discovery, path aliases and JSON/TOML client serialization. Offline doctor verifies aligned package/manifest/protocol identity; it does not contact Premiere. Dependency audit reports no known vulnerabilities at review time. These checks are separate from native installation and editing evidence.
 
-GitHub Actions remain disabled during publication; no workflow is dispatched or rerun. Publication includes an anonymous fresh exact-tag checkout, npm ci and onboard --release validation without --install; the actual result is recorded after publication. A successful public download check on macOS does not verify Windows installation.
+GitHub Actions remain disabled during publication; no workflow is dispatched or rerun. After publication, an anonymous fresh exact-tag checkout at 663fd465d874da2c2fb867c1e02524712acbb513, with separate empty npm configuration and a fresh cache, passed npm ci and onboard --release on macOS. The actual public download matched the reviewed checksum and all seven rebuilt files, returning installed:false and configured:false. No client config was created; the temporary checkout/dependencies/cache were removed. This does not verify Windows installation. The main-branch update feed advances only after that public-route check; the immutable tag retains the preceding feed announcement.
 
 ## Experimental scope and participation
 
