@@ -1,24 +1,20 @@
 # Install and connect from the CLI
 
-The development source now prepares Windows installation; it is not part of the published v0.3.11 CLI and has no native Windows verification yet. Read [Windows preparation](windows.md) before using that candidate. The public macOS instructions below keep their exact-version scope.
+Version 0.3.12 provides macOS onboarding and **experimental Windows onboarding**. Windows installation, filesystem behavior and native Premiere calls are not yet verified; start with the [Windows guide](windows.md). Earlier native reference evidence is from macOS Apple Silicon / Premiere 26.5 on 0.3.11 and prior builds, not a native 0.3.12 regression.
 
-The supported preview platform is macOS, Node.js 22+, Creative Cloud Desktop and
-Premiere (manifest minimum 25.6; native reference host 26.5 Apple Silicon).
-Creative Cloud supplies Adobe's Unified Plugin Installer Agent (UPIA). End users
-install the reviewed CCX with UPIA; UXP Developer Tools is a development alternative,
-not an end-user prerequisite for the CCX route.
+Both routes require native Node.js 22+, Git, Creative Cloud Desktop and Premiere (manifest minimum 25.6). The plugin, local server and agent must run on the same computer/account. Creative Cloud supplies Adobe's Unified Plugin Installer Agent (UPIA); UXP Developer Tools is optional for development.
 
 ## Published preview
 
-The free MIT preview is v0.3.11. Use its exact tag and official CCX/checksum. The
+The free MIT preview is v0.3.12. Use its exact tag and official CCX/checksum. The
 [agent-led entrypoint](../INSTALL.md) lets a local agent guide the installation
 from a repository link. A cloud-only chat without local terminal/files cannot
-start the stdio server on your Mac.
+start the stdio server on your computer.
 
 ## CLI installation
 
 ```sh
-git clone --branch v0.3.11 https://github.com/ywdagency/premiere-mcp-bridge.git
+git clone --branch v0.3.12 https://github.com/ywdagency/premiere-mcp-bridge.git
 cd premiere-mcp-bridge
 npm ci
 npm run onboard -- --release
@@ -32,15 +28,15 @@ this CLI before publication. Prerequisites and Adobe/client confirmation cannot
 be bypassed by a shell command.
 
 The downloader reads only this repository's published matching GitHub release
-and exact assets `premiere-mcp-bridge-0.3.11.ccx` and
-`premiere-mcp-bridge-0.3.11.ccx.sha256`. Missing/draft assets fail explicitly.
+and exact assets `premiere-mcp-bridge-0.3.12.ccx` and
+`premiere-mcp-bridge-0.3.12.ccx.sha256`. Missing/draft assets fail explicitly.
 No API token is required for public downloads; private candidate downloads are
 not supported by this automatic route.
 
 ## Reviewed local CCX or manual Adobe installation
 
 ```sh
-git clone --branch v0.3.11 https://github.com/ywdagency/premiere-mcp-bridge.git
+git clone --branch v0.3.12 https://github.com/ywdagency/premiere-mcp-bridge.git
 cd premiere-mcp-bridge
 npm ci
 npm run onboard -- --ccx /path/to/reviewed.ccx --sha256 HASH_FROM_REVIEWED_CHECKSUM
@@ -57,7 +53,7 @@ then removed; validation never executes the downloaded plugin code.
 
 You can also double-click the reviewed .ccx file and confirm in Creative Cloud Desktop. This installs only the plugin; run npm run setup -- --read-only in the matching source clone to generate Codex configuration, or follow the client-specific generator/merge.
 
-The CLI installer invokes Adobe's documented macOS UPIA path with `--install`. It
+The CLI installer invokes Adobe's documented macOS UPIA with `--install`, or Windows UPIA with `/install`, using separate arguments and no shell. It
 does not uninstall an older version, erase plugin data, launch/restart Premiere
 or save a project. Adobe may show its own confirmation or permission dialog.
 If Creative Cloud/UPIA is missing, install/repair Creative Cloud normally.
@@ -75,11 +71,11 @@ After the installed panel is open, open/trust this clone in the chosen client an
 npm run doctor
 ```
 
-See the [0.3.11 verification](release/candidate-0.3.11.md) and the [earlier fresh-checkout review](release/final-review-0.3.8.md) for their exact scopes. A fresh source checkout on the maintainer's Mac is distinct from a pristine macOS account with no prior plugin installation.
+See the [0.3.12 verification](release/candidate-0.3.12.md) for current local/package checks and the [0.3.11 report](release/candidate-0.3.11.md) for earlier native Mac evidence. A fresh checkout on an existing Mac is not a pristine OS installation or a Windows test.
 
 ## Updating an existing installation
 
-Use a new clone of the exact v0.3.11 tag and the same onboard --release validation/install route. Preserve the plugin ID, plugin-owned storage, receipts and unrelated client configuration. Do not uninstall, delete data or restart/save Premiere automatically. Update the chosen client's server path/configuration to the matching clone and reconnect; installing a CCX alone does not update an agent's Node server. If Adobe leaves an old runtime loaded, the human should save work and normally restart Premiere, then run doctor until it reports 0.3.11 and no missing commands.
+Use a new clone of the exact v0.3.12 tag and the same onboard --release validation/install route. Preserve the plugin ID, plugin-owned storage, receipts and unrelated client configuration. Do not uninstall, delete data or restart/save Premiere automatically. Update the chosen client's server path/configuration to the matching clone and reconnect; installing a CCX alone does not update an agent's Node server. If Adobe leaves an old runtime loaded, the human should save work and normally restart Premiere, then run doctor until it reports 0.3.12 and no missing commands.
 
 Normal same-ID updates preserve remembered approval. Version 0.3.8 has an older Stop action that clears it; close that runtime normally rather than using Stop as an upgrade step. Folder movement, uninstall, token invalidation or already lost approval can still require one native folder consent on a real file request. The project location alone does not grant file access.
 

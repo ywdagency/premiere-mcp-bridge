@@ -1,6 +1,6 @@
 # MCP client setup
 
-Windows development candidates use the same client generators with native Windows node.exe and escaped Windows paths. Follow [Windows preparation and acceptance](windows.md); the public v0.3.11 CLI and the client/native evidence below remain scoped to macOS. Do not launch a Windows bridge through WSL or change unrelated client entries.
+Windows onboarding in v0.3.12 is experimental. Generators use native Windows node.exe and escaped Windows paths, but no real Windows agent/Premiere session is verified. Follow [Windows installation and testing](windows.md); the earlier native client evidence below remains scoped to macOS. Do not launch the bridge through WSL or change unrelated client entries.
 
 
 The UXP plugin and the MCP client must run on the same computer and user account. Each client starts `mcp/server.mjs` as a local Node process over stdio. This is not a URL connector for a cloud-only agent. Install the matching reviewed CCX using [CLI onboarding](installation.md); UDT is an optional development alternative. Client configuration alone does not load the plugin.
@@ -31,7 +31,7 @@ Load the UXP plugin separately in Premiere, open its panel once, then restart/re
 | Cursor | `mcpServers` JSON | Format and locations checked against official guidance; no dedicated end-to-end client session recorded here. |
 | VS Code | `servers` JSON with `type: "stdio"` | VS Code format checked against official guidance; agent harness configuration differs. No dedicated end-to-end client session recorded here. |
 
-Preview 0.3.11 exposes 43 full-access or 19 inspection-only tools. The exact installer payload, executing version, restored file grant and update-check diagnostics are verified on macOS Premiere 26.5. See the [current verification](release/candidate-0.3.11.md) and [earlier fresh-checkout review](release/final-review-0.3.8.md) for their different scopes. These are local integration paths, not vendor certification. Client source pages below were checked on 2026-10-29.
+Preview 0.3.11 exposes 43 full-access or 19 inspection-only tools. The exact installer payload, executing version, restored file grant and update-check diagnostics are verified on macOS Premiere 26.5. See the [0.3.11 native verification](release/candidate-0.3.11.md) and [earlier fresh-checkout review](release/final-review-0.3.8.md) for their different scopes. These are local integration paths, not vendor certification. Client source pages below were checked on 2026-10-29.
 
 ## Codex
 
@@ -63,7 +63,7 @@ Merge the printed `mcpServers.premiere` entry into `~/Library/Application Suppor
 
 This generator outputs JSON, not a Claude Desktop `.mcpb` extension. It does not configure Claude Code, claude.ai or a remote connector. See the official [MCP local-server guide](https://modelcontextprotocol.io/docs/develop/connect-local-servers) for the manual configuration mechanism and [Claude's local-server help](https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop) for current diagnostics.
 
-## Cursor on macOS
+## Cursor (macOS / experimental Windows)
 
 ```sh
 node scripts/setup.mjs --client cursor
@@ -73,7 +73,7 @@ Merge the printed `mcpServers.premiere` entry into project `.cursor/mcp.json` or
 
 See [Cursor configuration locations and examples](https://prod.cursor.com/help/customization/mcp) and [Cursor MCP reference](https://prod.cursor.com/docs/mcp). Managed client restrictions can still prevent a local process from reading Adobe plugin storage.
 
-## VS Code on macOS
+## VS Code (macOS / experimental Windows)
 
 ```sh
 node scripts/setup.mjs --client vscode

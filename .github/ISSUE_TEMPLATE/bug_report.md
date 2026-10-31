@@ -18,7 +18,7 @@ Provide a minimal reproduction using a new synthetic project. Include the tool n
 
 Bridge version or commit:
 Premiere version:
-macOS version and CPU architecture:
+OS version and CPU architecture (macOS or experimental Windows):
 Node version:
 MCP client and version:
 Installation: UDT development load or installed CCX:

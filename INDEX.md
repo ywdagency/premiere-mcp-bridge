@@ -8,7 +8,7 @@
 | Agent edits, ownership and recovery | [Agent operating guide](docs/agent-workflows.md) |
 | Open-source license and reuse | [Open-source model](OPEN_SOURCE.md) |
 | CLI installation and executing-version diagnosis | [Installation](docs/installation.md) |
-| Development Windows setup and native acceptance | [Windows preparation](docs/windows.md) |
+| Experimental Windows installation and testing | [Windows guide](docs/windows.md) |
 | Codex, Claude, Cursor, VS Code | [Client setup](docs/clients.md) |
 | Full native API catalog and typed control | [Native API guide](docs/native-api.md) |
 | Official user-guide search through existing tools | [Manual reference](docs/manual-reference.md) |
@@ -29,4 +29,4 @@
 | Daily version checks and release metadata | [Updates](docs/updates.md) |
 | License boundaries and Adobe material | [Third-party notices](docs/third-party-notices.md) |
 
-Current preview: [0.3.11 installer and native verification](docs/release/candidate-0.3.11.md).
+Current preview: [0.3.12 experimental Windows release](docs/release/candidate-0.3.12.md). Earlier [0.3.11 native verification](docs/release/candidate-0.3.11.md) retains its original version/platform scope.

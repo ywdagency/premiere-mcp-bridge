@@ -1,6 +1,14 @@
-# Windows preparation and native acceptance
+# Windows installation — experimental
 
-Status: Windows onboarding is prepared in the development source and tested with platform fixtures on macOS. It is not present in the immutable public v0.3.11 source tag, whose installer CLI accepts macOS only. No Windows/Premiere installation or native Windows filesystem/client behavior has been verified. The public release/feed stays unchanged until a separately reviewed release is authorized.
+Version **0.3.12** makes Windows onboarding available as an **experimental preview**. Automated Windows platform fixtures pass on macOS; no actual Windows/Premiere installation, client connection, NTFS privacy or native operation is verified yet. Use non-sensitive test material and start read-only. This is not stable Windows support. The older immutable v0.3.11 CLI accepts macOS only.
+
+## Easiest start: ask your local agent
+
+Give Codex, Claude Code or another locally running agent this request:
+
+> Study https://github.com/ywdagency/premiere-mcp-bridge and help me install v0.3.12 on Windows and connect this agent. Follow INSTALL.md and docs/windows.md. I understand Windows support is experimental. Start in read-only mode; do not change or save my edit, restart Premiere or request a media folder during setup.
+
+The agent needs terminal/file access on the same Windows computer and account as Premiere. A cloud-only chat cannot launch this local bridge. No bridge address, API key or connection-folder selection is needed.
 
 ## What is prepared
 
@@ -14,27 +22,40 @@ Client generators use the current native node.exe and absolute server path as se
 
 File tool paths stay forward-slash relative to the deliberately approved media folder. There is no new panel setting. The Node broker rejects Windows device names, alternate streams, trailing-dot/space aliases and invalid characters, in addition to traversal, links/junctions, containment and no-overwrite checks. A successful read of a cached folder grant must not request it again; a missing grant prompts only for a real authorized file task.
 
-## Running the development candidate on Windows
+## Install from PowerShell or Command Prompt
 
-Use a supported native Windows Premiere installation, Creative Cloud Desktop, Git and Node.js 22+. Obtain the exact reviewed development commit from the maintainer; the v0.3.11 tag does not contain these CLI changes. Do not claim a new public Windows installer exists or switch silently to an unreviewed branch/latest asset.
-
-In native PowerShell or Command Prompt, open that candidate clone and run:
+Install Git, native Node.js 22+, Creative Cloud Desktop and a supported native Windows Premiere (manifest minimum 25.6). Run Premiere normally at least once. Use a normal user terminal, not WSL, a remote container or an elevated agent. Commands below work in PowerShell and Command Prompt; if PowerShell blocks npm.ps1, use npm.cmd in place of npm rather than changing execution policy.
 
 ```sh
+git clone --branch v0.3.12 --depth 1 https://github.com/ywdagency/premiere-mcp-bridge.git
+cd premiere-mcp-bridge
 npm ci
-npm test
 npm run onboard -- --release
 ```
 
-The candidate still has version 0.3.11 and its plugin payload is unchanged, so --release intentionally validates the existing exact-version public CCX against the candidate build. This does not certify it for Windows. If validation passes and the owner requests installation, use:
+The last command validates the exact official CCX/checksum against this source. It does not install or configure. If validation passes, install and generate read-only Codex configuration:
 
 ```sh
 npm run onboard -- --release --install --read-only
 ```
 
-This invokes Adobe and writes only the clone's Codex configuration. For another client add the documented --client selector; its JSON is returned for a controlled manual merge, not silently configured. Adobe may ask for normal installation consent. If UPIA is absent, install/repair Creative Cloud Desktop normally; a reviewed CCX can also be double-clicked in Creative Cloud. Do not bypass an installer rejection, request admin access for the agent or delete an existing installation to force the test.
+Adobe may ask for installation consent. The installer uses Adobe UPIA /install, without a shell or automatic elevation. If UPIA is missing, install/repair Creative Cloud normally; do not delete an existing plugin or bypass an installer rejection. You can instead double-click the [reviewed CCX](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.12) in Creative Cloud and run npm run setup -- --read-only in the exact source clone. Installation alone does not configure an agent.
 
-Enable Premiere Developer Mode, open Window → UXP Plugins → Premiere MCP Bridge, trust the candidate clone/client entry and reconnect its local MCP process. A stale runtime needs a normal human-controlled restart after work is saved. Then run npm run doctor; executing version, missing commands and actual calls must be checked, not inferred from Adobe's registration.
+For Claude Code use npm run onboard -- --release --install --client json --read-only and merge the returned mcpServers object into this clone's ignored .mcp.json, preserving other servers. Other local clients use the [client guide](clients.md); generated JSON must be merged into that client's configuration, and configured:false means this manual merge is still required. Do not copy another computer's paths.
+
+In Premiere enable Developer Mode under the Plugins preferences, then open Window → UXP Plugins → Premiere MCP Bridge. Open/trust the source clone in your agent and reconnect its MCP process. If an old plugin runtime is still loaded, save your work yourself and restart Premiere when convenient; panel Reload only restarts transport. Never uninstall or remove plugin data as an upgrade shortcut.
+
+```sh
+npm run doctor
+```
+
+Success requires actual running version 0.3.12 and no missing commands. Ask your agent to list its tools (19 in read-only mode), call premiere_get_capabilities and premiere_get_project, and inspect the active sequence/clips if present. A null project/sequence is valid. Do not import, create, edit, save, export, request a media grant or revoke approval as an installation check. Never report successful connection merely because Adobe accepted the package.
+
+## Help verify Windows
+
+Whether it works or fails, [send a Windows test report](https://github.com/ywdagency/premiere-mcp-bridge/issues/new?template=windows_test.md). Include Windows/Node/Premiere/bridge/client versions, source tag, CCX checksum, installation method, doctor result/error code and whether the 19 tools and safe reads work. Copy only the sanitized summary; report unattempted checks as not tested. Screenshots, raw logs, configurations, owner paths, project/media names, transcripts, tokens and SID/ACL dumps can disclose private data and should stay private. For vulnerabilities use [private security reporting](../SECURITY.md), not a public issue.
+
+The first useful contribution is the read-only installation/connection result. The deeper acceptance table below is for separately authorized disposable testing, not permission to run mutations on someone's project. Do not bypass client/OS safeguards to obtain a pass. No native Windows rows are verified by this release.
 
 ## Checks that require Windows
 
@@ -52,6 +73,6 @@ Enable Premiere Developer Mode, open Window → UXP Plugins → Premiere MCP Bri
 
 Run npm test on Windows as well. The Unix permission-mode case is explicitly skipped there. File-symlink creation can require Windows OS Developer Mode or privilege; the test reports that skip while still checking ordinary directory junctions. Any skip must be recorded, not reported as complete filesystem security coverage. Premiere's own Developer Mode is a separate setting.
 
-Report Windows/Node/Premiere/plugin versions, exact source/CCX hash, actual client, doctor/tool counts, pass/fail/skip per row and test limitations. Keep owner paths, project/media names, SID/ACL dumps, tokens, raw logs and screenshots private. Fixtures prepared on a Mac are not an actual Windows result; do not change public support claims until the native rows have evidence.
+Report Windows/Node/Premiere/plugin versions, exact source/CCX hash, actual client, doctor/tool counts, pass/fail/skip per row and test limitations. Keep owner paths, project/media names, SID/ACL dumps, tokens, raw logs and screenshots private. Fixtures prepared on a Mac are not an actual Windows result; do not describe Windows as stable or verified until the applicable native rows have evidence.
 
 Sources checked 2026-10-31: [Adobe Premiere installation and Windows UPIA syntax](https://developer.adobe.com/premiere-pro/uxp/plugins/distribution/install/), [Node Windows path behavior](https://nodejs.org/api/path.html#windows-vs-posix), [Microsoft Windows filename/device rules](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file), [yauzl bounded ZIP reading](https://github.com/thejoshwolfe/yauzl). The actual Premiere storage path and native behavior still require the host check above.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.12 — experimental Windows preview
+
+Add Windows UPIA onboarding, native node.exe client configuration, case-insensitive environment discovery and guarded Windows relative paths. Validate CCX archives portably in bounded Node memory without a system unzip command. Retain per-file authorization, remembered folder tokens, plugin ID and manifest permissions. Include the already published official Adobe manual search through existing reference tools. Add exact-version Windows installation instructions and a sanitized volunteer test-report template.
+
+Windows behavior is covered by platform fixtures on macOS, not a Windows installation or Premiere session. This release does not claim a new native 0.3.12 Mac regression either; earlier native evidence remains versioned. Start read-only; report actual host results separately.
+
 ## 0.3.11 — public preview
 
 Preserve approved external-folder tokens across Stop/Launch, plugin/Premiere restarts and normal same-ID upgrades. Restore without prompting; retain tokens across temporary restoration failures. Add explicit journaled file-access revocation without panel settings; stale picker/restoration completions cannot silently regrant permission. Keep request-only filesystem access and per-file Entry/Node checks. Correct obsolete panel-folder guidance. The combined installer payload, executing version, restored grant and native GitHub update request are verified on macOS Premiere 26.5; yellow/red routing remains fixture/browser evidence.

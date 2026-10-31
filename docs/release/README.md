@@ -1,11 +1,12 @@
 # Release verification and maintenance
 
-The public preview is [v0.3.11](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.11), combining remembered file approval and the daily update indicator with read-only diagnostics. It exposes 43 MCP tools (40 host commands and three offline references), or 19 tools in inspection-only mode. The exact seven-file CCX matches both rebuilt source and installed payload; the executing version, restored grant and native update check pass on the reference Mac. See the versioned report for exact evidence and limits.
+The current preview is [v0.3.12](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.12), adding experimental Windows onboarding and portable CCX validation. It exposes 43 MCP tools or 19 in read-only mode. Windows has no native verification yet. Local tests/package validation are separate from the earlier native macOS 0.3.11 and editing reports; see [0.3.12 scope](candidate-0.3.12.md).
 
 ## Evidence
 
 | Report | Verified scope |
 | --- | --- |
+| [0.3.12](candidate-0.3.12.md) | Local automated/package checks; Windows experimental and no native 0.3.12 regression |
 | [0.3.11](candidate-0.3.11.md) | Exact installer/source/installed payload, native connection, restored grant and update check |
 | [0.3.10](candidate-0.3.10.md) | Persistent folder approval, bundled lifecycle/upgrade tests, installation and real runtime/restored-grant reads |
 | [0.3.8](native-check-0.3.8.md) | Maximum-size batch, denial/recovery, backups, edits, markers, effects/keyframes, explicit source authorization/revocation and readable interchange outputs |
