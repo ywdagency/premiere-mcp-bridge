@@ -64,8 +64,8 @@ test("clip dispatcher rejects unknown args and unbounded or ambiguous reads", ()
   assert.doesNotThrow(() => validateArgs("get_sequence_clips", { mediaType: "audio", trackIndex: 0, limit: 20 }));
 });
 
-test("UTF-8 payload limits count Cyrillic, astral characters and escaped lone surrogates", () => {
-  for (const value of ["ascii", "Клип", "🎞️", "\ud800", "音声".repeat(10000)]) {
+test("UTF-8 payload limits count multibyte text, astral characters and escaped lone surrogates", () => {
+  for (const value of ["ascii", "clip\u0301", "🎞️", "\ud800", "音声".repeat(10000)]) {
     const json = JSON.stringify({ value });
     assert.equal(utf8ByteLength(json), Buffer.byteLength(json));
   }

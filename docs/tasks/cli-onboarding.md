@@ -1,0 +1,16 @@
+# Release CLI onboarding
+
+Task TASK-8EDB4D39BE96. Premiere-only, based on release/0.3.6.
+
+- [x] Preserve original dirty workspace in a separate worktree.
+- [x] Verify checksum and exact CCX/source payload before Adobe install.
+- [x] Keep install explicit; no uninstall/restart/hidden save.
+- [x] Generate config without contacting Premiere, preserving other entries.
+- [x] Pin downloads to the exact published tag and expected assets.
+- [x] Supply offline/live doctor without project names or media paths.
+- [x] Align README, AGENTS and client/agent installation instructions.
+- [x] Fresh clone of implementation 28341e6: npm ci, all 150 tests, local configuration generation and offline/version checks.
+- [x] Pass remote CI at b4b61aa: all eight jobs, 150 tests per job; recheck any later publication head.
+- [x] Activate installed 0.3.6 with owner's normal restart; exact-version doctor and complete command inventory pass.
+- [ ] Complete disposable native workflows under TASK-2BFAF9DBED1E; see the candidate native report.
+- [ ] Publish only after owner's release decision.

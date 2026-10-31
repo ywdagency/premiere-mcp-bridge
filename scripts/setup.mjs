@@ -1,11 +1,12 @@
 import { mkdir, readFile, writeFile, chmod } from 'node:fs/promises';
 import { dirname, join, resolve, isAbsolute } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { prepareBridge, DEFAULT_BRIDGE_DIR } from '../mcp/file-bridge.mjs';
+import { DEFAULT_BRIDGE_DIR } from '../mcp/file-bridge.mjs';
 
 export function clientConfig(client, { nodePath, serverPath, directory, readOnly = false }) {
   const env = { ...(directory && directory !== 'auto' ? { PREMIERE_MCP_BRIDGE_DIR: directory } : {}), ...(readOnly ? { PREMIERE_MCP_READ_ONLY: '1' } : {}) };
-  if (client === 'codex') return `[mcp_servers.premiere_bridge]\ncommand = ${JSON.stringify(nodePath)}\nargs = [${JSON.stringify(serverPath)}]\nstartup_timeout_sec = 10\ntool_timeout_sec = 20\n\n[mcp_servers.premiere_bridge.env]\n${Object.entries(env).map(([key, value]) => `${key} = ${JSON.stringify(value)}`).join('\n')}\n`;
+  // Leave client/IPC overhead above the bridge's 30-second request deadline.
+  if (client === 'codex') return `[mcp_servers.premiere_bridge]\ncommand = ${JSON.stringify(nodePath)}\nargs = [${JSON.stringify(serverPath)}]\nstartup_timeout_sec = 10\ntool_timeout_sec = 45\n\n[mcp_servers.premiere_bridge.env]\n${Object.entries(env).map(([key, value]) => `${key} = ${JSON.stringify(value)}`).join('\n')}\n`;
   const server = { command: nodePath, args: [serverPath], env };
   if (client === 'vscode') return JSON.stringify({ servers: { premiere: { type: 'stdio', ...server } } }, null, 2) + '\n';
   if (['json', 'claude', 'cursor'].includes(client)) return JSON.stringify({ mcpServers: { premiere: server } }, null, 2) + '\n';
@@ -30,7 +31,6 @@ export async function setup(argv = process.argv.slice(2)) {
   const root = fileURLToPath(new URL('../', import.meta.url));
   const serverPath = join(root, 'mcp/server.mjs');
   const config = clientConfig(client, { nodePath: process.execPath, serverPath, directory: directory === 'auto' ? 'auto' : resolve(directory), readOnly });
-  try { await prepareBridge(directory); } catch (error) { if (error.code !== 'PLUGIN_NOT_LOADED') throw error; }
   if (client === 'codex') {
     const target = join(root, '.codex/config.toml');
     let existing = '';
@@ -40,7 +40,7 @@ export async function setup(argv = process.argv.slice(2)) {
     await chmod(target, 0o600);
     console.log(`Updated local Codex config: ${target}`);
   } else process.stdout.write(config);
-  console.error(`Plugin manifest: ${join(root, 'manifest.json')}\nLoad Premiere MCP Bridge in UXP Developer Tools. Connection is automatic: no folder or address. Editing is enabled while the bridge runs. Stop disables access.`);
+  console.error('MCP configuration generated without contacting Premiere. Install the reviewed matching CCX with npm run onboard, or use UDT only for development. Open the panel once and reconnect the client; npm run doctor checks the executing version.');
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try { await setup(); } catch (error) { console.error(error.message); process.exitCode = 1; }

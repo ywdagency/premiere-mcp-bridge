@@ -48,7 +48,11 @@ The server derives `premiere_get_sequence_summary` and its strict empty-argument
 
 ### Review workflow
 
-Use a focused branch and linked TODO under `docs/tasks/`. Keep a PR limited to one outcome, explain user-visible behavior and record verification plus remaining limits. Fixture tests run on Linux/macOS in CI; neither platform entry proves a live Premiere session. Report security issues privately using [SECURITY.md](SECURITY.md). Bug reports and feature requests should use synthetic projects and sanitized evidence.
+Use a focused branch and linked TODO under `docs/tasks/`. Keep a PR limited to one outcome, explain user-visible behavior and record verification plus remaining limits. Routine CI runs on Ubuntu with Node.js 22 and 24 for pull requests and pushes to main. Feature-branch pushes do not launch a duplicate workflow. Superseded runs for the same event and PR/ref are cancelled. Node setup has a two-minute limit within the existing five-minute job limit.
+
+The manual `Bridge checks` workflow adds macOS only when `full_compatibility` is selected; the default manual run uses Ubuntu. This preserves the four-job Linux/macOS compatibility matrix for deliberate release checks while routine PR updates use two Linux jobs instead of eight duplicated jobs. Neither platform entry proves a live Premiere session. Path filters are intentionally omitted so documentation-only PRs still report checks when branch protection requires them. Prefer local `npm test`, `node scripts/stage-release.mjs` and `npm pack --dry-run --json` while Actions usage is restricted; do not push or dispatch a workflow under a local-only instruction.
+
+Report security issues privately using [SECURITY.md](SECURITY.md). Bug reports and feature requests should use synthetic projects and sanitized evidence.
 
 For release/documentation work, use [the release review checklist](docs/release/README.md). Do not perform native writes, exports or saves merely to validate wording. Record the exact tested commit/build before distributing a package.
 
@@ -63,3 +67,7 @@ For a fork with a different installation identity, update `manifest.json` and `s
 Read `docs/native-api.md`. Run `ADOBE_DOCS_REF=<Adobe commit> npm run docs:sync` to regenerate the licensed catalog and compact contracts (or `--cached` when the source cache already exists). Generated files are committed; the download cache is private build output. Parameter names/types and original Since labels come from the official Markdown, optionality from the matching installed SDK types. Keep compatibility corrections tied to an official source and preserve original labels. Do not infer availability from SDK types alone.
 
 Review `src/api-policy.ts` for new native methods. An exact generated signature does not automatically justify granting mutation scope. Preserve actual ownership across getter/cast/union chains, particularly ProjectItem/media references from working clips. Construct Actions within synchronous locked transactions, use bridge-owned selection callbacks and typed event subscriptions, and retain operation receipts. Files require the current-request Node proof as well as UXP Entry checks; UXP lstat is not a link boundary. Add focused guard/IPC tests and record live tests separately in `data/live-verification.json` and the host report. Do not run global saves/preferences/cache/queue commands against an actively edited owner project just to claim coverage.
+
+## Contribution license
+
+Bridge contributions are submitted under the repository's MIT license. Retain existing copyright/license notices and identify the source/license of any new third-party material. Adobe-derived catalog/contracts keep their separate Apache-2.0 notices. See [the open-source model](OPEN_SOURCE.md).

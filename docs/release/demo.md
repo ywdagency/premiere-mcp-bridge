@@ -1,6 +1,6 @@
 # Short demo and capture brief
 
-This is a ready-to-record script, not an existing recording. Capture only after the final panel and installed build are approved. No owner projects/media were opened or captured for these materials. Do not create screenshots of the evolving panel for publication.
+This is a ready-to-record script, not an existing recording. Any Premiere capture must be supplied or recorded by the owner after the final panel and installed build are approved. Agents inspect Premiere through MCP only; this brief does not authorize UI automation, screenshots or preview-frame extraction. No owner projects/media were opened or captured for these materials. Do not create screenshots of the evolving panel for publication.
 
 ## Synthetic setup
 

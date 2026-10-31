@@ -7,6 +7,7 @@ const catalog = JSON.parse(
 );
 const members = [...catalog.classes.flatMap((c) => c.members), ...catalog.constants];
 const index = new Map(members.map((m) => [m.id, m]));
+const expansion = JSON.parse(readFileSync(new URL('../data/api-coverage-matrix.json', import.meta.url), 'utf8'));
 let verified = { members: [] };
 try {
   verified = JSON.parse(
@@ -106,6 +107,8 @@ export function coverage({ hostVersion } = {}) {
       ? members.filter((m) => policy.versionSupported(hostVersion, m.since)).length
       : null,
     liveVerification: verified,
+    adapterCoverage: { ...expansion.counts, matrixResource: 'premiere://api/coverage-matrix',
+      notice: 'Static routes and prior checks are not proof of full native behavior. New project operations await live verification.' },
     classes: catalog.classes.map((c) => ({
       name: c.name,
       members: c.members.length,
@@ -113,8 +116,8 @@ export function coverage({ hostVersion } = {}) {
     })),
     limitations: [
       'Only Adobe Premiere DOM API is executable. General UXP JavaScript, shell, network, UI DOM and arbitrary code are excluded.',
-      'Native timeline writes require bridge-created working sequences. Media source changes require an explicitly tracked newly imported asset.',
-      'Callback/lifetime APIs use bridge-owned transactions, selections and event subscriptions. Project close and unsupported lifecycle/output-reference overloads remain documented only.',
+      'Native timeline writes require bridge-created working sequences or explicit verified-backup authorization. Shared source media and retained backups remain protected.',
+      'Callback/lifetime APIs use bridge-owned transactions, selections and events. New named import/close/growing-media adapters remain pending live verification; callback alternatives are labeled separately.',
       'API presence is probed at runtime. Newer documented APIs may not exist in the installed Premiere.',
       'Native Promise success does not guarantee queued AME rendering is finished.',
     ],
@@ -189,6 +192,12 @@ export function registerReference(server) {
         }
       },
     );
+  server.registerResource(
+    'premiere-api-coverage-matrix',
+    'premiere://api/coverage-matrix',
+    { mimeType: 'application/json', description: 'Exhaustive per-member routing, version gates, internal alternatives and separate native verification status. Does not execute or probe the host.' },
+    async (uri) => ({ contents: [{ uri: uri.href, mimeType: 'application/json', text: JSON.stringify(expansion) }] }),
+  );
   server.registerResource(
     'premiere-api-index',
     'premiere://api/index',

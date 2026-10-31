@@ -21,6 +21,10 @@ const {
 } = protocol;
 
 export const DEFAULT_BRIDGE_DIR = 'auto';
+export function isLegacyMarkerValidation(command, error) {
+  return command === 'api_apply_actions' && error?.code === 'INVALID_API_ARGUMENT' &&
+    error.message.startsWith('Marker creation requires every preceding argument');
+}
 
 function assertPrivate(stat, directory = false) {
   if (
@@ -138,7 +142,7 @@ async function atomicWrite(path, value) {
 }
 
 export class FileBridge {
-  constructor(directory = DEFAULT_BRIDGE_DIR, { timeoutMs = 10000, pollMs = 50 } = {}) {
+  constructor(directory = DEFAULT_BRIDGE_DIR, { timeoutMs = 30000, pollMs = 50 } = {}) {
     if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 50 || timeoutMs > MAX_REQUEST_LIFETIME_MS) {
       throw new BridgeError(
         'INVALID_TIMEOUT',
@@ -151,7 +155,14 @@ export class FileBridge {
   }
 
   async call(command, args = {}, signal) {
-    validateArgs(command, args); // Server-side allowlist, separate from the UXP dispatcher.
+    try {
+      validateArgs(command, args); // Independent of the UXP dispatcher.
+    } catch (error) {
+      // A stricter new marker policy must not hide a previously journaled outcome.
+      // Base fields, UUID and bounded JSON were validated before this semantic error.
+      if (!isLegacyMarkerValidation(command, error)) throw error;
+      return this.recoverLegacyMarker(command, args, error);
+    }
     if (signal?.aborted) throw new BridgeError('REQUEST_CANCELLED', 'The request was cancelled.');
     const { directory, marker } = await prepareBridge(this.directory);
     const request = {
@@ -251,5 +262,37 @@ export class FileBridge {
         [requestPath, responsePath, ...checks].map((path) => unlink(path).catch(() => {})),
       );
     }
+  }
+
+  async recoverLegacyMarker(command, args, validationError) {
+    let directory, marker, receipt;
+    try {
+      directory = this.directory === DEFAULT_BRIDGE_DIR
+        ? await discoverBridgeDirectory() : resolve(this.directory);
+      assertPrivate(await lstat(directory), true);
+      await checkAncestors(directory);
+      marker = parseMarker(await readPrivateJson(join(directory, MARKER_FILE), 4096));
+      receipt = await readPrivateJson(join(directory, `operation-${args.operationId}.json`), MAX_RESPONSE_BYTES);
+    } catch (error) {
+      if (['ENOENT', 'ENOTDIR', 'PLUGIN_NOT_LOADED'].includes(error.code)) throw validationError;
+      throw error;
+    }
+    if (receipt.version !== 1 || receipt.bridgeId !== marker.bridgeId ||
+        receipt.operationId !== args.operationId)
+      throw new BridgeError('OPERATION_OUTCOME_UNKNOWN', 'The historical receipt identity could not be verified.');
+    const stable = value => Array.isArray(value) ? value.map(stable)
+      : value && typeof value === 'object'
+        ? Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])])) : value;
+    if (receipt.payload !== JSON.stringify({ command, args: stable(args) }))
+      throw new BridgeError('OPERATION_ID_CONFLICT', 'This operationId was used with different arguments.');
+    if (receipt.state !== 'completed')
+      throw new BridgeError('OPERATION_OUTCOME_UNKNOWN', 'The historical operation has no confirmed outcome. Do not retry under a new ID.');
+    const request = { version: BRIDGE_VERSION, bridgeId: marker.bridgeId, id: randomUUID(), command, args,
+      expiresAt: Date.now() + this.timeoutMs };
+    const response = parseResponse({ ...receipt.outcome, version: BRIDGE_VERSION,
+      bridgeId: marker.bridgeId, id: request.id }, request);
+    if (!response.ok)
+      throw new BridgeError(response.error.code, response.error.message, response.error.diagnostics);
+    return { ...response.result, operationReplayed: true };
   }
 }

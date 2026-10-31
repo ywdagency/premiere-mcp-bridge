@@ -1,17 +1,22 @@
 {
   "name": "premiere-mcp-bridge",
-  "version": "0.3.4",
+  "version": "0.3.8",
   "private": true,
   "description": "An extensible local MCP bridge between AI agents and Adobe Premiere Pro UXP",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "npm run build && node --test tests/*.test.cjs",
+    "test": "npm run build && node --test --test-concurrency=2 tests/*.test.cjs",
     "setup": "npm run build && node scripts/setup.mjs",
+    "onboard": "npm run build && node scripts/onboard.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "release:assets": "npm run build && node scripts/prepare-release-assets.mjs",
     "mcp:prepare": "node mcp/server.mjs --prepare",
     "mcp:start": "node mcp/server.mjs",
     "mcp:smoke": "node mcp/smoke.mjs",
     "plugin:load": "node scripts/load-plugin.mjs",
-    "docs:sync": "node scripts/sync-adobe-api.mjs"
+    "docs:sync": "node scripts/sync-adobe-api.mjs",
+    "api:matrix": "npm run build && node scripts/api-coverage-matrix.mjs",
+    "test:prepare-live": "node scripts/prepare-live-verification.mjs"
   },
   "devDependencies": {
     "@adobe/premierepro": "26.5.0",
@@ -46,11 +51,21 @@
     "styles.css",
     "tsconfig.json",
     "AGENTS.md",
+    "INSTALL.md",
     "INDEX.md",
+    "OPEN_SOURCE.md",
     "CONTRIBUTING.md",
     "CHANGELOG.md",
     "SECURITY.md",
     "LICENSE",
     "data/"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ywdagency/premiere-uxp-bridge.git"
+  },
+  "homepage": "https://github.com/ywdagency/premiere-uxp-bridge#readme",
+  "bugs": {
+    "url": "https://github.com/ywdagency/premiere-uxp-bridge/issues"
+  }
 }

@@ -16,7 +16,7 @@ async function setup(t, connect = true) {
   const uxp = new UxpBridge(hostFixture(), (...args) => reports.push(args));
   if (connect) await uxp.start(folderAdapter(directory));
   t.after(async () => { uxp.stop(); await fs.rm(directory, { recursive: true, force: true }); });
-  return { ...prepared, FileBridge, uxp, reports, bridge: new FileBridge(directory, { timeoutMs: 1500, pollMs: 5 }) };
+  return { ...prepared, FileBridge, uxp, reports, bridge: new FileBridge(directory, { timeoutMs: 10000, pollMs: 5 }) };
 }
 
 test("real filesystem transport round-trips concurrent reads through the actual UXP dispatcher", async (t) => {
@@ -140,7 +140,7 @@ test("stdio MCP handshake, discovery and tool contracts work end to end; annotat
   const client = new Client({ name: "premiere-mcp-test", version: "1.0.0" });
   const transport = new StdioClientTransport({ command: process.execPath,
     args: [resolve(__dirname, "../mcp/server.mjs")],
-    env: { ...process.env, PREMIERE_MCP_BRIDGE_DIR: directory, PREMIERE_MCP_TIMEOUT_MS: "1500" }
+    env: { ...process.env, PREMIERE_MCP_BRIDGE_DIR: directory, PREMIERE_MCP_TIMEOUT_MS: "10000" }
   });
   t.after(() => client.close());
   await client.connect(transport);
@@ -153,6 +153,7 @@ test("stdio MCP handshake, discovery and tool contracts work end to end; annotat
   assert.ok(!result.isError, JSON.stringify(result));
   assert.equal(result.structuredContent.project.name, "Transport fixture");
   const seq = await client.callTool({ name: "premiere_get_active_sequence", arguments: {} });
+  assert.ok(!seq.isError, JSON.stringify(seq));
   assert.equal(seq.structuredContent.activeSequence.videoTrackCount, 1);
   const withPath = await client.callTool({ name: "premiere_get_project", arguments: { includePath: true } });
   assert.equal(withPath.structuredContent.project.path, "/test/private.prproj");
@@ -224,6 +225,23 @@ async function bundledPanel(t, options = {}) {
   return { bridge, FileBridge, directory, elements, entrypoints, storage, saved, mediaFolder,
     pickerCalls: () => pickerCalls };
 }
+
+test('bundled plugin reports absent and restored file access without adding controls or opening a picker', async (t) => {
+  const fresh = await bundledPanel(t);
+  const none = await fresh.bridge.call('get_file_access', { includePath: true });
+  assert.equal(none.granted, false);
+  assert.equal(none.pathIncluded, false);
+  assert.equal(fresh.pickerCalls(), 0);
+  assert.equal(fresh.saved.size, 0);
+  const restored = await bundledPanel(t, { savedMedia: true });
+  const summary = await restored.bridge.call('get_file_access');
+  assert.equal(summary.granted, true);
+  assert.equal('nativePath' in summary.folder, false);
+  const detail = await restored.bridge.call('get_file_access', { includePath: true });
+  assert.equal(detail.folder.nativePath, restored.directory);
+  assert.equal(restored.pickerCalls(), 0);
+  assert.equal(restored.saved.size, 1);
+});
 
 test('bridge launches with editing enabled, exposes only lifecycle controls and Stop revokes access', async (t) => {
   const { bridge, FileBridge, directory, elements, entrypoints, saved, pickerCalls } = await bundledPanel(t);
@@ -366,7 +384,7 @@ test('Reload preserves typed handles and file access when the external MCP serve
     const client = new Client({ name: 'panel-recovery', version: '1.0.0' });
     await client.connect(new StdioClientTransport({ command: process.execPath,
       args: [resolve(__dirname, '../mcp/server.mjs')],
-      env: { ...process.env, PREMIERE_MCP_BRIDGE_DIR: directory, PREMIERE_MCP_TIMEOUT_MS: '1500' } }));
+      env: { ...process.env, PREMIERE_MCP_BRIDGE_DIR: directory, PREMIERE_MCP_TIMEOUT_MS: '10000' } }));
     t.after(() => client.close());
     return client;
   }

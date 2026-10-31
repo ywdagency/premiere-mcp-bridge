@@ -5,6 +5,7 @@ import { AutoConnection } from './auto-connection';
 import { PremiereApi } from './api-runtime';
 import { PremiereControl } from './premiere-control';
 import { PLUGIN_VERSION } from './identity';
+import { describeFileAccess } from './file-access';
 
 declare function require(name: string): any;
 interface GrantedFolder extends UxpFolder {
@@ -114,9 +115,9 @@ async function resolveApiPath(
       'Approve the folder dialog, then submit a new file request. This request did not access a file.',
     );
   }
-  if (rootDirectory)
-    return bridge.authorizeFile(mediaFolder.nativePath, relative, mode);
-  const rootPath = mediaFolder.nativePath;
+  // Bind before asynchronous Entry traversal so a late result cannot join another request.
+  const authorize = bridge.fileAuthorization(mediaFolder.nativePath, relative, mode);
+  if (rootDirectory) return authorize();
   const parts = relative.split('/');
   const base = mediaFolder.nativePath.replace(/\\/g, '/').replace(/\/$/, '');
   let folder = mediaFolder as unknown as MediaEntry;
@@ -129,7 +130,7 @@ async function resolveApiPath(
           'OUTPUT_EXISTS',
           'Output already exists; overwriting is not allowed.',
         );
-      return bridge.authorizeFile(rootPath, relative, mode);
+      return authorize();
     }
     if (!entry)
       throw new BridgeError('FILE_NOT_FOUND', 'The requested granted entry does not exist.');
@@ -147,7 +148,7 @@ async function resolveApiPath(
         'INVALID_API_ARGUMENT',
         'Granted entry has the wrong file/folder type.',
       );
-    if (last) return bridge.authorizeFile(rootPath, relative, mode);
+    if (last) return authorize();
     folder = entry;
   }
   throw new BridgeError('INVALID_API_ARGUMENT', 'Invalid granted path.');
@@ -191,6 +192,7 @@ const bridge = new UxpBridge(
     name: host.name,
     version: host.version,
     uxpVersion: versions.uxp,
+    getFileAccess: (includePath) => describeFileAccess(mediaFolder, includePath),
     clipConstants: {
       clipType: ppro.Constants.TrackItemType.CLIP,
       displayFormats: ppro.Constants.VideoDisplayFormatType,

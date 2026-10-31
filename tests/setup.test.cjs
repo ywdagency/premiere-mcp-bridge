@@ -1,5 +1,12 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+test('generated Codex deadline leaves client overhead above the maximum bridge request lifetime', async () => {
+  const { clientConfig } = await import('../scripts/setup.mjs');
+  const { MAX_REQUEST_LIFETIME_MS } = require('../build/lib/bridge-protocol.cjs');
+  const config = clientConfig('codex', { nodePath: '/node', serverPath: '/clone/mcp/server.mjs', directory: 'auto' });
+  const seconds = Number(/^tool_timeout_sec = (\d+)$/m.exec(config)?.[1]);
+  assert.ok(seconds >= MAX_REQUEST_LIFETIME_MS / 1000 + 10);
+});
 test('portable client generator uses caller paths and preserves unrelated Codex server entries', async () => {
   const { clientConfig, mergeCodex } = await import('../scripts/setup.mjs');
   const options = { nodePath: '/node with spaces/node', serverPath: '/clone/mcp/server.mjs', directory: '/docs/Premiere MCP Bridge', readOnly: true };

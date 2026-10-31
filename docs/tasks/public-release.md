@@ -1,5 +1,7 @@
 # Public release preparation
 
+Current candidate: [0.3.6 preparation](release-0.3.6.md) and [release gates](../release/README.md). The remaining sections record historical tasks and their then-current constraints/results.
+
 Historical PR numbers below refer to the predecessor repository, not to PRs in this clean-history replacement.
 
 Registry: TASK-FAD7BB7A3DCC. Scope: local, reviewable release materials for the existing repository. Publication, visibility changes, merging PR #1, native edits/exports/saves and outreach require a separate owner request.

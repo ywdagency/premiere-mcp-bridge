@@ -5,6 +5,7 @@ import { ApiMember, ApiScope, ApiHandle, ApiType, ClipObservation } from './api-
 import { boundedJson, parametersFor, referenceIds, resolveValue } from './api-validation';
 import { PremiereControl } from './premiere-control';
 import { ImportDiagnostics } from './import-diagnostics';
+import { prepareProjectOperation, ProjectOperation, PROJECT_OPERATION_MEMBERS } from './project-operations';
 export interface ApiHost {
   module: Record<string, any>;
   version: string;
@@ -22,6 +23,8 @@ interface Job {
   result?: unknown;
   error?: { code: string; message: string };
   scope: ApiScope;
+  exclusiveProject?: boolean;
+  operationId?: string;
 }
 interface Prepared {
   member: ApiMember;
@@ -140,10 +143,15 @@ export class PremiereApi {
     return p;
   }
   private writeGate(expiresAt: number): void {
+    this.ensureNoProjectOperation();
     if (!this.host.writesEnabled())
       throw new BridgeError('WRITES_DISABLED', 'Launch Premiere MCP Bridge first.');
     if (Date.now() >= expiresAt)
       throw new BridgeError('REQUEST_EXPIRED', 'The operation expired before entering Premiere.');
+  }
+  ensureNoProjectOperation(): void {
+    if ([...this.jobs.values()].some((job) => job.exclusiveProject && job.state === 'running'))
+      throw new BridgeError('PROJECT_OPERATION_IN_PROGRESS', 'A project import/lifecycle job is still running. Poll its existing jobId before another write.');
   }
   private editable(scope: ApiScope): boolean {
     return (
@@ -726,7 +734,7 @@ export class PremiereApi {
       }
     }
     for (const sequence of await project.getSequences()) {
-      if (this.control.mayEdit(project.guid.toString(), sequence.guid.toString())) continue;
+      if (this.control.isWorking(project.guid.toString(), sequence.guid.toString())) continue;
       for (const kind of ['Video', 'Audio']) {
         const count = await sequence[`get${kind}TrackCount`]();
         for (let i = 0; i < count; i++) {
@@ -991,12 +999,79 @@ export class PremiereApi {
       );
     return { ...job, scope: { projectId: job.scope.projectId, sequenceId: job.scope.sequenceId } };
   }
+  private async projectOperation(kind: ProjectOperation, args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
+    this.writeGate(expiresAt);
+    this.member(PROJECT_OPERATION_MEMBERS[kind]);
+    if (this.jobs.size >= 100) throw new BridgeError('JOB_LIMIT', 'Review retained jobs before restarting the plugin.');
+    if ([...this.jobs.values()].some((job) => job.state === 'running' && job.scope.projectId === args.projectId))
+      throw new BridgeError('JOB_IN_PROGRESS', 'A native job still uses this project. Wait for it before importing or changing project lifecycle.');
+    const prepared = await prepareProjectOperation(kind, args, this.host, async (id, projectId) => {
+      const bin = this.handle(id);
+      if (!bin.types.includes('FolderItem'))
+        throw new BridgeError('INVALID_API_ARGUMENT', 'targetBin must be a FolderItem handle.');
+      await this.validateRefs([bin], projectId);
+      return this.host.module.ProjectItem.cast(bin.native);
+    }, expiresAt);
+    this.writeGate(expiresAt);
+    const id = this.id('job');
+    const job: Job = { id, memberId: prepared.memberId, state: 'running',
+      createdAt: new Date().toISOString(), scope: { projectId: prepared.projectId },
+      exclusiveProject: true, operationId: args.operationId as string };
+    this.jobs.set(id, job);
+    // The durable request receipt records this job ID. Never recreate a job on receipt replay.
+    const fail = () => {
+      job.state = 'failed';
+      job.error = { code: 'OPERATION_OUTCOME_UNKNOWN', message: 'The project operation did not return a confirmed outcome. Inspect Premiere; never restart it automatically.' };
+      job.finishedAt = new Date().toISOString();
+      this.invalidate(job.scope);
+    };
+    try {
+      const promise = prepared.invoke();
+      Promise.resolve(promise).then((result) => {
+        if (typeof result !== 'boolean') { fail(); return; }
+        this.invalidate(job.scope);
+        if (kind === 'project_close' && result) {
+          this.control.forgetProject(prepared.projectId);
+          for (const key of this.ownedAssets) if (key.startsWith(`${prepared.projectId}:`)) this.ownedAssets.delete(key);
+        }
+        job.result = { nativeResult: result, saveInvokedByBridge: false, importedOwnershipGranted: false,
+          ...(kind === 'project_close' ? { saveOutcome: 'native-prompt-user-decision-not-observed' } : { saved: false }),
+          ...(kind.startsWith('import_') ? { partialImportPossible: !result } : {}),
+          ...(kind === 'project_close' ? { contextChanged: result, nativeDirtyPromptEnabled: true } : {}),
+          ...(kind === 'close_sequence' ? { contextMayHaveChanged: true } : {}) };
+        job.state = result ? 'native_succeeded' : 'native_returned_false';
+        job.finishedAt = new Date().toISOString();
+      }, fail).catch(fail);
+    } catch { fail(); }
+    return { readOnly: false, jobId: id, state: job.state,
+      completionMeaning: 'Native operation outcome; imports may be partial on false/error. Poll api_get_job, then inspect current project contents. No implicit save or ownership grant; a human may choose Save in a native close prompt.' };
+  }
+  importAEComps(args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
+    return this.projectOperation('import_ae_comps', args, expiresAt);
+  }
+  importAllAEComps(args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
+    return this.projectOperation('import_all_ae_comps', args, expiresAt);
+  }
+  importSequences(args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
+    return this.projectOperation('import_sequences', args, expiresAt);
+  }
+  closeProject(args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
+    return this.projectOperation('project_close', args, expiresAt);
+  }
+  closeSequence(args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
+    return this.projectOperation('close_sequence', args, expiresAt);
+  }
+  setGrowingMediaPaused(args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
+    return this.projectOperation('project_set_growing_media_paused', args, expiresAt);
+  }
   afterLegacyWrite(args: BridgeArgs): void {
     if (typeof args.projectId === 'string')
       this.invalidate({
         projectId: args.projectId,
         ...(typeof args.sequenceId === 'string' ? { sequenceId: args.sequenceId } : {}),
       });
+    if (typeof args.projectId === 'string' && typeof args.backupSequenceId === 'string')
+      this.invalidate({ projectId: args.projectId, sequenceId: args.backupSequenceId });
   }
   async importSnapshot(
     paths: string[],
@@ -1102,7 +1177,7 @@ export class PremiereApi {
     this.writeGate(expiresAt);
     const project = await this.requireProject(args.projectId),
       id = args.sequenceId as string;
-    if (!this.control.mayEdit(project.guid.toString(), id))
+    if (!this.control.isWorking(project.guid.toString(), id))
       throw new BridgeError(
         'SOURCE_SEQUENCE_PROTECTED',
         'Only a bridge-created working sequence may be deleted.',
@@ -1177,13 +1252,22 @@ export class PremiereApi {
       throw new BridgeError('ACTIVE_CONTEXT_CHANGED', 'The active project changed.');
     if (typeof args.path !== 'string' || !args.path.toLowerCase().endsWith('.prproj'))
       throw new BridgeError('INVALID_API_ARGUMENT', 'A relative .prproj path is required.');
+    let options: ApiHandle | undefined;
+    if (args.openOptions !== undefined) {
+      if (args.createNew) throw new BridgeError('INVALID_API_ARGUMENT', 'openOptions applies to opening, not creating a project.');
+      options = this.handle(args.openOptions as string);
+      if (!options.types.includes('OpenProjectOptions') || !options.scope.ownedValue)
+        throw new BridgeError('INVALID_API_ARGUMENT', 'openOptions requires a bridge-owned OpenProjectOptions draft handle.');
+    }
     const path = await this.host.path(args.path, args.createNew ? 'write' : 'read');
+    if (((await this.host.getActiveProject())?.guid.toString() ?? 'none') !== args.projectId)
+      throw new BridgeError('ACTIVE_CONTEXT_CHANGED', 'The project changed during file authorization.');
     this.writeGate(expiresAt);
     let project;
     try {
       project = args.createNew
         ? await this.host.module.Project.createProject(path)
-        : await this.host.module.Project.open(path);
+        : options ? await this.host.module.Project.open(path, options.native) : await this.host.module.Project.open(path);
     } catch {
       throw nativeFailure(args.createNew ? 'Project.createProject' : 'Project.open');
     }

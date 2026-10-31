@@ -6,6 +6,7 @@ export * from './premiere-control';
 export * from './dispatcher';
 export * from './uxp-bridge';
 export * from './auto-connection';
+export * from './file-access';
 
 export * from './api-runtime';
 export * from './api-policy';

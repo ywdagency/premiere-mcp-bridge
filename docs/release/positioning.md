@@ -32,11 +32,11 @@ For a future social preview, the copy is **“Your AI agent. Your Premiere workf
 
 **Solution.** YWD Agency built Premiere MCP Bridge: a UXP plugin inside Premiere and an agent-independent Node MCP server on the user's machine. A shared command catalog defines strict inputs at both boundaries. A typed native adapter exposes documented member IDs and opaque object references. Working-sequence ownership, explicit file grants, native transactions and durable operation receipts constrain operations without embedding an editorial policy.
 
-**Demonstrated result.** The development implementation exposes 33 MCP tools and a searchable pinned Adobe DOM catalog of 73 types/707 entries. The merged 0.3.4 source passes 105 automated tests; its current verification scope is recorded in the readiness report. A separate report records selected native members exercised on Premiere 26.5/macOS ARM64, including reads and selected operations on disposable working copies. Installed-plugin/lifecycle observations are recorded by their actual versions. These are engineering verification results, not adoption or performance metrics.
+**Demonstrated result.** Candidate 0.3.8 retains 42 MCP tools and the pinned Adobe DOM reference of 73 types/707 entries. Actual 0.3.7 synthetic checks cover creation, individual imports, backup/edit/recovery, persistence/lifecycle and interchange outputs. Native testing exposed batch preflight and sparse-marker defects; the 0.3.8 fixes pass native regression checks. Explicit source authorization, one-frame A/V edits, revocation and retained-backup protection are also verified on owner-approved synthetic fixtures. These are bounded engineering results, not adoption, performance or full API certification claims.
 
 **What this shows about YWD.** Practical integration of AI tooling with creative software: protocol design, desktop constraints, permission boundaries, recovery behavior and reusable developer documentation. The public preview is intended to make that work inspectable and useful to other builders. No customer endorsement, production deployment or commercial outcome is implied.
 
-Evidence: [command contracts](../../src/command-catalog.ts), [architecture](../mcp-bridge.md), [native report](../live-verification-26.5.md), [license](../../LICENSE), [release audit](public-readiness.md). Reconfirm counts and the final build before publishing this case on any agency channel.
+Evidence: [command contracts](../../src/command-catalog.ts), [architecture](../mcp-bridge.md), [native report](../live-verification-26.5.md), [license](../../LICENSE), [current release audit](final-review-0.3.8.md). Reconfirm counts and the final build before publishing this case on any agency channel.
 
 ## Launch announcement drafts
 

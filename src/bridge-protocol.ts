@@ -90,6 +90,17 @@ export function onlyKeys(value: Record<string, unknown>, keys: string[]): void {
   }
 }
 
+export function validateMarkerParameterPrefix(memberId: unknown, value: unknown): void {
+  if (memberId !== 'Markers#createAddMarkerAction') return;
+  const args = object(value);
+  let omitted = false;
+  for (const key of ['name', 'markerType', 'startTime', 'duration', 'comments']) {
+    if (args[key] === undefined) omitted = true;
+    else if (omitted)
+      throw new BridgeError('INVALID_API_ARGUMENT', 'Marker creation requires every preceding argument when a later optional argument is supplied.');
+  }
+}
+
 export function validateArgs(command: unknown, value: unknown): BridgeArgs {
   const spec = COMMAND_LIST.find((item) => item.command === command);
   if (!spec)
@@ -141,6 +152,10 @@ export function validateArgs(command: unknown, value: unknown): BridgeArgs {
         entry.length >= (field.min ?? 0) &&
         entry.length <= (field.max ?? 100) &&
         entry.every((id) => typeof id === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(id));
+    if (field.type === 'names')
+      valid = Array.isArray(entry) && entry.length >= (field.min ?? 0) &&
+        entry.length <= (field.max ?? 50) && entry.every((name) =>
+          typeof name === 'string' && name.length > 0 && name.length <= 256 && !name.includes(String.fromCharCode(0)));
     if (field.type === 'json') {
       validateJson(entry);
       valid = true;
@@ -151,6 +166,12 @@ export function validateArgs(command: unknown, value: unknown): BridgeArgs {
         `Invalid ${key}. Consult this command's input schema.`,
       );
   }
+  if (command === 'api_apply_actions' && Array.isArray(args.actions)) {
+    for (const action of args.actions) {
+      if (action && typeof action === 'object' && !Array.isArray(action))
+        validateMarkerParameterPrefix(action.memberId, action.parameters);
+    }
+  }
   if (
     command === 'get_sequence_clips' &&
     args.trackIndex !== undefined &&
@@ -159,6 +180,27 @@ export function validateArgs(command: unknown, value: unknown): BridgeArgs {
   ) {
     throw new BridgeError('INVALID_REQUEST', 'trackIndex requires mediaType video or audio.');
   }
+  if (['import_ae_comps', 'import_all_ae_comps', 'import_sequences'].includes(command as string)) {
+    const extension = command === 'import_sequences' ? '.prproj' : '.aep';
+    const path = args.path as string;
+    if (!path.toLowerCase().endsWith(extension) || /[\\:\u0000]/.test(path) ||
+      path.split('/').some((part) => !part || part === '.' || part === '..'))
+      throw new BridgeError('INVALID_API_ARGUMENT', `Use a granted relative ${extension} path.`);
+    if (command === 'import_ae_comps' && new Set(args.compNames as string[]).size !== (args.compNames as string[]).length)
+      throw new BridgeError('INVALID_API_ARGUMENT', 'Composition names must be distinct.');
+    if (command === 'import_sequences') {
+      const ids = args.sequenceIds as string[] | undefined;
+      if (args.allSequences === true ? ids !== undefined : !ids?.length)
+        throw new BridgeError('INVALID_API_ARGUMENT', 'Provide sequenceIds or explicit allSequences=true, exclusively.');
+      if (ids && (new Set(ids.map((id) => id.toLowerCase())).size !== ids.length ||
+        !ids.every((id) => /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id))))
+        throw new BridgeError('INVALID_API_ARGUMENT', 'Source sequence IDs must be distinct GUIDs.');
+    }
+  }
+  if (command === 'project_close' && args.confirm !== true)
+    throw new BridgeError('EXPLICIT_AUTHORIZATION_REQUIRED', 'Closing a project must be deliberate (confirm=true).');
+  if (command === 'project_open' && args.createNew && args.openOptions !== undefined)
+    throw new BridgeError('INVALID_API_ARGUMENT', 'openOptions applies to opening, not creating a project.');
   return args as BridgeArgs;
 }
 

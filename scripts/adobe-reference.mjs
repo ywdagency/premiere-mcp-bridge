@@ -193,6 +193,7 @@ export async function generateReference(cache = 'build/adobe-reference') {
   }
   const constants = parseConstants(await readFile(join(root, 'constants/index.md'), 'utf8'));
   const overrides = {
+    'Project#closeSequence': '26.2',
     'Transcript.transcribeClipProjectItem': '26.5',
     'Transcript.isLanguagePackAvailable': '26.5',
     'Media#getDuration': '26.5',
@@ -226,7 +227,9 @@ export async function generateReference(cache = 'build/adobe-reference') {
         m.documentedSince = m.since;
         m.since = v;
         m.compatibilityNote =
-          'Minimum corrected against the official Adobe UXP changelog; the reference page has an older Since label.';
+          m.id === 'Project#closeSequence'
+            ? 'Minimum corrected against the current official Project reference (checked 2026-10-29), which states Since 26.2; the pinned page has an older label.'
+            : 'Minimum corrected against the official Adobe UXP changelog; the reference page has an older Since label.';
       }
       m.result = typeSchema(m.returns);
       for (const p of m.parameters) {

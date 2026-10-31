@@ -2,6 +2,7 @@ import type { FolderItem, ProjectItem, Action, AudioClipTrackItem, Project, Sequ
 import { BridgeArgs, BridgeError } from "./bridge-protocol";
 import type { BridgeCommand } from "./command-catalog";
 import { ImportDiagnostics } from "./import-diagnostics";
+import { authorizationSnapshot } from './sequence-authorization';
 
 type Clip = VideoClipTrackItem | AudioClipTrackItem;
 export interface ControlHost {
@@ -15,12 +16,30 @@ export interface ControlHost {
 }
 export class PremiereControl {
   private readonly working = new Map<string, Set<string>>();
+  private readonly cloneSources = new Map<string, string>();
+  private readonly authorized = new Map<string, { projectId: string; id: string; backupSequenceId: string }>();
+  private readonly protectedBackups = new Set<string>();
   constructor(private readonly host: ControlHost) {}
-  mayEdit(projectId: string, sequenceId: string): boolean { return this.working.get(projectId)?.has(sequenceId) ?? false; }
+  private key(projectId: string, sequenceId: string): string { return JSON.stringify([projectId, sequenceId]); }
+  isWorking(projectId: string, sequenceId: string): boolean {
+    return !this.protectedBackups.has(this.key(projectId, sequenceId)) && (this.working.get(projectId)?.has(sequenceId) ?? false);
+  }
+  mayEdit(projectId: string, sequenceId: string): boolean {
+    const key = this.key(projectId, sequenceId);
+    return !this.protectedBackups.has(key) && (this.isWorking(projectId, sequenceId) || this.authorized.has(key));
+  }
   forgetWorking(projectId:string,sequenceId:string):void { this.working.get(projectId)?.delete(sequenceId); }
+  forgetProject(projectId: string): void {
+    this.working.delete(projectId);
+    for (const [key, grant] of this.authorized) if (grant.projectId === projectId) this.authorized.delete(key);
+    for (const key of this.cloneSources.keys()) if (JSON.parse(key)[0] === projectId) this.cloneSources.delete(key);
+    for (const key of this.protectedBackups) if (JSON.parse(key)[0] === projectId) this.protectedBackups.delete(key);
+  }
   capabilities(): Record<string, unknown> {
     return { writesEnabled: this.host.writesEnabled(), mediaFolderGranted: this.host.mediaGranted(),
-      workingSequences: Array.from(this.working, ([projectId, ids]) => Array.from(ids, (id) => ({ projectId, id }))).flat() };
+      workingSequences: Array.from(this.working, ([projectId, ids]) => Array.from(ids, (id) => ({ projectId, id }))).flat()
+        .filter(({ projectId, id }) => this.isWorking(projectId, id)),
+      authorizedSequences: [...this.authorized.values()] };
   }
   markWorking(project: Project, sequence: Sequence): void {
     const key = project.guid.toString();
@@ -37,7 +56,7 @@ export class PremiereControl {
     const sequence = (await project.getSequences()).find((item) => item.guid.toString() === args.sequenceId);
     if (!sequence) throw new BridgeError("SEQUENCE_NOT_FOUND", "The requested sequence does not exist in the active project.");
     if (editable && !this.mayEdit(project.guid.toString(), sequence.guid.toString())) {
-      throw new BridgeError("SOURCE_SEQUENCE_PROTECTED", "Only sequences created or duplicated by this bridge in this plugin session can be edited.");
+      throw new BridgeError("SOURCE_SEQUENCE_PROTECTED", "Timeline edits require a bridge working copy or explicit sequence authorization with a verified backup.");
     }
     return sequence;
   }
@@ -103,7 +122,39 @@ export class PremiereControl {
         this.markWorking(project, clone);
         const item = await clone.getProjectItem();
         this.transaction(project, () => [item.createSetNameAction(args.name as string)], "MCP: name working sequence", expiresAt);
+        this.cloneSources.set(this.key(project.guid.toString(), clone.guid.toString()), source.guid.toString());
         return { ...this.ref(project, clone), sourceSequenceId: source.guid.toString() };
+      }
+      if (command === 'revoke_sequence_authorization') {
+        const sequence = await this.sequence(project, args);
+        this.beforeWrite(expiresAt);
+        this.authorized.delete(this.key(project.guid.toString(), sequence.guid.toString()));
+        return { ...this.ref(project, sequence), authorizationRevoked: true };
+      }
+      if (command === 'authorize_sequence') {
+        if (args.confirm !== true || args.backupVerified !== true)
+          throw new BridgeError('EXPLICIT_AUTHORIZATION_REQUIRED', 'Explicit owner instruction and independently verified backup must both be confirmed.');
+        const sequence = await this.sequence(project, args), projectId = project.guid.toString(),
+          id = sequence.guid.toString(), backupId = args.backupSequenceId as string,
+          key = this.key(projectId, id), backupKey = this.key(projectId, backupId);
+        if (id === backupId || this.protectedBackups.has(key) || this.authorized.has(backupKey) ||
+          this.cloneSources.get(backupKey) !== id)
+          throw new BridgeError('INVALID_SEQUENCE_BACKUP', 'Use a distinct backup cloned directly from this sequence by this bridge session. Retained backups cannot be authorized.');
+        const backup = (await project.getSequences()).find((seq) => seq.guid.toString() === backupId);
+        if (!backup) throw new BridgeError('INVALID_SEQUENCE_BACKUP', 'The retained backup no longer exists.');
+        const before = await authorizationSnapshot(sequence, this.host.clipType);
+        this.beforeWrite(expiresAt);
+        if (before !== await authorizationSnapshot(backup, this.host.clipType))
+          throw new BridgeError('BACKUP_MISMATCH', 'The backup does not match the current sequence. Create and verify a fresh backup.');
+        if (before !== await authorizationSnapshot(sequence, this.host.clipType) ||
+          (await this.host.getActiveProject())?.guid.toString() !== projectId)
+          throw new BridgeError('ACTIVE_CONTEXT_CHANGED', 'The sequence or project changed during authorization. No permission was granted.');
+        this.beforeWrite(expiresAt);
+        this.protectedBackups.add(backupKey);
+        this.working.get(projectId)?.delete(backupId);
+        this.authorized.set(key, { projectId, id, backupSequenceId: backupId });
+        return { ...this.ref(project, sequence), backupSequenceId: backupId,
+          authorization: 'explicit-current-session', verification: 'clip-layout-source-ranges-speed-timebase; caller verified other relevant state' };
       }
       if (command === "open_sequence") {
         const sequence = await this.sequence(project, args);

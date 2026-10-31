@@ -46,6 +46,8 @@ export class UxpBridge {
   private polling = false;
   private activeRequest?: ReadRequest;
   private pathCounter = 0;
+  private fileAuthorizationQueue: Promise<void> = Promise.resolve();
+  private failedFileRequest?: string;
 
   constructor(
     private readonly host: InspectionHost,
@@ -204,9 +206,45 @@ export class UxpBridge {
     relative: string,
     mode: 'read' | 'write' | 'directory',
   ): Promise<string> {
+    return this.fileAuthorization(root, relative, mode)();
+  }
+
+  fileAuthorization(root: string, relative: string, mode: 'read' | 'write' | 'directory'): () => Promise<string> {
+    const request = this.activeRequest, generation = this.generation;
+    if (!request)
+      throw new BridgeError('FILE_CHECK_UNAVAILABLE', 'File access requires an active brokered MCP request.');
+    return () => this.authorizeFileScoped(root, relative, mode, request, generation);
+  }
+
+  private async authorizeFileScoped(root: string, relative: string, mode: 'read' | 'write' | 'directory',
+    request: ReadRequest, generation: number): Promise<string> {
+    const previous = this.fileAuthorizationQueue;
+    let release!: () => void;
+    this.fileAuthorizationQueue = new Promise<void>((resolve) => { release = resolve; });
+    await previous;
+    try {
+      if (this.activeRequest !== request || generation !== this.generation ||
+          Date.now() >= request.expiresAt || this.failedFileRequest === request.id)
+        throw new BridgeError('FILE_CHECK_ABORTED', 'This file request is no longer eligible for authorization.');
+      // UXP Entry enumeration and proof cleanup must not overlap across checks.
+      return await this.authorizeFileNow(root, relative, mode);
+    } catch (error) {
+      this.failedFileRequest = request.id;
+      throw error;
+    } finally {
+      release();
+    }
+  }
+
+  private async authorizeFileNow(
+    root: string,
+    relative: string,
+    mode: 'read' | 'write' | 'directory',
+  ): Promise<string> {
     const request = this.activeRequest,
       folder = this.folder,
-      marker = this.marker;
+      marker = this.marker,
+      generation = this.generation;
     if (!request || !folder || !marker)
       throw new BridgeError(
         'FILE_CHECK_UNAVAILABLE',
@@ -231,6 +269,8 @@ export class UxpBridge {
     await folder.renameEntry(temporary, checkName, { overwrite: false });
     try {
       while (Date.now() < request.expiresAt) {
+        if (this.activeRequest !== request || this.generation !== generation)
+          throw new BridgeError('FILE_CHECK_ABORTED', 'The originating file request has ended.');
         const proof = (await folder.getEntries()).find(
           (file) => file.name === proofName && file.isFile,
         );

@@ -7700,7 +7700,7 @@
           "className": "Project",
           "name": "closeSequence",
           "kind": "method",
-          "since": "25.6",
+          "since": "26.2",
           "description": "Close a sequence and return true if successful.",
           "parameters": [
             {
@@ -7716,6 +7716,8 @@
           ],
           "returns": "Promise<boolean>",
           "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/project#closesequence",
+          "documentedSince": "25.6",
+          "compatibilityNote": "Minimum corrected against the current official Project reference (checked 2026-10-29), which states Since 26.2; the pinned page has an older label.",
           "result": {
             "kind": "boolean"
           }

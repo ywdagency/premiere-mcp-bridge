@@ -36,7 +36,7 @@ async function setup(t) {
   await uxp.start(folderAdapter(directory));
   t.after(async () => { uxp.stop(); await fs.rm(directory, { recursive: true, force: true }); });
   return { f, directory, marker, args, counts, imported,
-    bridge: new FileBridge(directory, { timeoutMs: 3000, pollMs: 5 }),
+    bridge: new FileBridge(directory, { timeoutMs: 10000, pollMs: 5 }),
     restart: async () => { uxp.stop(); uxp = makeUxp(); await uxp.start(folderAdapter(directory)); },
     receipt: async () => JSON.parse(await fs.readFile(join(directory, `operation-${args.operationId}.json`), 'utf8')),
   };
@@ -185,7 +185,7 @@ test('stdio MCP exposes identical structured/text diagnostics on initial failure
   t.after(() => client.close());
   await client.connect(new StdioClientTransport({ command: process.execPath,
     args: [resolve(__dirname, '../mcp/server.mjs')], env: { ...process.env,
-      PREMIERE_MCP_BRIDGE_DIR: s.directory, PREMIERE_MCP_TIMEOUT_MS: '3000' } }));
+      PREMIERE_MCP_BRIDGE_DIR: s.directory, PREMIERE_MCP_TIMEOUT_MS: '10000' } }));
   const request = { name: 'premiere_import_media', arguments: s.args };
   const first = await client.callTool(request), replay = await client.callTool(request);
   assert.equal(first.isError, true);

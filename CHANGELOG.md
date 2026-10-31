@@ -1,8 +1,24 @@
 # Changelog
 
+## 0.3.8 — public preview
+
+Serialize request-bound UXP file proof lifecycles after an actual batch-import preflight failure. Release the queue on error/expiry/context end and prevent queued checks from outliving the request. Reject sparse marker argument prefixes before native calls at both boundaries. Preserve exact UUID recovery, file permissions and all 42 tools. The native ten-file batch and denied-file recovery pass on Premiere 26.5; full-argument markers, effect animation and explicit source authorization/revocation are verified on synthetic fixtures. Keep catalog coverage distinct from native coverage. The generated Codex client timeout is 45 seconds, above the bridge request deadline. Routine CI now avoids duplicate feature-branch pushes and makes macOS an explicit manual compatibility check. See the versioned release reports for current limits.
+
+## 0.3.7 — release candidate, unpublished
+
+Add read-only file-access diagnostics so agents can discover an existing restored folder grant. Omit the private absolute path unless explicitly requested; never expose saved tokens, enumerate files, open a picker or change permission. Preserve automatic connection, the compact lifecycle-only panel and per-file Entry/Node validation. This patch requires an updated plugin; earlier 0.3.6 activation/read evidence is separate from its pending native verification.
+
+## 0.3.6 — release candidate, unpublished
+
+Add six explicit, journaled project import/lifecycle adapters and typed project-open options. Imports do not grant edit ownership. Pollable jobs block competing bridge writes, retain native close prompts and distinguish false or uncertain outcomes. Add the complete per-member API coverage matrix and an assisted live verification plan. Align English release documentation and build/package version checks. These contracts pass local tests. The candidate was installed and its 0.3.6 runtime activated; doctor and bounded read/time checks pass. Disposable native write verification remains pending.
+
+## 0.3.5 — development candidate
+
+Add explicit, session-scoped authorization of an existing sequence with a verified direct-clone backup and revocation. Compare structural state and detect source changes before granting permission. Keep the backup protected, original deletion blocked and shared media protected even when its original timeline is authorized. No implicit save or context switch. Fixture checks are separate from pending live installation/verification.
+
 ## 0.3.4 — development candidate
 
-Preserve import failures across preparation, file validation, native execution and result registration. Return bounded original exception type/code/message and whether native import started through durable receipts and MCP, including same-operation recovery. Historical receipts remain unchanged. Local tests pass; installation and live import verification are pending owner authorization.
+Preserve import failures across preparation, file validation, native execution and result registration. Return bounded original exception type/code/message and whether native import started through durable receipts and MCP, including same-operation recovery. Historical receipts remain unchanged. Local tests pass. The later 0.3.5 runtime was activated successfully; a synthetic native import still awaits separate verification.
 
 ## Unreleased — release preparation
 

@@ -22,6 +22,12 @@ export const VALUE_TYPES = new Set([
   'ScratchDiskSettings',
 ]);
 const DEDICATED: Record<string, string> = {
+  'Project#closeSequence': 'premiere_close_sequence',
+  'Project#importAEComps': 'premiere_import_ae_comps',
+  'Project#importAllAEComps': 'premiere_import_all_ae_comps',
+  'Project#importSequences': 'premiere_import_sequences',
+  'Project#close': 'premiere_project_close',
+  'Project#pauseGrowing': 'premiere_project_set_growing_media_paused',
   'Project.createProject': 'premiere_project_open',
   'Project.open': 'premiere_project_open',
   'Project#createSequence': 'premiere_create_sequence',

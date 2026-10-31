@@ -24,6 +24,8 @@ function controlFixture() {
     const tracks = [{ name: 'Video 1', getTrackItems: () => items }];
     const value = { guid: `sequence-${++serial}`, name, items, getVideoTrack: async (i) => tracks[i],
       getAudioTrack: async () => ({ getTrackItems: () => [] }), getVideoTrackCount: async () => 1, getAudioTrackCount: async () => 0,
+      getTimebase: async () => '10584000000', getZeroPoint: async () => tick('0'),
+      getSequenceVideoTimeDisplayFormat: async () => ({ type: 100 }),
       getProjectItem: async () => ({ createSetNameAction: (next) => action(() => { value.name = next; }) }),
       createCloneAction: () => action(() => { sequence(`${name} Copy`, items.map((item) => clip({
         name: item.state.name, start: item.state.start.seconds, end: item.state.end.seconds, sourceIn: item.state.sourceIn.seconds

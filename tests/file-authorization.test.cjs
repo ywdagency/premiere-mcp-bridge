@@ -94,3 +94,76 @@ test('real IPC services a UXP file challenge with a matched proof and cleans onl
     false,
   );
 });
+
+test('parallel file requests respect a UXP storage adapter that rejects overlapping proof lifecycles', async (t) => {
+  const { root } = await setup(t);
+  const { FileBridge, prepareBridge } = await import('../mcp/file-bridge.mjs');
+  const { UxpBridge, PremiereControl } = require('../build/lib/runtime.cjs');
+  const { controlFixture } = require('./helpers/control-fixture.cjs');
+  const { folderAdapter } = require('./helpers/bridge-fixture.cjs');
+  const directory = join(root, 'bridge'); await prepareBridge(directory);
+  await fs.writeFile(join(root, 'second.txt'), 'second');
+  const folder = folderAdapter(directory), create = folder.createFile, entries = folder.getEntries;
+  let active = 0, maximum = 0;
+  folder.createFile = async (name, options) => {
+    if (name.startsWith('pathcheck-')) {
+      if (active) throw Object.assign(new Error('no such file or directory'), { code: -2 });
+      maximum = Math.max(maximum, ++active);
+    }
+    return create(name, options);
+  };
+  folder.getEntries = async () => (await entries()).map(entry => {
+    const remove = entry.delete;
+    return { ...entry, delete: async () => {
+      await remove();
+      if (entry.name.startsWith('pathproof-')) active--;
+    } };
+  });
+  const f = controlFixture(); let uxp;
+  f.host.resolveMedia = paths => Promise.all(paths.map(path => uxp.authorizeFile(root, path, 'read')));
+  uxp = new UxpBridge(f.inspectHost, () => {}, new PremiereControl(f.host));
+  await uxp.start(folder); t.after(() => uxp.stop());
+  const result = await new FileBridge(directory, { timeoutMs: 2500, pollMs: 5 }).call('import_media', {
+    projectId: f.project.guid, operationId: randomUUID(), paths: ['input.txt', 'second.txt'],
+  });
+  assert.equal(result.saved, false);
+  assert.equal(f.imports.length, 1);
+  assert.equal(maximum, 1); assert.equal(active, 0);
+  assert.equal((await fs.readdir(directory)).some(n => /^path(check|proof)-/.test(n)), false);
+  await assert.rejects(new FileBridge(directory, { timeoutMs: 2500, pollMs: 5 }).call('import_media', {
+    projectId: f.project.guid, operationId: randomUUID(), paths: ['missing.txt', 'second.txt'],
+  }));
+  assert.equal(f.imports.length, 1, 'A denied first path must never import');
+  assert.equal(active, 0);
+  await new FileBridge(directory, { timeoutMs: 2500, pollMs: 5 }).call('import_media', {
+    projectId: f.project.guid, operationId: randomUUID(), paths: ['input.txt', 'second.txt'],
+  });
+  assert.equal(f.imports.length, 2, 'A failed request must release the queue for the next request');
+  assert.equal(maximum, 1); assert.equal(active, 0);
+});
+
+test('a file authorization captured before async traversal cannot join a later MCP request', async (t) => {
+  const { root } = await setup(t);
+  const { FileBridge, prepareBridge } = await import('../mcp/file-bridge.mjs');
+  const { UxpBridge, PremiereControl } = require('../build/lib/runtime.cjs');
+  const { controlFixture } = require('./helpers/control-fixture.cjs');
+  const { folderAdapter } = require('./helpers/bridge-fixture.cjs');
+  const directory = join(root, 'bridge'); await prepareBridge(directory);
+  const f = controlFixture(); let captured, uxp;
+  f.host.resolveMedia = async () => {
+    captured = uxp.fileAuthorization(root, 'input.txt', 'read');
+    throw new Error('Synthetic asynchronous traversal failure');
+  };
+  uxp = new UxpBridge(f.inspectHost, () => {}, new PremiereControl(f.host));
+  await uxp.start(folderAdapter(directory)); t.after(() => uxp.stop());
+  const bridge = new FileBridge(directory, { timeoutMs: 2500, pollMs: 5 });
+  const args = () => ({ projectId: f.project.guid, operationId: randomUUID(), paths: ['input.txt'] });
+  await assert.rejects(bridge.call('import_media', args()));
+  f.host.resolveMedia = async () => [await captured()];
+  await assert.rejects(bridge.call('import_media', args()), error =>
+    error.diagnostics?.originalError?.code === 'FILE_CHECK_ABORTED');
+  assert.equal(f.imports.length, 0);
+  assert.equal((await fs.readdir(directory)).some(n => /^path(check|proof)-/.test(n)), false);
+  f.host.resolveMedia = async () => [await uxp.authorizeFile(root, 'input.txt', 'read')];
+  await bridge.call('import_media', args()); assert.equal(f.imports.length, 1);
+});

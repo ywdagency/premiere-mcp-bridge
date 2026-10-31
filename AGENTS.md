@@ -4,6 +4,31 @@ This project is a local, agent-independent MCP bridge for Adobe Premiere desktop
 The previous autonomous edit-plan product has been removed by the owner's request.
 Do not reintroduce an automatic editor, content-analysis service or editorial policy.
 
+## First-run installation requests
+
+For a user asking to install/connect this repository from a URL or otherwise,
+read INSTALL.md, docs/installation.md and docs/agent-quickstart.md first. Use the checkout's exact version, npm ci and
+npm run onboard. Validation is the default; --install explicitly invokes Adobe
+UPIA and configures the selected client. Only --release downloads a published
+matching release; never silently fall back to a floating latest binary or claim
+unpublished assets exist. A reviewed local CCX plus its trusted checksum is the
+candidate alternative. No sudo, uninstall, plugin-data deletion or hidden restart.
+
+Setup only generates local client configuration; it does not contact Premiere.
+Respect project trust and client reconnect requirements. Non-Codex configurations
+are returned for manual merge, never reported as already configured.
+For authorized file work, use premiere_get_file_access (includePath=true only when
+the private root is needed) instead of asking the owner to recall a hidden folder.
+This diagnostic never prompts or grants access. Preserve deliberate native folder
+approval for actual file requests and both per-file validation boundaries.
+Run npm run doctor after the user opens the installed panel. A version mismatch
+or missing command is a failure, even if Adobe reports successful installation.
+Doctor proves connection/version only. Keep native release tests separate and
+use disposable fixtures; never use the user's working timeline as an install test.
+This onboarding is Premiere-only. Do not configure another Adobe application or
+combine bridge servers as part of installation.
+
+Read docs/agent-workflows.md for task execution and recovery.
 Read INDEX.md and docs/premiere-control-reference.md before Premiere API work.
 Verify exact methods against Adobe's current official UXP documentation and record
 minimum versions. The baseline is Premiere 25.6; pages mentioning 27.0 do not
@@ -18,8 +43,11 @@ Reads must not alter selection, playback or active context. Writes require the
 running bridge, exact project ID and caller-generated operation UUID.
 The owner selected default-on editing on 2026-10-29: do not reintroduce a separate
 Enable Editing toggle. Stop disables access; Launch and transport Reload enable it.
-Clip mutations are restricted to sequences created or duplicated by this bridge
-in the current plugin session. Preserve source sequences. Use documented undoable
+Clip mutations default to sequences created or duplicated by this bridge in the
+current plugin session. Owner-approved exception (2026-10-29): an exact existing
+sequence can be explicitly authorized with authorize_sequence after a verified
+direct clone backup. Never infer permission. Keep retained backups, original
+sequence deletion and shared source media protected; support revocation. Use documented undoable
 transactions with synchronous callbacks. Journal writes before invoking the host;
 never blindly retry uncertain mutations. Never save projects implicitly.
 
@@ -33,6 +61,12 @@ Use npm test. Record live-host checks separately from fixtures. Keep private
 artifacts, local client configs, credentials, project names and owner paths out
 of commits and packages. Do not delegate or message other chats without direct
 owner authorization.
+
+Release review must audit the exact intended publication refs and packages.
+Unrelated local-only branches may contain private task notes; preserve them and
+never use push --all or --mirror to publish this repository. Send only the
+reviewed branch/tag. Keep current logs, caches and downloaded audit material
+private; a clean source scan does not audit those separately stored surfaces.
 
 ## Full API adapter
 

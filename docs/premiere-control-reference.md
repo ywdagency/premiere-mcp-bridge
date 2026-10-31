@@ -24,4 +24,10 @@ The [UXP changelog](https://developer.adobe.com/premiere-pro/uxp/changelog/) and
 
 The full pinned DOM catalog is in `data/adobe-api.json`, generated with SDK types 26.5.0. Read [native API behavior](native-api.md) and [actual host checks](live-verification-26.5.md). The 26.5 changelog corrects stale method Since labels for Media/Transcript and adds WorkAreaUtils/MediaManager/C2PAService. The 26.3 changelog establishes track-name actions, subclips, AAF, ObjectMaskUtils, language queries and EncoderManager queue/XMP helpers. Corrected metadata retains the page's original Since label. Current samples/reference pages also contain APIs newer than the installed host; native probing is mandatory when availability is uncertain.
 
+The API-expansion audit on 2026-10-29 checked the current Project and
+CloseProjectOptions references. `Project#closeSequence` now states Since 26.2;
+the generator applies that conservative minimum while retaining the pinned
+page's older label and an explicit correction note. New named import/close/
+growing-media contracts are [staged, not live-verified](api-expansion.md).
+
 For file operations, [UXP fs](https://developer.adobe.com/premiere-pro/uxp/uxp-api/reference-js/modules/fs/fs) documents scheme-based lstat. In the tested host, bare native paths fail, Entry URLs work, Stats lacks isSymbolicLink, and URL lstat follows a link. Production file metadata uses Entry.getMetadata; the Node file broker performs independent real filesystem checks before native path calls. Do not rely on UXP lstat alone for containment.
