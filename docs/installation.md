@@ -1,5 +1,7 @@
 # Install and connect from the CLI
 
+
+This checkout is unpublished candidate 0.3.10; use the [candidate guide](release/candidate-0.3.10.md) for local CCX validation. Public v0.3.8 installation examples below remain pinned to that release. Its native runtime has the earlier Stop behavior; the new persistent-grant behavior requires the matching candidate runtime.
 The supported preview platform is macOS, Node.js 22+, Creative Cloud Desktop and
 Premiere (manifest minimum 25.6; native reference host 26.5 Apple Silicon).
 Creative Cloud supplies Adobe's Unified Plugin Installer Agent (UPIA). End users

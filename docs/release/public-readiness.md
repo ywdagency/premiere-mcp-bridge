@@ -1,3 +1,5 @@
+Current development: [candidate 0.3.10](candidate-0.3.10.md). This historical report retains its own version and scope.
+
 # Historical candidate readiness audit — 0.3.6
 
 This audit describes the 0.3.6 snapshot, not the subsequent 0.3.7 patch. See [current candidate status](candidate-0.3.8.md).

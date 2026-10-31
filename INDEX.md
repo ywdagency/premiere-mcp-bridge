@@ -29,3 +29,5 @@
 | Product copy and promotion options | [Positioning](docs/release/positioning.md) |
 | Synthetic-data demo and screenshots | [Demo brief](docs/release/demo.md) |
 | License boundaries and Adobe material | [Third-party notices](docs/third-party-notices.md) |
+
+Current local candidate: [0.3.10 file-approval persistence](docs/release/candidate-0.3.10.md).

@@ -45,6 +45,11 @@ const memberFields: Record<string, Field> = {
   parameters: { type: 'json' },
 };
 export const COMMANDS = {
+  forget_file_access: {
+    minVersion: '25.6', readOnly: false,
+    fields: { ...operation, confirm: { type: 'boolean', required: true } },
+    description: 'Explicitly forget the remembered external-folder approval and persistent token after the human asks to revoke file access. Requires confirm=true and the exact active project ID like other writes. Does not delete files, change the timeline or save. Stop/Launch/Reload and normal updates preserve this approval; use this command only for deliberate revocation. A later file request needs native approval again.',
+  },
   get_file_access: {
     minVersion: '25.6', readOnly: true,
     fields: { includePath: { type: 'boolean' } },
@@ -320,7 +325,7 @@ export const COMMANDS = {
         min: 1,
         max: 10,
         description:
-          'Relative media paths inside the media folder granted in the plugin panel. No absolute paths, traversal, scripts or project files.',
+          'Relative media paths inside the remembered user-approved folder. No panel path setting. No absolute paths, traversal, scripts or project files.',
       },
     },
     description:

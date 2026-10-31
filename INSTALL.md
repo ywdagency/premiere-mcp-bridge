@@ -1,5 +1,7 @@
 # Install with your AI agent
 
+
+This checkout is unpublished candidate 0.3.10; use the [candidate guide](docs/release/candidate-0.3.10.md) for local CCX validation. Public v0.3.8 installation examples below remain pinned to that release. Its native runtime has the earlier Stop behavior; the new persistent-grant behavior requires the matching candidate runtime.
 Give your local agent this repository URL and ask:
 
 > Study https://github.com/ywdagency/premiere-uxp-bridge and help me install Premiere MCP Bridge and connect it to this agent. Follow the installation instructions, start in read-only mode, and do not change my edit during setup.

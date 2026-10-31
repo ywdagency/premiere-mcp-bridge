@@ -1,5 +1,7 @@
 # Premiere MCP Bridge
 
+**Working candidate 0.3.10 — not published or live-verified.** This checkout preserves file approval across Stop/restart/same-ID updates and adds explicit permission forgetting. See the [candidate checks](docs/release/candidate-0.3.10.md). The public installer/source below remains the separately verified v0.3.8 preview.
+
 **Give your AI agent a documented connection to Adobe Premiere.** Inspect timelines, work on sequence copies and build creative tools through local MCP—using the agent you choose.
 
 MIT-licensed bridge built by **YWD Agency** for editors, creative technologists and developers connecting AI workflows to desktop production tools. The bridge exposes explicit operations; you direct the edit. It does not choose a story, analyze footage for an automatic montage or replace editorial judgment.
@@ -80,7 +82,7 @@ Success means capabilities report the connected host and project inspection retu
 
 ## Running, stopping and file access
 
-The bridge connects automatically when the plugin loads, with editing enabled. **Stop** blocks access and clears the external-folder grant; **Launch** resumes it. **Reload** restarts the plugin transport while retaining working-copy ownership, handles, job records and receipts. It does not restart JavaScript or the client's external Node process. Actual UDT/host plugin unload loses session ownership, handles and job registries; it does not cancel native jobs.
+The bridge connects automatically when the plugin loads, with editing enabled. **Stop** blocks access while preserving the remembered external-folder approval; **Launch** resumes it. **Reload** restarts the plugin transport while retaining working-copy ownership, handles, job records and receipts. It does not restart JavaScript or the client's external Node process. Actual UDT/host plugin unload loses session ownership, handles and job registries; it does not cancel native jobs.
 
 File operations require a separate native folder approval. The first valid request without a grant opens that dialog and returns `MEDIA_FOLDER_REQUIRED` before file I/O. Approve the intended folder and submit a new request; a write with this confirmed preflight rejection uses a new operation UUID. Unknown write outcomes require recovery with the original UUID and identical arguments instead. There is no implicit project save.
 
@@ -88,7 +90,7 @@ For an inspection-only client configuration, run `npm run setup -- --read-only`.
 
 ## API coverage and limits
 
-The staged source server exposes **42 MCP tools**: convenience project/sequence/clip operations, searchable reference tools and a typed native adapter. Six project import/lifecycle adapters are exposed; selected native checks and remaining AE/growing-media variants are separately recorded; see the [API expansion matrix and test plan](docs/api-expansion.md). Installed runtimes report their own command list through capabilities. The pinned Adobe DOM catalog covers **73 types and 707 entries**, including 137 constants. Native evidence is recorded separately for Premiere 26.5; installation/lifecycle observations must identify the actual build tested. These counts describe this checkout, not every Premiere version or full behavioral coverage.
+The staged source server exposes **43 MCP tools**: convenience project/sequence/clip operations, searchable reference tools and a typed native adapter. Six project import/lifecycle adapters are exposed; selected native checks and remaining AE/growing-media variants are separately recorded; see the [API expansion matrix and test plan](docs/api-expansion.md). Installed runtimes report their own command list through capabilities. The pinned Adobe DOM catalog covers **73 types and 707 entries**, including 137 constants. Native evidence is recorded separately for Premiere 26.5; installation/lifecycle observations must identify the actual build tested. These counts describe this checkout, not every Premiere version or full behavioral coverage.
 
 Catalog membership, execution policy, native presence and live-tested behavior are different. Search and describe work without Premiere; `premiere_api_probe` checks the running host. The [native API guide](docs/native-api.md) documents opaque handles, locked action batches, file grants, jobs and events. The [live report](docs/live-verification-26.5.md) records what actually ran.
 

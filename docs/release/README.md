@@ -1,3 +1,7 @@
+# Working candidate 0.3.10
+
+The [persistent file-approval patch](candidate-0.3.10.md) is local and not published/live-verified. It exposes 43 full tools (40 host commands) and 19 read-only tools. Published v0.3.8 evidence below remains historical and does not verify this candidate.
+
 # Preview release 0.3.8
 
 This Premiere-only preview retains 42 MCP tools, 39 host commands and 19 read-only tools. It fixes overlapping UXP file-proof lifecycles and rejects sparse marker argument prefixes before native calls. Automatic connection, the compact panel, request-only filesystem permission, source protection and exact-UUID recovery remain intact.

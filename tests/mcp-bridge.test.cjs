@@ -186,7 +186,7 @@ async function bundledPanel(t, options = {}) {
     addEventListener(name, listener) { this.listeners[name] = listener; },
   }]));
   const document = { getElementById: (id) => elements.get(id) ?? null };
-  const saved = new Map(options.savedMedia ? [['premiere-mcp-media-folder', 'saved-media']] : []);
+  const saved = options.saved ?? new Map(options.savedMedia ? [['premiere-mcp-media-folder', 'saved-media']] : []);
   const localStorage = { getItem: (key) => saved.get(key) ?? null,
     setItem: (key, value) => saved.set(key, value), removeItem: (key) => saved.delete(key) };
   let entrypoints;
@@ -194,7 +194,7 @@ async function bundledPanel(t, options = {}) {
   const dataDirectory = join(directory, 'PluginData');
   await fs.mkdir(dataDirectory);
   const dataFolder = folderAdapter(dataDirectory);
-  const mediaFolder = { ...folderAdapter(directory), name: 'Private fixture folder', nativePath: directory };
+  const mediaFolder = { ...folderAdapter(directory), name: 'Private fixture folder', nativePath: directory, isFolder: true };
   const storage = { getDataFolder: async () => dataFolder,
     getFolder: async () => { pickerCalls++; return mediaFolder; },
     createPersistentToken: async () => 'saved-media',
@@ -202,7 +202,7 @@ async function bundledPanel(t, options = {}) {
     ...options.storage };
   const readEntries = dataFolder.getEntries;
   dataFolder.getEntries = async () => [...await readEntries(), { ...folderAdapter(directory), name: 'mcp-bridge', isFolder: true, isFile: false }];
-  vm.runInNewContext(await fs.readFile(resolve(__dirname, "../dist/main.js"), "utf8"), {
+  vm.runInNewContext(options.bundle ?? await fs.readFile(resolve(__dirname, "../dist/main.js"), "utf8"), {
     document, localStorage, console, setTimeout, clearTimeout,
     require(name) {
       if (name === "premierepro") return { Project: { getActiveProject: host.getActiveProject },
@@ -243,7 +243,7 @@ test('bundled plugin reports absent and restored file access without adding cont
   assert.equal(restored.saved.size, 1);
 });
 
-test('bridge launches with editing enabled, exposes only lifecycle controls and Stop revokes access', async (t) => {
+test('Stop blocks transport while preserving the folder approval and Launch reuses it without a picker', async (t) => {
   const { bridge, FileBridge, directory, elements, entrypoints, saved, pickerCalls } = await bundledPanel(t);
   assert.equal((await bridge.call('get_capabilities')).writesEnabled, true);
   assert.equal(pickerCalls(), 0, 'Launching must not ask for file access');
@@ -259,11 +259,119 @@ test('bridge launches with editing enabled, exposes only lifecycle controls and 
   assert.equal(elements.get('toggle-connection').textContent, 'Launch');
   assert.equal(elements.get('status').textContent, 'Stopped');
   await assert.rejects(new FileBridge(directory, { timeoutMs: 60, pollMs: 5 }).call('get_project'), { code: 'BRIDGE_TIMEOUT' });
-  assert.equal(saved.size, 0);
+  assert.equal(saved.size, 1);
   elements.get('toggle-connection').listeners.click();
   const capabilities = await bridge.call('get_capabilities');
   assert.equal(capabilities.writesEnabled, true);
-  assert.equal(capabilities.mediaFolderGranted, false);
+  assert.equal(capabilities.mediaFolderGranted, true);
+  assert.equal(pickerCalls(), 1, 'Stop/Launch must not ask for an already approved folder');
+});
+
+test('a new plugin runtime and version restore the same saved approval without opening a picker', async (t) => {
+  // Optional immutable previous-release bundle for the separate local upgrade check.
+  const previous = process.env.PREMIERE_TEST_PREVIOUS_BUNDLE;
+  const first = await bundledPanel(t, { bundle: previous ? await fs.readFile(previous, 'utf8') : undefined });
+  const originalVersion = (await first.bridge.call('get_capabilities')).bridgeVersion;
+  await fs.writeFile(join(first.directory, 'upgrade.txt'), 'Retained folder content');
+  const entries = first.mediaFolder.getEntries;
+  first.mediaFolder.getEntries = async () => (await entries()).map(entry => ({ ...entry,
+    nativePath: join(first.directory, entry.name),
+    getMetadata: async () => ({ size: (await fs.stat(join(first.directory, entry.name))).size }),
+  }));
+  await assert.rejects(first.bridge.call('api_load_text', { path: 'grant.txt' }), { code: 'MEDIA_FOLDER_REQUIRED' });
+  assert.equal(first.saved.get('premiere-mcp-media-folder'), 'saved-media');
+  first.entrypoints.plugin.destroy();
+  const retained = { saved: first.saved, storage: { getEntryForPersistentToken: async () => first.mediaFolder } };
+  const restarted = await bundledPanel(t, retained);
+  assert.equal((await restarted.bridge.call('get_file_access')).granted, true);
+  assert.equal((await restarted.bridge.call('get_file_access', { includePath: true })).folder.nativePath, first.directory);
+  if (previous) assert.notEqual((await restarted.bridge.call('get_capabilities')).bridgeVersion, originalVersion);
+  assert.equal(restarted.pickerCalls(), 0);
+  restarted.entrypoints.plugin.destroy();
+  const upgraded = await bundledPanel(t, retained);
+  assert.equal((await upgraded.bridge.call('get_capabilities')).mediaFolderGranted, true);
+  assert.equal((await upgraded.bridge.call('api_load_text', { path: 'upgrade.txt' })).characters,
+    'Retained folder content'.length, 'Restored approval must still pass Entry and Node file checks');
+  assert.equal(upgraded.pickerCalls(), 0);
+  assert.equal(upgraded.saved.size, 1);
+});
+
+test('Stop or explicit forgetting during persistent-token creation cannot commit a late picker result', async (t) => {
+  for (const action of ['stop', 'forget']) {
+    await t.test(action, async t => {
+      const p = await bundledPanel(t);
+      await p.bridge.call('get_capabilities');
+      let finish, entered;
+      const started = new Promise(r => { entered = r; });
+      p.storage.createPersistentToken = () => { entered(); return new Promise(r => { finish = r; }); };
+      await assert.rejects(p.bridge.call('api_load_text', { path: 'grant.txt' }), { code: 'MEDIA_FOLDER_REQUIRED' });
+      await started;
+      if (action === 'stop') p.entrypoints.commands.disconnectReadOnlyMcp();
+      else await p.bridge.call('forget_file_access', { projectId: 'project-fixture', operationId: randomUUID(), confirm: true });
+      finish('late-token'); await delay(0);
+      await p.entrypoints.commands.connectReadOnlyMcp();
+      assert.equal((await p.bridge.call('get_file_access')).granted, false);
+      assert.equal(p.saved.size, 0);
+    });
+  }
+});
+
+test('an unavailable remembered token asks again only for an explicit file request', async (t) => {
+  const p = await bundledPanel(t, { savedMedia: true, storage: {
+    getEntryForPersistentToken: async () => { throw new Error('Invalid token'); },
+  } });
+  assert.equal((await p.bridge.call('get_file_access')).granted, false);
+  assert.equal(p.pickerCalls(), 0);
+  await assert.rejects(p.bridge.call('api_load_text', { path: 'grant.txt' }), { code: 'MEDIA_FOLDER_REQUIRED' });
+  assert.equal(p.pickerCalls(), 1);
+  assert.equal((await p.bridge.call('get_file_access')).granted, true);
+});
+
+test('forget_file_access requires explicit confirmation/current project and journals revocation separately from Stop', async (t) => {
+  const p = await bundledPanel(t, { savedMedia: true });
+  const args = { projectId: 'project-fixture', operationId: randomUUID(), confirm: true };
+  assert.equal((await p.bridge.call('get_file_access')).granted, true);
+  await assert.rejects(p.bridge.call('forget_file_access', { ...args, confirm: false }), { code: 'EXPLICIT_AUTHORIZATION_REQUIRED' });
+  await assert.rejects(p.bridge.call('forget_file_access', { ...args, operationId: randomUUID(), projectId: 'stale' }), { code: 'ACTIVE_CONTEXT_CHANGED' });
+  assert.equal(p.saved.size, 1);
+  const revoke = { ...args, operationId: randomUUID() };
+  assert.equal((await p.bridge.call('forget_file_access', revoke)).fileAccessForgotten, true);
+  assert.equal((await p.bridge.call('get_file_access')).granted, false);
+  assert.equal(p.saved.size, 0);
+  assert.equal(p.pickerCalls(), 0, 'Explicit forgetting must not itself prompt');
+  await assert.rejects(p.bridge.call('api_load_text', { path: 'grant.txt' }), { code: 'MEDIA_FOLDER_REQUIRED' });
+  assert.equal((await p.bridge.call('get_file_access')).granted, true);
+  assert.equal((await p.bridge.call('forget_file_access', revoke)).operationReplayed, true);
+  assert.equal((await p.bridge.call('get_file_access')).granted, true, 'Recovery of an old revoke cannot delete a later approval');
+});
+
+test('restoration failure keeps the token and prompts only on an actual file request', async (t) => {
+  const p = await bundledPanel(t, { savedMedia: true, storage: {
+    getEntryForPersistentToken: async () => { throw new Error('Volume temporarily unavailable'); },
+  } });
+  assert.equal((await p.bridge.call('get_file_access')).granted, false);
+  assert.equal(p.saved.size, 1, 'A transient error must not erase remembered consent');
+  assert.equal(p.pickerCalls(), 0);
+  p.storage.getEntryForPersistentToken = async () => p.mediaFolder;
+  await p.entrypoints.commands.reloadBridge();
+  assert.equal((await p.bridge.call('get_file_access')).granted, true);
+  assert.equal(p.pickerCalls(), 0);
+});
+
+test('Stop during token restoration cannot revive transport; the next Launch can restore again', async (t) => {
+  let resolve;
+  const p = await bundledPanel(t, { savedMedia: true, storage: {
+    getEntryForPersistentToken: () => new Promise(r => { resolve = r; }),
+  } });
+  p.entrypoints.commands.disconnectReadOnlyMcp();
+  resolve(p.mediaFolder);
+  await delay(0);
+  assert.equal(p.elements.get('status').textContent, 'Stopped');
+  assert.equal(p.saved.size, 1);
+  p.storage.getEntryForPersistentToken = async () => p.mediaFolder;
+  await p.entrypoints.commands.connectReadOnlyMcp();
+  assert.equal((await p.bridge.call('get_file_access')).granted, true);
+  assert.equal(p.pickerCalls(), 0);
 });
 
 test('first file request asks once and rejects before access; the next granted request reads through the broker', async (t) => {
@@ -424,7 +532,7 @@ test('expired remembered access stays quiet until a file request requires a fres
   assert.equal(c.writesEnabled, true);
   assert.equal(c.mediaFolderGranted, false);
   assert.equal(elements.get('error').style.display, 'none');
-  assert.equal(saved.size, 0);
+  assert.equal(saved.size, 1);
   assert.equal(pickerCalls(), 0);
   await assert.rejects(bridge.call('api_load_text', { path: 'grant.txt' }), { code: 'MEDIA_FOLDER_REQUIRED' });
   assert.equal(pickerCalls(), 1);

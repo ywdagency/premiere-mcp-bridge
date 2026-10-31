@@ -22,7 +22,7 @@ Example inspection prompt:
 
 | Control | What it does |
 | --- | --- |
-| Stop | Blocks bridge access and clears the external-file grant. |
+| Stop | Blocks bridge access while retaining the approved folder and persistent token. |
 | Launch | Resumes the plugin transport with editing available. It does not launch Premiere or the AI client. |
 | Reload in the plugin panel | Restarts transport and preserves session handles, jobs, working ownership and receipts. It does not load newly installed JavaScript or refresh the client's tool list. |
 | Reconnect/restart MCP in the client | Starts the client's server process again and refreshes tools/configuration. |
@@ -59,6 +59,12 @@ If the client has no tools, inspect its configuration/trust and reconnect it. If
 After a write timeout, tell the agent to recover the identical request/operation ID and inspect the outcome. A new ID is a new operation and can duplicate work. Do not repeatedly ask it to retry an unknown edit or import. Existing-source protection, stale context and unsupported API errors are documented in [troubleshooting](troubleshooting.md).
 
 For a public bug report, include versions, the tool/error code and a synthetic reproduction. Remove personal paths, names, transcripts and raw logs. Security reports use [SECURITY.md](../SECURITY.md), not public issues. The preview's [verification scope](release/final-review-0.3.8.md) is separate from catalog coverage.
+
+## Remembered file approval
+
+In working candidate 0.3.10, Stop, Launch and Reload retain the approved folder; normal Premiere/plugin restarts and same-ID updates restore the persistent token. No new panel setting is required. To revoke it deliberately, ask the agent to call premiere_forget_file_access with confirm:true, the exact active project ID and a fresh operation UUID. This write tool is absent from an inspection-only client. It forgets access without deleting files or cancelling existing Adobe jobs. If restoration fails, diagnostics remain quiet; only a deliberate file operation can request approval again.
+
+Uninstalling, deleting plugin data, moving the folder or OS permission changes can invalidate persistence. An update must preserve the plugin ID and storage; do not uninstall as an update step.
 
 ## Updates
 

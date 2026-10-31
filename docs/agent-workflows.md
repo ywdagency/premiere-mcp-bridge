@@ -45,3 +45,5 @@ Poll premiere_api_get_job for a returned jobId. A false native result is failure
 ## Report completion
 
 Report the actual result, retained backup/work labels, structural readback and any unresolved operations. State whether the project was explicitly saved or remains unsaved, and distinguish native evidence from fixtures, catalog knowledge and unreviewed picture/sound. Sanitize host metadata before putting it in GitHub. Actual native tests use disposable fixtures and are recorded in the [versioned report](release/native-check-0.3.8.md).
+
+Folder approval in candidate 0.3.10 survives Stop/Launch/Reload, normal same-ID updates and restarts. Do not ask for a path already returned by get_file_access. Use premiere_forget_file_access only for an explicit revocation request, with confirm:true, current projectId and operationId; it is absent from inspection-only clients. Stop is transport suspension, not revocation. Earlier installed versions can clear approval on Stop; check the executing version. Uninstall/data deletion or Adobe/OS invalidation can remove persistence. Never trigger a picker merely to diagnose or test installation.

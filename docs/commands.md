@@ -62,3 +62,7 @@ On success only the named sequence becomes editable. The retained backup loses w
 `premiere_revoke_sequence_authorization` takes `projectId`, `sequenceId` and a new operation UUID. It removes the explicit grant while retaining backup protection. Actual plugin unload clears all session authorization/clone records; panel transport Reload alone preserves the session. Operations retain normal journal/recovery semantics.
 
 Native marker creation on Premiere 26.5 requires a contiguous argument prefix: when supplying startTime, include markerType; when supplying comments, also include duration. Sparse middle arguments are rejected with INVALID_API_ARGUMENT before host invocation. Trailing optional arguments may still be omitted according to the catalog. Full-argument Comment marker creation was tested natively; not every optional variant is verified.
+
+## Explicit file-access revocation (candidate0.3.10)
+
+premiere_forget_file_access is a write tool requiring the exact active projectId, a new operationId and confirm:true after the human asks to forget approval. It clears only the remembered folder/token, with no file deletion, timeline edit, implicit save or new picker. Inspect premiere_get_file_access afterward. Stop/Launch/Reload, normal restarts and same-ID updates preserve remembered approval. Recover a timed-out revoke with the same arguments/UUID; replaying a completed revoke must not revoke a later newly approved folder. This command does not cancel already submitted Adobe/AME jobs.

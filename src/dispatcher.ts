@@ -62,6 +62,21 @@ export function createDispatcher(
     };
   // Adding a catalog entry without a handler is a TypeScript error.
   const handlers: Record<BridgeCommand, Handler> = {
+    forget_file_access: async ({ args, expiresAt }) => {
+      if (args.confirm !== true)
+        throw new BridgeError('EXPLICIT_AUTHORIZATION_REQUIRED', 'Confirm the human request to forget file access.');
+      const project = await host.getActiveProject();
+      if (!project || project.guid.toString() !== args.projectId)
+        throw new BridgeError('ACTIVE_CONTEXT_CHANGED', 'The requested project is no longer active.');
+      if (!control?.capabilities().writesEnabled)
+        throw new BridgeError('WRITES_DISABLED', 'Launch Premiere MCP Bridge first.');
+      if (Date.now() >= expiresAt)
+        throw new BridgeError('REQUEST_EXPIRED', 'The request expired before forgetting access.');
+      if (!host.forgetFileAccess)
+        throw new BridgeError('FILE_ACCESS_DIAGNOSTICS_UNAVAILABLE', 'This host cannot forget file access.');
+      host.forgetFileAccess();
+      return { readOnly: false, operationId: args.operationId, fileAccessForgotten: true, saved: false };
+    },
     get_file_access: async ({ args }) => {
       if (!host.getFileAccess)
         throw new BridgeError('FILE_ACCESS_DIAGNOSTICS_UNAVAILABLE', 'This host has no file-access diagnostics provider.');

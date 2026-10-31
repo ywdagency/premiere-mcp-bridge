@@ -9,7 +9,7 @@ import { formatClipPage } from './timecode.mjs';
 import catalog from '../build/lib/command-catalog.cjs';
 import protocol from '../build/lib/bridge-protocol.cjs';
 
-const FILE_ACCESS_INSTRUCTIONS = 'The panel has no file-path setting or folder button. Connection, timeline inspection, sequence backups and ordinary clip edits need no external-folder grant. For a deliberate import/file/output task, first call premiere_get_file_access; if granted=true, reuse that grant and request includePath=true only when mapping private paths is necessary. Never ask the human to recall or configure a saved path. When a default destination is needed, read premiere_get_project with includePath=true and prefer the saved .prproj parent only if it is inside the approved folder; convert to a path relative to that grant. The project path is not permission, media need not live beside the project, and an unsaved project has no reliable project-folder default. If no grant exists, the actual file request opens Adobe native approval; explain that dialog only, never a removed panel setting. Do not trigger a picker during setup or diagnostics, silently switch an existing grant, grant full-disk access or bypass Entry/Node checks.';
+const FILE_ACCESS_INSTRUCTIONS = 'Since 0.3.10, Stop/Launch/Reload and normal same-ID updates/restarts preserve folder approval. Use premiere_forget_file_access only after an explicit human revocation request, with confirm=true, active project ID and operation UUID. The panel has no file-path setting or folder button. Connection, timeline inspection, sequence backups and ordinary clip edits need no external-folder grant. For a deliberate import/file/output task, first call premiere_get_file_access; if granted=true, reuse that grant and request includePath=true only when mapping private paths is necessary. Never ask the human to recall or configure a saved path. When a default destination is needed, read premiere_get_project with includePath=true and prefer the saved .prproj parent only if it is inside the approved folder; convert to a path relative to that grant. The project path is not permission, media need not live beside the project, and an unsaved project has no reliable project-folder default. If no grant exists, the actual file request opens Adobe native approval; explain that dialog only, never a removed panel setting. Do not trigger a picker during setup or diagnostics, silently switch an existing grant, grant full-disk access or bypass Entry/Node checks.';
 
 function inputSchema(fields) {
   const shape = {};
@@ -45,10 +45,7 @@ function inputSchema(fields) {
     if (field.type === 'names')
       schema = z.array(z.string().min(1).max(256).regex(/^[^\u0000]*$/))
         .min(field.min ?? 0).max(field.max ?? 50);
-    // Correct legacy catalog wording without changing the published UXP payload.
-    if (field.description) schema = schema.describe(field.description.replace(
-      'granted in the plugin panel', 'approved through Adobe native folder approval',
-    ));
+    if (field.description) schema = schema.describe(field.description);
     shape[name] = field.required ? schema : schema.optional();
   }
   return z.object(shape).strict();

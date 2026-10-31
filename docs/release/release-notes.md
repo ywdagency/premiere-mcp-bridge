@@ -1,3 +1,5 @@
+Current development: [candidate 0.3.10](candidate-0.3.10.md). This historical report retains its own version and scope.
+
 # Premiere MCP Bridge 0.3.8 — public preview
 
 Local MCP bridge with 42 tools, automatic plugin-storage discovery, opt-in file-access diagnostics and portable CLI/client setup. The pinned Adobe DOM contains 73 types and 707 reference entries; catalog routing is broader than native verification.

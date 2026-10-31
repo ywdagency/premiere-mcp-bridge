@@ -105,9 +105,15 @@ async function resolveApiPath(
       'INVALID_API_ARGUMENT',
       'Paths must be relative inside the granted folder, without traversal.',
     );
+  if (!connected || !connectionEnabled)
+    throw new BridgeError('WRITES_DISABLED', 'Launch Premiere MCP Bridge first.');
   if (!mediaFolder) {
-    if (!connected || !connectionEnabled)
-      throw new BridgeError('WRITES_DISABLED', 'Launch Premiere MCP Bridge first.');
+    const generation = accessGeneration;
+    await restoreMediaAccess(generation);
+    if (generation !== accessGeneration || !connected || !connectionEnabled)
+      throw new BridgeError('FILE_CHECK_ABORTED', 'File access was interrupted before authorization.');
+  }
+  if (!mediaFolder) {
     // Reject before file access instead of waiting past an IPC deadline for a picker.
     requestMediaAccess();
     throw new BridgeError(
@@ -193,6 +199,7 @@ const bridge = new UxpBridge(
     version: host.version,
     uxpVersion: versions.uxp,
     getFileAccess: (includePath) => describeFileAccess(mediaFolder, includePath),
+    forgetFileAccess: forgetMediaAccess,
     clipConstants: {
       clipType: ppro.Constants.TrackItemType.CLIP,
       displayFormats: ppro.Constants.VideoDisplayFormatType,
@@ -223,12 +230,15 @@ async function startBridge(activity: string): Promise<void> {
   const generation = ++accessGeneration;
   connectionEnabled = true;
   connected = false;
+  auto.stop();
   restarting = true;
   activityText = activity;
   connectionError = '';
   mediaError = '';
   render();
   try {
+    await restoreMediaAccess(generation);
+    if (generation !== accessGeneration || !connectionEnabled) return;
     await auto.start();
   } finally {
     if (generation === accessGeneration) {
@@ -243,9 +253,16 @@ function disconnect(): void {
   connectionEnabled = false;
   connected = false;
   restarting = false;
-  mediaFolder = undefined;
-  forget(MEDIA_TOKEN);
+  // Stop suspends transport; the existing user-approved folder/token survives.
   connectionError = '';
+  mediaError = '';
+  render();
+}
+function forgetMediaAccess(): void {
+  // Invalidate late picker/restoration results before clearing the remembered grant.
+  accessGeneration++;
+  forget(MEDIA_TOKEN);
+  mediaFolder = undefined;
   mediaError = '';
   render();
 }
@@ -277,22 +294,22 @@ async function chooseMedia(): Promise<void> {
     render();
   }
 }
-async function restore(): Promise<void> {
-  const generation = accessGeneration;
+async function restoreMediaAccess(generation: number): Promise<void> {
   const savedMedia = token(MEDIA_TOKEN);
   if (savedMedia) {
     try {
       const folder = await fs.getEntryForPersistentToken(savedMedia);
-      if (generation !== accessGeneration) return;
+      if (generation !== accessGeneration || token(MEDIA_TOKEN) !== savedMedia) return;
+      if (!folder?.isFolder)
+        throw new BridgeError('INVALID_FILE_GRANT', 'The remembered entry is not a folder.');
       mediaFolder = folder;
     } catch {
-      if (generation !== accessGeneration) return;
-      forget(MEDIA_TOKEN);
+      if (generation !== accessGeneration || token(MEDIA_TOKEN) !== savedMedia) return;
+      // A disconnected volume or temporary restore failure must not erase consent.
+      // Only a real file request may ask the user again; diagnostics never prompt.
       mediaFolder = undefined;
     }
   }
-  if (generation === accessGeneration && connectionEnabled) await connect();
-  render();
 }
 function wire(): void {
   if (wired) {
@@ -326,7 +343,7 @@ function wireAction(buttonId: string, controlId: string, action: () => void, ena
 entrypoints.setup({
   plugin: {
     create() {
-      void restore();
+      void connect();
     },
     destroy() {
       accessGeneration++;
