@@ -4,6 +4,7 @@ import { ClipConstants, readSequenceClips } from "./clip-inspection";
 
 type ProjectReader = Pick<Project, "guid" | "name" | "path" | "getSequences" | "getActiveSequence">;
 export interface InspectionHost {
+  getUpdateStatus?(): Record<string, unknown>;
   getFileAccess?(includePath: boolean): Record<string, unknown>;
   forgetFileAccess?(): void;
   getActiveProject(): Promise<ProjectReader | null | undefined>;

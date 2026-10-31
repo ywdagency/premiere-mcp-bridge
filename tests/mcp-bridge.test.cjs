@@ -230,26 +230,31 @@ async function bundledPanel(t, options = {}) {
 
 test('bundled version checks once and opens repository or release only on click/Enter', async t => {
   const { REPOSITORY_URL, UPDATES_URL, UPDATE_CACHE_KEY } = require('../build/lib/updates.cjs');
-  const installedVersion = require('../package.json').version;
-  const newerVersion = installedVersion.replace(/\d+$/, patch => String(Number(patch) + 1));
+  const installed = require('../package.json').version;
+  const parts = installed.split('.').map(Number);
+  const newer = `${parts[0]}.${parts[1]}.${parts[2] + 1}`;
   for (const state of ['neutral', 'update', 'critical']) {
     let checks = 0;
     const opened = [];
     const metadata = { schemaVersion: 1, latest: {
-      version: state === 'neutral' ? installedVersion : newerVersion, minimumPremiereVersion: '25.6.0',
-      releaseUrl: REPOSITORY_URL + '/releases/tag/v' + (state === 'neutral' ? installedVersion : newerVersion) },
-      criticalBelow: state === 'critical' ? newerVersion : null };
+      version: state === 'neutral' ? installed : newer, minimumPremiereVersion: '25.6.0',
+      releaseUrl: REPOSITORY_URL + '/releases/tag/v' + (state === 'neutral' ? installed : newer) },
+      criticalBelow: state === 'critical' ? newer : null };
     const panel = await bundledPanel(t, { fetch: async (url, init) => {
       checks++; assert.equal(url, UPDATES_URL); assert.equal(init.method, 'GET');
       assert.equal(init.credentials, 'omit'); assert.equal('body' in init, false);
       return new Response(JSON.stringify(metadata));
     }, openExternal: async (url, context) => { opened.push({ url, context }); return ''; } });
-    await panel.bridge.call('get_capabilities');
+    const capabilities = await panel.bridge.call('get_capabilities');
     const version = panel.elements.get('plugin-version');
     const destination = state === 'neutral' ? REPOSITORY_URL : metadata.latest.releaseUrl;
     assert.equal(version.attributes['data-update'], state);
     assert.equal(version.attributes.href, destination);
-    assert.equal(version.textContent, `v${installedVersion}`);
+    assert.equal(version.textContent, 'v' + installed);
+    assert.equal(capabilities.updateStatus.lastResult, 'success');
+    assert.equal(capabilities.updateStatus.source, 'network');
+    assert.equal(capabilities.updateStatus.requestsStarted, 1);
+    assert.equal(capabilities.updateStatus.nextAttemptAtMs - capabilities.updateStatus.lastAttemptAtMs, 86400000);
     assert.equal(checks, 1); assert.equal(opened.length, 0); assert.equal(panel.pickerCalls(), 0);
     assert.ok(panel.saved.has(UPDATE_CACHE_KEY));
     let prevented = 0;
@@ -264,7 +269,10 @@ test('bundled version checks once and opens repository or release only on click/
     assert.equal(panel.elements.get('status').textContent, 'Running');
     assert.equal(panel.elements.get('error').style.display, 'none');
     const reloaded = await bundledPanel(t, { saved: panel.saved, fetch: async () => assert.fail('Cached check must survive reload') });
-    await reloaded.bridge.call('get_capabilities');
+    const cached = await reloaded.bridge.call('get_capabilities');
+    assert.equal(cached.updateStatus.source, 'cache');
+    assert.equal(cached.updateStatus.requestsStarted, 0);
+    assert.equal(cached.updateStatus.lastAttemptAtMs, capabilities.updateStatus.lastAttemptAtMs);
     assert.equal(reloaded.elements.get('plugin-version').attributes['data-update'], state);
   }
 });

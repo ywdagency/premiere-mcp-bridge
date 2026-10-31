@@ -1,10 +1,10 @@
 # Changelog
 
-## Unreleased — source 0.3.10
+## 0.3.11 — public preview
 
-Preserve approved external-folder tokens across Stop/Launch, plugin/Premiere restarts and normal same-ID upgrades. Restore without prompting; retain tokens across temporary restoration failures. Add explicit journaled file-access revocation without panel settings; stale picker/restoration completions cannot silently regrant permission. Keep request-only filesystem access and per-file Entry/Node checks. Correct obsolete panel-folder guidance. The file-approval build's activation/restored grant was verified; the combined source with the update indicator has not yet received a native installer check.
+Preserve approved external-folder tokens across Stop/Launch, plugin/Premiere restarts and normal same-ID upgrades. Restore without prompting; retain tokens across temporary restoration failures. Add explicit journaled file-access revocation without panel settings; stale picker/restoration completions cannot silently regrant permission. Keep request-only filesystem access and per-file Entry/Node checks. Correct obsolete panel-folder guidance. The combined installer payload, executing version, restored grant and native GitHub update request are verified on macOS Premiere 26.5; yellow/red routing remains fixture/browser evidence.
 
-Add daily GitHub updates.json checks and a plain clickable version: gray opens the repository, yellow opens a newer compatible release, red opens an explicitly critical update. No automatic install or telemetry. Rename the repository to premiere-mcp-bridge and update active installation, package and release URLs.
+Add daily GitHub updates.json checks and a plain clickable version: gray opens the repository, yellow opens a newer compatible release, red opens an explicitly critical update. No automatic install or telemetry. Rename the repository to premiere-mcp-bridge and update active installation, package and release URLs. Add read-only updateStatus diagnostics to capabilities, refresh agent-led onboarding and remove superseded internal documentation.
 
 ## 0.3.8 — public preview
 

@@ -91,6 +91,7 @@ export function createDispatcher(
       workingSequences: [],
       ...control?.capabilities(),
       ...api?.capabilities(),
+      updateStatus: host.getUpdateStatus?.() ?? null,
       commands: COMMAND_LIST.map(({ command, readOnly, minVersion }) => ({
         name: `premiere_${command}`,
         readOnly,

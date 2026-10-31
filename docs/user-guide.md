@@ -62,7 +62,7 @@ For a public bug report, include versions, the tool/error code and a synthetic r
 
 ## Remembered file approval
 
-In working candidate 0.3.10, Stop, Launch and Reload retain the approved folder; normal Premiere/plugin restarts and same-ID updates restore the persistent token. No new panel setting is required. To revoke it deliberately, ask the agent to call premiere_forget_file_access with confirm:true, the exact active project ID and a fresh operation UUID. This write tool is absent from an inspection-only client. It forgets access without deleting files or cancelling existing Adobe jobs. If restoration fails, diagnostics remain quiet; only a deliberate file operation can request approval again.
+In preview 0.3.11, Stop, Launch and Reload retain the approved folder; normal Premiere/plugin restarts and same-ID updates restore the persistent token. No new panel setting is required. To revoke it deliberately, ask the agent to call premiere_forget_file_access with confirm:true, the exact active project ID and a fresh operation UUID. This write tool is absent from an inspection-only client. It forgets access without deleting files or cancelling existing Adobe jobs. If restoration fails, diagnostics remain quiet; only a deliberate file operation can request approval again.
 
 Uninstalling, deleting plugin data, moving the folder or OS permission changes can invalidate persistence. An update must preserve the plugin ID and storage; do not uninstall as an update step.
 

@@ -27,4 +27,4 @@
 | Daily version checks and release metadata | [Updates](docs/updates.md) |
 | License boundaries and Adobe material | [Third-party notices](docs/third-party-notices.md) |
 
-Current local candidate: [0.3.10 file-approval persistence](docs/release/candidate-0.3.10.md).
+Current preview: [0.3.11 installer and native verification](docs/release/candidate-0.3.11.md).

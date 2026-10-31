@@ -1,13 +1,12 @@
 # Release verification and maintenance
 
-The public preview is [v0.3.8](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.8). The current unreleased source is **0.3.10**, combining remembered file approval and the daily update indicator. The earlier file-approval-only build was installed and read-verified on the reference Mac; the combined source has not yet received a native installer check. It exposes 43 MCP tools (40 host commands and three offline references), or 19 tools in inspection-only mode.
-
-The combined source passed 178 local automated tests after integration. This is source/build/fixture verification, not a new native installation or full Premiere regression. The feed and public installer remain 0.3.8.
+The public preview is [v0.3.11](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.11), combining remembered file approval and the daily update indicator with read-only diagnostics. It exposes 43 MCP tools (40 host commands and three offline references), or 19 tools in inspection-only mode. The exact seven-file CCX matches both rebuilt source and installed payload; the executing version, restored grant and native update check pass on the reference Mac. See the versioned report for exact evidence and limits.
 
 ## Evidence
 
 | Report | Verified scope |
 | --- | --- |
+| [0.3.11](candidate-0.3.11.md) | Exact installer/source/installed payload, native connection, restored grant and update check |
 | [0.3.10](candidate-0.3.10.md) | Persistent folder approval, bundled lifecycle/upgrade tests, installation and real runtime/restored-grant reads |
 | [0.3.8](native-check-0.3.8.md) | Maximum-size batch, denial/recovery, backups, edits, markers, effects/keyframes, explicit source authorization/revocation and readable interchange outputs |
 | [0.3.7](native-check-0.3.7.md) | Synthetic creation/import/edit, saves, lifecycle and interchange checks; batch defect that prompted 0.3.8 |

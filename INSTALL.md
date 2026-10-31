@@ -1,7 +1,5 @@
 # Install with your AI agent
 
-
-This checkout is unpublished candidate 0.3.10; use the [candidate guide](docs/release/candidate-0.3.10.md) for local CCX validation. Public v0.3.8 installation examples below remain pinned to that release. Its native runtime has the earlier Stop behavior; the new persistent-grant behavior requires the matching candidate runtime.
 Give your local agent this repository URL and ask:
 
 > Study https://github.com/ywdagency/premiere-mcp-bridge and help me install Premiere MCP Bridge and connect it to this agent. Follow the installation instructions, start in read-only mode, and do not change my edit during setup.
@@ -19,7 +17,7 @@ Check macOS, Git, Node.js 22+, Creative Cloud Desktop/UPIA and the intended Prem
 Choose a new folder, preserving existing checkouts and work. For this preview:
 
 ```sh
-git clone --branch v0.3.8 --depth 1 https://github.com/ywdagency/premiere-mcp-bridge.git
+git clone --branch v0.3.11 --depth 1 https://github.com/ywdagency/premiere-mcp-bridge.git
 cd premiere-mcp-bridge
 npm ci
 npm run onboard -- --release
@@ -54,7 +52,7 @@ After the panel is open:
 npm run doctor
 ```
 
-Require executing version 0.3.8 and no missing commands. Discover tools in the client's actual MCP connection, then read premiere_get_capabilities and premiere_get_project, and the active sequence if relevant. Inspection-only configuration exposes 19 tools. A null project/sequence is valid. Do not create/import/edit/export/save a project or open a media-folder picker as an installation test.
+Require executing version 0.3.11 and no missing commands. Discover tools in the client's actual MCP connection, then read premiere_get_capabilities and premiere_get_project, and the active sequence if relevant. Inspection-only configuration exposes 19 tools. A null project/sequence is valid. Do not create/import/edit/export/save a project or open a media-folder picker as an installation test.
 
 Finish by reporting the actual version, doctor/first-read result, client configuration location and any remaining human action. If a client needs a new session/reconnect, state that setup is waiting for it. Follow [troubleshooting](docs/troubleshooting.md) rather than claiming success from installer registration alone.
 

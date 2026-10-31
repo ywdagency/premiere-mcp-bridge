@@ -2,7 +2,7 @@
   "manifestVersion": 5,
   "id": "com.yeswelldone.premiere-auto-editor",
   "name": "Premiere MCP Bridge",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "main": "index.html",
   "host": {
     "app": "premierepro",
@@ -46,7 +46,15 @@
   ],
   "requiredPermissions": {
     "localFileSystem": "request",
-    "network": { "domains": ["https://raw.githubusercontent.com"] },
-    "launchProcess": { "schemes": ["https"] }
+    "network": {
+      "domains": [
+        "https://raw.githubusercontent.com"
+      ]
+    },
+    "launchProcess": {
+      "schemes": [
+        "https"
+      ]
+    }
   }
 }

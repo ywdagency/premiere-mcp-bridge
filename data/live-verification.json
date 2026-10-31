@@ -350,5 +350,55 @@
       "actionsArtifactsRemaining": 0,
       "newActionsRunsStarted": 0
     }
+  },
+  "updateIndicatorInstallation0311": {
+    "checkedAt": "2026-10-30 America/Vancouver",
+    "ownerAuthorized": true,
+    "installer": "Adobe Unified Plugin Installer Agent",
+    "installedVersion": "0.3.11",
+    "installerConfirmedEnabled": true,
+    "installedPayloadMatchesReviewedSource": true,
+    "ccxSha256": "f9385fba1601ce0db331e5dff133e6a119cda6d2171b4c00264cad524ffbbe2d",
+    "durableReceiptsVerifiedUnchanged": 703,
+    "runningVersionFromMcp": "0.3.11",
+    "mcpResult": "success",
+    "runtimeActivationPending": false,
+    "nativeUpdateCheckVerified": true,
+    "nativeBrowserLaunchVerified": true,
+    "nativeColorAppearanceReviewed": false,
+    "ownerProjectWritesPerformed": false,
+    "hostUiOrRestartPerformed": false,
+    "host": {
+      "name": "premierepro",
+      "version": "26.5.0",
+      "uxpVersion": "uxp-9.3.0-local"
+    },
+    "browserLaunchEvidence": "Owner clicked the gray installed-version label and confirmed the expected GitHub repository opened.",
+    "nativeUpdateStatus": {
+      "installedVersion": "0.3.11",
+      "manifestUrl": "https://raw.githubusercontent.com/ywdagency/premiere-mcp-bridge/main/updates.json",
+      "indicator": {
+        "state": "neutral",
+        "url": "https://github.com/ywdagency/premiere-mcp-bridge",
+        "title": "Open GitHub"
+      },
+      "lastResult": "success",
+      "source": "network",
+      "failureCode": null,
+      "requestsStarted": 1,
+      "lastAttemptAtMs": 1793429176492,
+      "nextAttemptAtMs": 1793515576492,
+      "latestVersion": "0.3.8",
+      "minimumPremiereVersion": "25.6.0",
+      "criticalBelow": null,
+      "runtimeAvailable": true
+    },
+    "repeatCapabilitiesDidNotFetch": true,
+    "dailyIntervalMs": 86400000,
+    "nativeElapsed24HoursTested": false,
+    "nativeYellowRedVerified": false,
+    "fixtureYellowRedVerified": true,
+    "fileGrantRestoredWithoutPicker": true,
+    "doctorConnectionVersionPassed": true
   }
 }

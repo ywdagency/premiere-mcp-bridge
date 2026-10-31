@@ -1,7 +1,6 @@
 # MCP client setup
 
 
-This checkout is unpublished candidate 0.3.10; use the [candidate guide](release/candidate-0.3.10.md) for local CCX validation. Public v0.3.8 installation examples below remain pinned to that release. Its native runtime has the earlier Stop behavior; the new persistent-grant behavior requires the matching candidate runtime.
 The UXP plugin and the MCP client must run on the same computer and user account. Each client starts `mcp/server.mjs` as a local Node process over stdio. This is not a URL connector for a cloud-only agent. Install the matching reviewed CCX using [CLI onboarding](installation.md); UDT is an optional development alternative. Client configuration alone does not load the plugin.
 
 From the clone, run `npm ci` and `npm run build` before generating configuration. Node.js 22+ is required. Generated configurations use the current Node executable and absolute server path, avoiding GUI PATH differences. Regenerate after moving the clone or changing Node. Do not share generated machine-specific files or commit them.
@@ -30,7 +29,7 @@ Load the UXP plugin separately in Premiere, open its panel once, then restart/re
 | Cursor | `mcpServers` JSON | Format and locations checked against official guidance; no dedicated end-to-end client session recorded here. |
 | VS Code | `servers` JSON with `type: "stdio"` | VS Code format checked against official guidance; agent harness configuration differs. No dedicated end-to-end client session recorded here. |
 
-Preview 0.3.8 retains 42 full-access or 19 inspection-only tools and the portable client generators. Actual 0.3.7 synthetic workflow evidence is recorded separately; its batch preflight failure led to the current patch. Executing 0.3.8, maximum-size imports, file denial/recovery, marker guards, effects/keyframes and explicit source authorization/revocation are verified on the documented synthetic scope. Fresh-checkout results are recorded in the [final private review](release/final-review-0.3.8.md). These are local integration paths, not vendor certification. Source pages below were checked on 2026-10-29.
+Preview 0.3.11 exposes 43 full-access or 19 inspection-only tools. The exact installer payload, executing version, restored file grant and update-check diagnostics are verified on macOS Premiere 26.5. See the [current verification](release/candidate-0.3.11.md) and [earlier fresh-checkout review](release/final-review-0.3.8.md) for their different scopes. These are local integration paths, not vendor certification. Client source pages below were checked on 2026-10-29.
 
 ## Codex
 

@@ -213,6 +213,7 @@ const bridge = new UxpBridge(
     name: host.name,
     version: host.version,
     uxpVersion: versions.uxp,
+    getUpdateStatus: () => updates.diagnostics,
     getFileAccess: (includePath) => describeFileAccess(mediaFolder, includePath),
     forgetFileAccess: forgetMediaAccess,
     clipConstants: {
