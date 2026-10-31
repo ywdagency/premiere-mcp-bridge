@@ -16,8 +16,8 @@ start the stdio server on your Mac.
 ## CLI installation
 
 ```sh
-git clone --branch v0.3.8 https://github.com/ywdagency/premiere-uxp-bridge.git
-cd premiere-uxp-bridge
+git clone --branch v0.3.8 https://github.com/ywdagency/premiere-mcp-bridge.git
+cd premiere-mcp-bridge
 npm ci
 npm run onboard -- --release
 npm run onboard -- --release --install --read-only
@@ -38,8 +38,8 @@ not supported by this automatic route.
 ## Reviewed local CCX or manual Adobe installation
 
 ```sh
-git clone --branch v0.3.8 https://github.com/ywdagency/premiere-uxp-bridge.git
-cd premiere-uxp-bridge
+git clone --branch v0.3.8 https://github.com/ywdagency/premiere-mcp-bridge.git
+cd premiere-mcp-bridge
 npm ci
 npm run onboard -- --ccx /path/to/reviewed.ccx --sha256 HASH_FROM_REVIEWED_CHECKSUM
 # Add --install only when ready to invoke Adobe and generate client configuration.

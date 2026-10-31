@@ -35,6 +35,7 @@ await build({
     'src/runtime.ts',
     'src/auto-connection.ts',
     'src/api-policy.ts',
+    'src/updates.ts',
   ],
   bundle: true,
   format: 'cjs',

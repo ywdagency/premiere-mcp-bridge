@@ -213,7 +213,7 @@ test("published download pins the checkout version/assets/checksum and never con
   const version = require("../package.json").version;
   const name = "premiere-mcp-bridge-" + version + ".ccx";
   const prefix =
-    "https://github.com/ywdagency/premiere-uxp-bridge/releases/download/v" +
+    "https://github.com/ywdagency/premiere-mcp-bridge/releases/download/v" +
     version +
     "/";
   const urls = [];

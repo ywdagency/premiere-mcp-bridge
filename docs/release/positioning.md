@@ -18,7 +18,7 @@ Suggested About description:
 
 > Connect AI agents to Adobe Premiere through a local MCP bridge. Inspect timelines, work on sequence copies, and build explicit creative workflows with UXP.
 
-Use the repository name `premiere-uxp-bridge`. Use its own README/releases as the initial destination; do not add an unbuilt landing page. Suggested topics are `mcp`, `mcp-server`, `model-context-protocol`, `adobe-premiere-pro`, `uxp`, `creative-tools`, `video-editing`, `typescript`, `nodejs` and `ai-tools`.
+Use the repository name `premiere-mcp-bridge`. Use its own README/releases as the initial destination; do not add an unbuilt landing page. Suggested topics are `mcp`, `mcp-server`, `model-context-protocol`, `adobe-premiere-pro`, `uxp`, `creative-tools`, `video-editing`, `typescript`, `nodejs` and `ai-tools`.
 
 GitHub topics aid discovery and must describe the actual project. GitHub allows at most 20, using lowercase letters/numbers/hyphens and at most 50 characters each; topic names themselves are public even for private repositories. These suggestions have not been applied. See [GitHub topics guidance](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics).
 
@@ -46,7 +46,7 @@ We built Premiere MCP Bridge at YWD Agency to connect AI agents to Adobe Premier
 
 The first preview targets macOS, with native evidence from Premiere 26.5. The repository includes setup, limits and contributor guidance. It is an explicit tool bridge; you keep control of the edit.
 
-Explore the code and quickstart: https://github.com/ywdagency/premiere-uxp-bridge
+Explore the code and quickstart: https://github.com/ywdagency/premiere-mcp-bridge
 
 ### Engineering-first
 
@@ -54,7 +54,7 @@ What does it take to connect an AI agent to a desktop editing application respon
 
 YWD Agency's local UXP + Node MCP bridge exposes a pinned API reference alongside typed tools, and reports catalog coverage separately from native tests. The preview includes reproducible fixtures and an honest record of what ran in Premiere 26.5.
 
-Code, architecture and limits: https://github.com/ywdagency/premiere-uxp-bridge
+Code, architecture and limits: https://github.com/ywdagency/premiere-mcp-bridge
 
 ## Promotion choices for the owner
 

@@ -53,7 +53,11 @@ never blindly retry uncertain mutations. Never save projects implicitly.
 
 Use getDataFolder for automatic plugin-owned IPC; no bridge-folder picker.
 Keep persistent UXP tokens only for optional media grants. Do not broaden
-permissions to fullAccess or network. Import only from a separately picker-granted
+filesystem permissions to fullAccess. The owner authorized daily public update
+checks from the fixed GitHub updates.json URL and user-clicked HTTPS repository/
+release links. Keep that exception to raw.githubusercontent.com plus HTTPS
+opening, without telemetry, arbitrary destinations or other network use.
+Import only from a separately picker-granted
 media folder. Do not automate UXP Developer Tools through Accessibility: its
 Electron accessibility tree can crash.
 
@@ -74,6 +78,6 @@ Use premiere_api_search/describe and the pinned data/adobe-api.json before const
 
 Only exact catalog member IDs may cross the generic API tools. No arbitrary traversal, callback code or escaped native Actions. Native union candidates are not all simultaneously valid types. Create Actions only inside the synchronous project lock/transaction, and keep inline selection callbacks alive through consumption. Working clip ownership must not transfer to its shared media ProjectItem. Newly imported assets used by protected sequences, and bins with unowned children, remain protected.
 
-Use both UXP Entry validation and the current-request Node file-authorization broker for file paths. Premiere 26.5 UXP fs.lstat follows symbolic links and its Stats lacks isSymbolicLink; it is not an independent security check. Production metadata uses granted Entry.getMetadata, not path-based UXP fs calls. Native output APIs have a preflight check, not a filesystem-atomic no-overwrite guarantee. Do not widen manifest permissions. Explicit project saves, global preferences/cache operations, Source Monitor changes and queued AME work must retain their documented side effects; do not invoke them as hidden implementation details.
+Use both UXP Entry validation and the current-request Node file-authorization broker for file paths. Premiere 26.5 UXP fs.lstat follows symbolic links and its Stats lacks isSymbolicLink; it is not an independent security check. Production metadata uses granted Entry.getMetadata, not path-based UXP fs calls. Native output APIs have a preflight check, not a filesystem-atomic no-overwrite guarantee. Do not widen manifest permissions beyond the update-check exception above. Explicit project saves, global preferences/cache operations, Source Monitor changes and queued AME work must retain their documented side effects; do not invoke them as hidden implementation details.
 
 Keep live verification in data/live-verification.json and docs/live-verification-26.5.md separate from catalog coverage and fixture tests. Probe host availability when needed. A settled native export Promise may only confirm queue acceptance. Reload loses handles/jobs/working ownership and does not cancel native jobs. Preserve manual editing and never compare a live source against an old snapshot as a reason to revert it.

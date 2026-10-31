@@ -6,6 +6,7 @@ import { PremiereApi } from './api-runtime';
 import { PremiereControl } from './premiere-control';
 import { PLUGIN_VERSION } from './identity';
 import { describeFileAccess } from './file-access';
+import { UpdateChecker } from './updates';
 
 declare function require(name: string): any;
 interface GrantedFolder extends UxpFolder {
@@ -20,7 +21,7 @@ interface MediaEntry extends UxpFile {
   getEntries(): Promise<MediaEntry[]>;
 }
 const ppro = require('premierepro') as Premiere.premierepro;
-const { entrypoints, storage, host, versions } = require('uxp');
+const { entrypoints, storage, host, versions, shell } = require('uxp');
 const fs = storage.localFileSystem;
 let mediaFolder: GrantedFolder | undefined;
 let connected = false;
@@ -35,6 +36,13 @@ let mediaRequest: Promise<void> | undefined;
 const MEDIA_TOKEN = 'premiere-mcp-media-folder';
 const mediaExtension =
   /\.(mp4|mov|mxf|avi|mkv|webm|mp3|wav|aif|aiff|flac|m4a|aac|jpg|jpeg|png|tif|tiff|webp|bmp|psd)$/i;
+let updateStorage: Storage | undefined;
+try { if (typeof localStorage !== 'undefined') updateStorage = localStorage; } catch { /* Optional update cache. */ }
+const updates = new UpdateChecker({
+  installedVersion: PLUGIN_VERSION, hostVersion: host.version, storage: updateStorage,
+  fetcher: typeof fetch === 'function' ? fetch : undefined, onChange: render,
+});
+let openingVersion = false;
 
 function render(): void {
   const connection = document.getElementById('toggle-connection');
@@ -57,7 +65,14 @@ function render(): void {
     status.style.display = message ? 'none' : 'block';
   }
   const version = document.getElementById('plugin-version');
-  if (version) version.textContent = `v${PLUGIN_VERSION}`;
+  if (version) {
+    const indicator = updates.indicator;
+    version.textContent = `v${PLUGIN_VERSION}`;
+    version.setAttribute('data-update', indicator.state);
+    version.setAttribute('href', indicator.url);
+    version.setAttribute('title', indicator.title);
+    version.setAttribute('aria-label', `Plugin version ${PLUGIN_VERSION}. ${indicator.title}`);
+  }
   document.getElementById('bridge-status')?.setAttribute('data-state', message ? 'error' : state);
   const error = document.getElementById('error');
   if (error) {
@@ -305,7 +320,27 @@ function wire(): void {
     else void connect();
   });
   wireAction('reload-bridge', 'reload-control', () => void reloadBridge(), () => !restarting);
+  const version = document.getElementById('plugin-version');
+  version?.addEventListener('click', event => {
+    event.preventDefault();
+    void openVersion();
+  });
+  version?.addEventListener('keydown', event => {
+    if (event.key === 'Enter') { event.preventDefault(); void openVersion(); }
+  });
   render();
+}
+async function openVersion(): Promise<void> {
+  if (openingVersion) return;
+  openingVersion = true;
+  const indicator = updates.indicator;
+  try {
+    const result = await shell.openExternal(indicator.url,
+      indicator.state === 'neutral' ? 'Open the Premiere MCP Bridge repository in your browser.' : 'Open the Premiere MCP Bridge update release in your browser.');
+    if (result !== '') throw new Error('Browser did not open.');
+  } catch {
+    document.getElementById('plugin-version')?.setAttribute('title', `Could not open GitHub. Open in your browser: ${indicator.url}`);
+  } finally { openingVersion = false; }
 }
 function wireAction(buttonId: string, controlId: string, action: () => void, enabled = () => true): void {
   const button = document.getElementById(buttonId);
@@ -326,9 +361,11 @@ function wireAction(buttonId: string, controlId: string, action: () => void, ena
 entrypoints.setup({
   plugin: {
     create() {
+      updates.start();
       void restore();
     },
     destroy() {
+      updates.stop();
       accessGeneration++;
       connectionEnabled = false;
       connected = false;
