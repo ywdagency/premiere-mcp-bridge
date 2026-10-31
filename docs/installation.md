@@ -1,5 +1,7 @@
 # Install and connect from the CLI
 
+The development source now prepares Windows installation; it is not part of the published v0.3.11 CLI and has no native Windows verification yet. Read [Windows preparation](windows.md) before using that candidate. The public macOS instructions below keep their exact-version scope.
+
 The supported preview platform is macOS, Node.js 22+, Creative Cloud Desktop and
 Premiere (manifest minimum 25.6; native reference host 26.5 Apple Silicon).
 Creative Cloud supplies Adobe's Unified Plugin Installer Agent (UPIA). End users

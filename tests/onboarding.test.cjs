@@ -5,13 +5,15 @@ const { execFileSync } = require("node:child_process");
 const { createHash } = require("node:crypto");
 const { join, resolve } = require("node:path");
 const { tmpdir } = require("node:os");
+const {zipBuffer} = require('./helpers/zip-fixture.cjs');
 
 async function fixture(t) {
   const { ROOT, PAYLOAD, onboard } = await import("../scripts/onboard.mjs");
   const dir = await fs.mkdtemp(join(tmpdir(), "premiere-onboarding-test-"));
   t.after(() => fs.rm(dir, { recursive: true, force: true }));
   const ccx = join(dir, "reviewed fixture.ccx");
-  execFileSync("/usr/bin/zip", ["-q", ccx, ...PAYLOAD], { cwd: ROOT });
+  const entries = await Promise.all(PAYLOAD.map(async name => ({name, bytes:await fs.readFile(join(ROOT,name))})));
+  await fs.writeFile(ccx, await zipBuffer(entries));
   const bytes = await fs.readFile(ccx);
   const sha256 = createHash("sha256").update(bytes).digest("hex");
   const calls = [];
@@ -32,6 +34,7 @@ async function fixture(t) {
     ccx,
     sha256,
     bytes,
+    entries,
     onboard,
     calls,
     dependencies,
@@ -54,6 +57,47 @@ test("reviewed seven-file CCX check is non-installing and installation uses the 
   assert.deepEqual(f.calls, ["install", ["--client", "codex", "--read-only"]]);
 });
 
+test('Windows onboarding validates the same archive and reaches only the explicit injected installer', async t => {
+  const f=await fixture(t);
+  const dependencies={...f.dependencies,platform:'win32'};
+  const check=await f.onboard(f.args,dependencies);
+  assert.equal(check.installed,false); assert.deepEqual(f.calls,[]);
+  const installed=await f.onboard([...f.args,'--install'],dependencies);
+  assert.equal(installed.installed,true);
+  assert.equal(f.calls[0],'install');
+});
+
+test('portable CCX validation rejects duplicates, missing files, linked entries and compressed oversized payloads', async t => {
+  const f=await fixture(t);
+  const cases=[
+    f.entries.slice(1),
+    f.entries.map((e,i)=>i===f.entries.length-1?{...e,name:f.entries[0].name}:e),
+    f.entries.map((e,i)=>i===0?{...e,mode:0o120777}:e),
+    f.entries.map((e,i)=>i===0?{...e,bytes:Buffer.alloc(8*1024*1024+1)}:e),
+  ];
+  for(const entries of cases) {
+    const bytes=await zipBuffer(entries); await fs.writeFile(f.ccx,bytes);
+    const hash=createHash('sha256').update(bytes).digest('hex');
+    await assert.rejects(f.onboard(['--ccx',f.ccx,'--sha256',hash,'--install'],f.dependencies),/CCX/);
+  }
+  assert.deepEqual(f.calls,[],'Rejected archives must never install or configure');
+});
+
+test('local/central filename disagreement and encrypted metadata reject before Adobe invocation', async t => {
+  const f=await fixture(t);
+  const mismatch=Buffer.from(f.bytes);
+  assert.equal(mismatch.readUInt32LE(0),0x04034b50);
+  mismatch[30]=mismatch[30]===109?77:109;
+  const encrypted=Buffer.from(f.bytes);
+  const central=encrypted.indexOf(Buffer.from([0x50,0x4b,0x01,0x02]));
+  assert.ok(central>=0);encrypted.writeUInt16LE(encrypted.readUInt16LE(central+8)|1,central+8);
+  for(const bytes of [mismatch,encrypted,Buffer.from('not a zip')]) {
+    await fs.writeFile(f.ccx,bytes);
+    await assert.rejects(f.onboard(['--ccx',f.ccx,'--sha256',createHash('sha256').update(bytes).digest('hex'),'--install'],f.dependencies),/CCX/);
+  }
+  assert.deepEqual(f.calls,[]);
+});
+
 test("bad checksum, unexpected entries, unknown client and unsupported platform never call the installer or configure clients", async (t) => {
   const f = await fixture(t);
   await assert.rejects(
@@ -74,9 +118,7 @@ test("bad checksum, unexpected entries, unknown client and unsupported platform 
     }),
     /macOS/,
   );
-  const extra = join(f.dir, "unexpected.txt");
-  await fs.writeFile(extra, "not allowed");
-  execFileSync("/usr/bin/zip", ["-q", f.ccx, "unexpected.txt"], { cwd: f.dir });
+  await fs.writeFile(f.ccx, await zipBuffer([...f.entries,{name:'unexpected.txt',bytes:Buffer.from('not allowed')}]));
   const sha = createHash("sha256")
     .update(await fs.readFile(f.ccx))
     .digest("hex");

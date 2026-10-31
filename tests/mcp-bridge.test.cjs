@@ -102,14 +102,31 @@ test("stop during a pending host read prevents publishing its result", async (t)
 test("server refuses shared/symlink bridge folders and wrong protocol markers", async (t) => {
   const { directory } = await setup(t, false);
   const { prepareBridge } = await import("../mcp/file-bridge.mjs");
-  const shared = join(directory, "shared");
-  await fs.mkdir(shared, { mode: 0o755 });
-  await assert.rejects(prepareBridge(shared), { code: "UNSAFE_BRIDGE_PATH" });
+  if (process.platform !== 'win32') {
+    const shared = join(directory, "shared");
+    await fs.mkdir(shared, { mode: 0o755 });
+    await assert.rejects(prepareBridge(shared), { code: "UNSAFE_BRIDGE_PATH" });
+  }
   const linked = join(directory, "linked");
-  await fs.symlink(directory, linked);
+  await fs.symlink(directory, linked, process.platform === 'win32' ? 'junction' : 'dir');
   await assert.rejects(prepareBridge(linked), { code: "UNSAFE_BRIDGE_PATH" });
   await fs.writeFile(join(directory, "bridge.json"), JSON.stringify({ version: 1, name: "other-app", bridgeId: randomUUID() }));
   await assert.rejects(prepareBridge(directory), { code: "INVALID_BRIDGE" });
+});
+
+test('linked protocol marker is rejected before its JSON can be trusted', async t => {
+  const {directory}=await setup(t,false);
+  const {prepareBridge}=await import('../mcp/file-bridge.mjs');
+  const marker=join(directory,'bridge.json'), target=join(directory,'linked-marker-target.json');
+  await fs.rename(marker,target);
+  try { await fs.symlink(target,marker); }
+  catch(error) {
+    if(process.platform==='win32' && error.code==='EPERM') {
+      t.skip('Windows file-symlink privilege is unavailable'); return;
+    }
+    throw error;
+  }
+  await assert.rejects(prepareBridge(directory),{code:'UNSAFE_BRIDGE_PATH'});
 });
 
 test("server rejects forged response identity and cancellation cleans up IPC", async (t) => {

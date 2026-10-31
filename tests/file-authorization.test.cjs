@@ -47,12 +47,22 @@ test('Node file broker independently verifies existing inputs, output parents an
     code: 'INVALID_FILE_CHECK',
   });
 });
-test('real lstat blocks symlink files, linked parents and a linked granted root independently of UXP behavior', async (t) => {
+test('real lstat blocks links and Windows directory junctions independently of UXP behavior', async (t) => {
   const { root, request, check, authorizePath } = await setup(t);
-  await fs.symlink(join(root, 'input.txt'), join(root, 'link.txt'));
-  await fs.symlink(join(root, 'sub'), join(root, 'linked-dir'), 'dir');
-  await fs.symlink(root, join(root, 'sub', 'linked-root'), 'dir');
-  for (const relative of ['link.txt', 'linked-dir/new.png'])
+  await t.test('file symlink', async t => {
+    try { await fs.symlink(join(root, 'input.txt'), join(root, 'link.txt')); }
+    catch (error) {
+      if (process.platform === 'win32' && error.code === 'EPERM') {
+        t.skip('Windows file symlinks need OS Developer Mode or the appropriate privilege'); return;
+      }
+      throw error;
+    }
+    await assert.rejects(authorizePath({...check,relative:'link.txt'}, request), {code:'LINK_NOT_ALLOWED'});
+  });
+  const linkType = process.platform === 'win32' ? 'junction' : 'dir';
+  await fs.symlink(join(root, 'sub'), join(root, 'linked-dir'), linkType);
+  await fs.symlink(root, join(root, 'sub', 'linked-root'), linkType);
+  for (const relative of ['linked-dir/new.png'])
     await assert.rejects(
       authorizePath(
         { ...check, relative, mode: relative.endsWith('.png') ? 'write' : 'read' },

@@ -68,10 +68,14 @@ async function checkAncestors(path) {
 }
 
 async function readPrivateJson(path, maximum) {
+  const before = await lstat(path);
+  assertPrivate(before); // Windows has no O_NOFOLLOW: reject links before opening, too.
   const handle = await open(path, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0));
   try {
     const stat = await handle.stat();
     assertPrivate(stat);
+    if (before.dev !== stat.dev || before.ino !== stat.ino)
+      throw new BridgeError('UNSAFE_BRIDGE_PATH', 'Bridge file changed while opening it.');
     if (stat.size > maximum)
       throw new BridgeError('INVALID_RESPONSE', 'Bridge file exceeds the size limit.');
     const content = await handle.readFile('utf8');

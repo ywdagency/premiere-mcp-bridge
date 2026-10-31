@@ -1,5 +1,7 @@
 # Premiere MCP Bridge
 
+Development source prepares Windows onboarding; actual Windows/Premiere validation is pending. These changes are not in the published v0.3.11 tag. See [Windows preparation and acceptance](docs/windows.md).
+
 **Give your AI agent a documented connection to Adobe Premiere.** Inspect timelines, work on sequence copies and build creative tools through local MCP—using the agent you choose.
 
 MIT-licensed bridge built by **YWD Agency** for editors, creative technologists and developers connecting AI workflows to desktop production tools. The bridge exposes explicit operations; you direct the edit. It does not choose a story, analyze footage for an automatic montage or replace editorial judgment.

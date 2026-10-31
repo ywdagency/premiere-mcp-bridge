@@ -1,13 +1,19 @@
 import { readdir, lstat, readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
-import { join } from 'node:path';
+import { join, win32, posix } from 'node:path';
+import {windowsEnvironment, windowsAbsolutePath} from './platform-paths.mjs';
 import protocol from '../build/lib/bridge-protocol.cjs';
 const { BridgeError } = protocol;
 const manifest = JSON.parse(await readFile(new URL('../manifest.json', import.meta.url), 'utf8'));
 export const PLUGIN_ID = manifest.id;
-export function defaultStorageRoot() {
-  if (process.platform === 'darwin') return join(homedir(), 'Library/Application Support/Adobe/UXP/PluginsStorage/PPRO');
-  if (process.platform === 'win32' && process.env.APPDATA) return join(process.env.APPDATA, 'Adobe/UXP/PluginsStorage/PPRO');
+export function defaultStorageRoot({platform = process.platform, env = process.env, home = homedir()} = {}) {
+  if (platform === 'darwin') return posix.join(home, 'Library/Application Support/Adobe/UXP/PluginsStorage/PPRO');
+  const appData = windowsEnvironment(env, 'APPDATA');
+  if (platform === 'win32') {
+    if (!windowsAbsolutePath(appData))
+      throw new BridgeError('AUTO_DISCOVERY_UNSUPPORTED', 'Windows discovery requires an absolute per-user APPDATA path. Use a native Windows Node process; no folder selection is needed.');
+    return win32.join(appData, 'Adobe', 'UXP', 'PluginsStorage', 'PPRO');
+  }
   throw new BridgeError('AUTO_DISCOVERY_UNSUPPORTED', 'Automatic Premiere discovery is available on macOS and Windows.');
 }
 export async function discoverBridgeDirectory({ root = defaultStorageRoot(), now = Date.now(), hostVersion = process.env.PREMIERE_MCP_HOST_VERSION } = {}) {

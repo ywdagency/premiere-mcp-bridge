@@ -28,6 +28,14 @@ use disposable fixtures; never use the user's working timeline as an install tes
 This onboarding is Premiere-only. Do not configure another Adobe application or
 combine bridge servers as part of installation.
 
+Windows preparation: read docs/windows.md. Development onboarding accepts native
+Windows Node and documented UPIA /install; immutable v0.3.11 remains a macOS-only
+CLI. Platform fixtures on a Mac are not Windows certification. Keep ZIP validation
+portable and bounded, preserve per-file broker checks and record NTFS ACL/link/
+locking evidence on Windows. Never infer Windows security from Unix chmod tests,
+use WSL as the native host, auto-elevate or widen plugin permissions. Do not change
+release/feed/support claims until the owner authorizes a reviewed publication.
+
 Read docs/agent-workflows.md for task execution and recovery.
 Read INDEX.md and docs/premiere-control-reference.md before Premiere API work.
 Verify exact methods against Adobe's current official UXP documentation and record

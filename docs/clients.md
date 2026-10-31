@@ -1,5 +1,7 @@
 # MCP client setup
 
+Windows development candidates use the same client generators with native Windows node.exe and escaped Windows paths. Follow [Windows preparation and acceptance](windows.md); the public v0.3.11 CLI and the client/native evidence below remain scoped to macOS. Do not launch a Windows bridge through WSL or change unrelated client entries.
+
 
 The UXP plugin and the MCP client must run on the same computer and user account. Each client starts `mcp/server.mjs` as a local Node process over stdio. This is not a URL connector for a cloud-only agent. Install the matching reviewed CCX using [CLI onboarding](installation.md); UDT is an optional development alternative. Client configuration alone does not load the plugin.
 

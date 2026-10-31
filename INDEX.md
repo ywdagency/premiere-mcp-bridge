@@ -8,6 +8,7 @@
 | Agent edits, ownership and recovery | [Agent operating guide](docs/agent-workflows.md) |
 | Open-source license and reuse | [Open-source model](OPEN_SOURCE.md) |
 | CLI installation and executing-version diagnosis | [Installation](docs/installation.md) |
+| Development Windows setup and native acceptance | [Windows preparation](docs/windows.md) |
 | Codex, Claude, Cursor, VS Code | [Client setup](docs/clients.md) |
 | Full native API catalog and typed control | [Native API guide](docs/native-api.md) |
 | API expansion list and exhaustive per-member matrix | [Expansion coverage](docs/api-expansion.md) |

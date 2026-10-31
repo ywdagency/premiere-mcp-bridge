@@ -24,7 +24,8 @@ test('automatic discovery uses only this plugin, rejects stale hosts and refuses
   assert.equal(await discoverBridgeDirectory({ root, now }), join(data, 'mcp-bridge'));
 });
 
-test('private UXP storage can sit below writable directories protected by an owner-only ancestor', async (t) => {
+test('private UXP storage can sit below writable directories protected by an owner-only ancestor',
+  {skip:process.platform === 'win32' ? 'Unix permission modes; NTFS ACLs require separate native verification' : false}, async (t) => {
   const { prepareBridge } = await import('../mcp/file-bridge.mjs');
   const root = await fs.mkdtemp(join(tmpdir(), 'premiere-private-parent-'));
   t.after(() => fs.rm(root, { recursive: true, force: true }));

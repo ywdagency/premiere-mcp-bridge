@@ -4,11 +4,8 @@ import {
   writeFile,
   mkdtemp,
   rm,
-  access,
   lstat,
 } from "node:fs/promises";
-import { constants } from "node:fs";
-import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import { tmpdir } from "node:os";
@@ -16,11 +13,12 @@ import { join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { setup, clientConfig } from "./setup.mjs";
 import { withPublishedRelease } from "./download-release.mjs";
+import { readCcxPayload } from "./ccx-payload.mjs";
+import { supportedPlatform, installReviewedPackage } from "./install-platform.mjs";
 import protocol from "../build/lib/bridge-protocol.cjs";
 
 export const ROOT = fileURLToPath(new URL("../", import.meta.url));
-export const UPIA =
-  "/Library/Application Support/Adobe/Adobe Desktop Common/RemoteComponents/UPI/UnifiedPluginInstallerAgent/UnifiedPluginInstallerAgent.app/Contents/macOS/UnifiedPluginInstallerAgent";
+export { MAC_UPIA as UPIA } from "./install-platform.mjs";
 export const PAYLOAD = [
   "manifest.json",
   "data/ADOBE-COPYRIGHT.txt",
@@ -30,12 +28,6 @@ export const PAYLOAD = [
   "LICENSE",
   "styles.css",
 ];
-const run = (command, args) =>
-  execFileSync(command, args, {
-    maxBuffer: 8 * 1024 * 1024,
-    timeout: 120000,
-    stdio: ["ignore", "pipe", "pipe"],
-  });
 
 export async function withVerifiedPackage(
   { ccx, sha256, root = ROOT },
@@ -58,16 +50,7 @@ export async function withVerifiedPackage(
   try {
     const snapshot = join(temporary, "reviewed.ccx");
     await writeFile(snapshot, bytes, { mode: 0o600, flag: "wx" });
-    const names = run("/usr/bin/unzip", ["-Z1", snapshot])
-      .toString("utf8")
-      .trim()
-      .split(/\r?\n/);
-    if (
-      names.length !== PAYLOAD.length ||
-      new Set(names).size !== names.length ||
-      names.some((name) => !PAYLOAD.includes(name))
-    )
-      throw new Error("CCX contains unexpected or duplicate entries.");
+    const archivedFiles = await readCcxPayload(bytes, PAYLOAD);
     const manifest = JSON.parse(
       await readFile(join(root, "manifest.json"), "utf8"),
     );
@@ -78,7 +61,7 @@ export async function withVerifiedPackage(
     )
       throw new Error("Source package and plugin versions differ.");
     for (const name of PAYLOAD) {
-      const archived = run("/usr/bin/unzip", ["-p", snapshot, name]);
+      const archived = archivedFiles.get(name);
       const source = await readFile(join(root, name));
       const matches =
         name === "manifest.json"
@@ -96,7 +79,7 @@ export async function withVerifiedPackage(
       snapshot,
       version: manifest.version,
       sha256: sha256.toLowerCase(),
-      files: names.length,
+      files: archivedFiles.size,
     });
   } finally {
     await rm(temporary, { recursive: true, force: true });
@@ -135,10 +118,8 @@ export async function onboard(argv = process.argv.slice(2), dependencies = {}) {
     throw new Error(
       "Choose --release or --ccx with --sha256 and a supported --client.",
     );
-  if ((dependencies.platform ?? process.platform) !== "darwin")
-    throw new Error(
-      "Installer onboarding is verified for macOS only. No system changes were made.",
-    );
+  const platform = dependencies.platform ?? process.platform;
+  supportedPlatform(platform);
   if (release) {
     const pkg = JSON.parse(
       await readFile(join(dependencies.root ?? ROOT, "package.json"), "utf8"),
@@ -164,10 +145,7 @@ export async function onboard(argv = process.argv.slice(2), dependencies = {}) {
   }
   const installWithAdobe =
     dependencies.installWithAdobe ??
-    (async (snapshot) => {
-      await access(UPIA, constants.X_OK);
-      run(UPIA, ["--install", snapshot]);
-    });
+    (snapshot => installReviewedPackage(snapshot, {platform}));
   const configure =
     dependencies.configure ??
     (async (args) => {

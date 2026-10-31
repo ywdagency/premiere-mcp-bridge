@@ -1,6 +1,7 @@
 import { lstat, realpath } from 'node:fs/promises';
 import { isAbsolute, join, resolve, relative, sep } from 'node:path';
 import protocol from '../build/lib/bridge-protocol.cjs';
+import {validGrantedRelativePath} from './platform-paths.mjs';
 const { BridgeError, onlyKeys } = protocol;
 export async function authorizePath(check, request) {
   onlyKeys(check, ['version', 'bridgeId', 'requestId', 'counter', 'root', 'relative', 'mode']);
@@ -20,14 +21,7 @@ export async function authorizePath(check, request) {
     typeof check.root !== 'string' ||
     check.root.length > 4096 ||
     !isAbsolute(check.root) ||
-    typeof check.relative !== 'string' ||
-    check.relative.length > 1024 ||
-    !check.relative ||
-    check.relative.includes('\\') ||
-    (!(check.mode === 'directory' && check.relative === '.') &&
-      check.relative
-        .split('/')
-        .some((p) => !p || p === '.' || p === '..' || p.includes(':') || p.includes('\0'))) ||
+    !validGrantedRelativePath(check.relative, check.mode) ||
     !['read', 'write', 'directory'].includes(check.mode)
   )
     throw new BridgeError('INVALID_FILE_CHECK', 'Invalid granted file path.');
