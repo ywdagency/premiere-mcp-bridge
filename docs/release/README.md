@@ -1,5 +1,7 @@
 # Release verification and maintenance
 
+Local candidate: [0.4.0 folder-access panel](candidate-0.4.0.md), not published or natively activated. The candidate stages eight files, including the Figma folder SVG; released 0.3.12 has seven.
+
 The current preview is [v0.3.12](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.12), adding experimental Windows onboarding and portable CCX validation. It exposes 43 MCP tools or 19 in read-only mode. Windows has no native verification yet. Local tests/package validation are separate from the earlier native macOS 0.3.11 and editing reports; see [0.3.12 scope](candidate-0.3.12.md).
 
 ## Evidence
@@ -25,7 +27,7 @@ node scripts/stage-release.mjs
 npm pack --dry-run --json
 ```
 
-The staging helper checks source/build version identity and copies exactly seven plugin/runtime/license files into a new versioned snapshot. It refuses to overwrite an existing stage. Package that staged manifest with Adobe's supported UDT packaging implementation; keep proprietary packager files outside the repository/package. Validate the resulting CCX and trusted SHA-256 through onboard before explicit installation. The CCX installs only the plugin; the source provides the Node server and client setup. Follow [INSTALL.md](../../INSTALL.md) and [installation](../installation.md).
+The staging helper checks source/build version identity and copies exactly the current allowlisted plugin/runtime/license/asset files into a new versioned snapshot. It refuses to overwrite an existing stage. Package that staged manifest with Adobe's supported UDT packaging implementation; keep proprietary packager files outside the repository/package. Validate the resulting CCX and trusted SHA-256 through onboard before explicit installation. The CCX installs only the plugin; the source provides the Node server and client setup. Follow [INSTALL.md](../../INSTALL.md) and [installation](../installation.md).
 
 Preserve the plugin ID, saved token storage and durable receipts during updates; never uninstall or delete plugin data as a shortcut. Confirm the executing version through doctor after owner-controlled activation. Do not use an owner's working timeline as an installation test. Record native tests only on an explicitly authorized disposable fixture, retaining backups and exact-UUID recovery.
 

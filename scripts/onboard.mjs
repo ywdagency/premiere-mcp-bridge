@@ -20,6 +20,7 @@ import protocol from "../build/lib/bridge-protocol.cjs";
 export const ROOT = fileURLToPath(new URL("../", import.meta.url));
 export { MAC_UPIA as UPIA } from "./install-platform.mjs";
 export const PAYLOAD = [
+  "assets/folder.svg",
   "manifest.json",
   "data/ADOBE-COPYRIGHT.txt",
   "data/ADOBE-LICENSE.txt",

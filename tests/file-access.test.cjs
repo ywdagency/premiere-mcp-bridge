@@ -54,13 +54,15 @@ test('MCP and UXP both validate read-only file diagnostics without reading a pro
 test('MCP file discovery and diagnostics distinguish a reusable approval from nonexistent panel settings', async (t) => {
   const { Client, InMemoryTransport } = await import('@modelcontextprotocol/client');
   const { createServer } = await import('../mcp/server.mjs');
-  let granted = true;
+  let granted = true, legacy = false;
   const calls = [];
   const server = createServer({ async call(command, args) {
     calls.push(command);
     assert.equal(command, 'get_file_access', 'No project lookup or file operation is implicit');
-    return describeFileAccess(granted ? { name: 'Approved fixture', nativePath: '/private/fixture' } : undefined,
+    const data = describeFileAccess(granted ? { name: 'Approved fixture', nativePath: '/private/fixture' } : undefined,
       args.includePath === true);
+    if (legacy) delete data.folderButtonAvailable;
+    return data;
   } }, { readOnly: false });
   const client = new Client({ name: 'file-guidance-test', version: '1' });
   t.after(async () => { await client.close(); await server.close(); });
@@ -77,6 +79,7 @@ test('MCP file discovery and diagnostics distinguish a reusable approval from no
   assert.equal(existing.granted, true);
   assert.equal(existing.approvalRequiredOnFileRequest, false);
   assert.equal(existing.guidance.panelFolderSettingAvailable, false);
+  assert.equal(existing.guidance.panelFolderButtonAvailable, true);
   assert.equal(existing.guidance.pathBase, 'approved-folder');
   assert.match(existing.guidance.nextAction, /Reuse this grant/);
   assert.equal(JSON.stringify(existing).includes('/private/fixture'), false);
@@ -84,5 +87,9 @@ test('MCP file discovery and diagnostics distinguish a reusable approval from no
   const missing = await read();
   assert.equal(missing.approvalRequiredOnFileRequest, true);
   assert.match(missing.guidance.nextAction, /actual authorized file operation/);
-  assert.deepEqual(calls, ['get_file_access', 'get_file_access']);
+  legacy = true;
+  const older = await read();
+  assert.equal(older.guidance.panelFolderButtonAvailable, false);
+  assert.match(older.guidance.nextAction, /older runtime/);
+  assert.deepEqual(calls, ['get_file_access', 'get_file_access', 'get_file_access']);
 });

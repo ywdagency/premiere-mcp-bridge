@@ -42,7 +42,7 @@ async function fixture(t) {
   };
 }
 
-test("reviewed seven-file CCX check is non-installing and installation uses the same validated private snapshot", async (t) => {
+test("reviewed eight-file CCX check is non-installing and installation uses the same validated private snapshot", async (t) => {
   const f = await fixture(t);
   const check = await f.onboard(f.args, f.dependencies);
   assert.equal(check.installed, false);

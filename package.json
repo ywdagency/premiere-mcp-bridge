@@ -1,6 +1,6 @@
 {
   "name": "premiere-mcp-bridge",
-  "version": "0.3.12",
+  "version": "0.4.0",
   "private": true,
   "description": "An extensible local MCP bridge between AI agents and Adobe Premiere Pro UXP",
   "scripts": {
@@ -41,6 +41,7 @@
   },
   "files": [
     "src/",
+    "assets/",
     "dist/main.js",
     "build/lib/",
     "mcp/",

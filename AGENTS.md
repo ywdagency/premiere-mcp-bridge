@@ -19,7 +19,12 @@ Respect project trust and client reconnect requirements. Non-Codex configuration
 are returned for manual merge, never reported as already configured.
 For authorized file work, use premiere_get_file_access (includePath=true only when
 the private root is needed) instead of asking the owner to recall a hidden folder.
-This diagnostic never prompts or grants access. Preserve deliberate native folder
+This diagnostic never prompts or grants access. Since 0.4.0 folderButtonAvailable
+reports the explicit red/green folder button; missing fields on older runtimes mean
+no button. Reuse granted=true. For a deliberate file task the human may use that
+button or approve the actual file request. Never require it for connection or
+ordinary timeline tools. Button cancellation/failure preserves an existing grant;
+selection does not widen permissions or move files. Preserve deliberate native folder
 approval for actual file requests and both per-file validation boundaries.
 Run npm run doctor after the user opens the installed panel. A version mismatch
 or missing command is a failure, even if Adobe reports successful installation.

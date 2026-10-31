@@ -12,7 +12,7 @@ The agent needs terminal/file access on the same Windows computer and account as
 
 ## What is prepared
 
-The manifest's seven-file CCX has no OS-specific plugin binary. This source validates the archive in Node on either OS without zip/unzip, PowerShell extraction or executing downloaded contents. It checks the reviewed checksum, exact entries, duplicate/linked/encrypted entries, expanded-size bounds, consistent local/central headers, version and rebuilt bytes before invoking Adobe. The same previously reviewed macOS CCX must still match; this is not Windows host proof.
+The released 0.3.12 manifest's seven-file CCX has no OS-specific plugin binary. This source validates the archive in Node on either OS without zip/unzip, PowerShell extraction or executing downloaded contents. It checks the reviewed checksum, exact entries, duplicate/linked/encrypted entries, expanded-size bounds, consistent local/central headers, version and rebuilt bytes before invoking Adobe. The same previously reviewed macOS CCX must still match; this is not Windows host proof.
 
 The Windows installer resolves Adobe UPIA from the standard CommonProgramFiles environment locations and invokes UnifiedPluginInstallerAgent.exe with a separate /install argument and the validated private snapshot. It does not search PATH, use a shell, uninstall, erase data, elevate an agent, restart Premiere or save a project. Missing Adobe software or an installer error stops before configuration; do not retry an uncertain install blindly or try another executable after Adobe has started.
 
@@ -20,7 +20,7 @@ Automatic discovery uses the current Windows account's %APPDATA%/Adobe/UXP/Plugi
 
 Client generators use the current native node.exe and absolute server path as separate arguments; spaces/backslashes survive JSON/TOML serialization. Existing client configuration must be preserved during manual merge. Source and test paths must remain on the same Windows computer/account as Premiere. WSL/Linux, remote containers and a cloud-only chat are not supported ways to launch this local Windows bridge.
 
-File tool paths stay forward-slash relative to the deliberately approved media folder. There is no new panel setting. The Node broker rejects Windows device names, alternate streams, trailing-dot/space aliases and invalid characters, in addition to traversal, links/junctions, containment and no-overwrite checks. A successful read of a cached folder grant must not request it again; a missing grant prompts only for a real authorized file task.
+File tool paths stay forward-slash relative to the deliberately approved media folder. The 0.4.0 development candidate adds an optional folder button; the released 0.3.12 panel has no button. This does not change the grant boundary. The Node broker rejects Windows device names, alternate streams, trailing-dot/space aliases and invalid characters, in addition to traversal, links/junctions, containment and no-overwrite checks. A successful read of a cached folder grant must not request it again; a missing grant prompts only for a real authorized file task.
 
 ## Install from PowerShell or Command Prompt
 

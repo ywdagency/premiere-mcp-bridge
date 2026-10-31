@@ -49,6 +49,8 @@ export class UxpBridge {
   private fileAuthorizationQueue: Promise<void> = Promise.resolve();
   private failedFileRequest?: string;
 
+  get requestActive(): boolean { return !!this.activeRequest; }
+
   constructor(
     private readonly host: InspectionHost,
     private readonly report: (message: string, failed?: boolean) => void,

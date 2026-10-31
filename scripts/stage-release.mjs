@@ -16,6 +16,7 @@ if (pkg.version !== manifest.version || pkg.version !== PLUGIN_VERSION)
 
 const files = [
   'manifest.json', 'index.html', 'styles.css', 'dist/main.js', 'LICENSE',
+  'assets/folder.svg',
   'data/ADOBE-LICENSE.txt', 'data/ADOBE-COPYRIGHT.txt',
 ];
 // Read every input before creating output. The destination must be new.

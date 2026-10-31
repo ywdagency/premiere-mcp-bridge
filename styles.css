@@ -11,6 +11,9 @@ button, .action-face { position: absolute; top: 0; left: 0; width: 100%; height:
 .action-face { display: flex; align-items: center; justify-content: center; border: 0; border-radius: 5px; background: #913d44; }
 .action.reload .action-face { background: #385f9d; }
 .action.launch .action-face { background: #28704f; }
+.action.folder { flex-grow: 0; flex-shrink: 0; flex-basis: 64px; width: 64px; }
+.action.folder.granted .action-face { background: #28704f; }
+.folder-icon { width: 24px; height: 24px; flex-shrink: 0; }
 .action.disabled .action-face { color: #858585; background: #2a2a2a; }
 .action[data-focus="true"] .action-face { border: 2px solid #aab8ff; }
 .status-box { display: flex; align-items: flex-start; min-height: 44px; padding: 11px 12px; border: 1px solid #3b3b3b; border-radius: 5px; background: #242424; color: #c8c8c8; font-size: 12px; line-height: 20px; }

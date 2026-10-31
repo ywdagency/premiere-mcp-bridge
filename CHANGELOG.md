@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 — development candidate
+
+Add the approved compact folder button: red without usable access, green with a remembered folder, and a status/name tooltip. A human can explicitly select or replace a folder without an agent file request. Cancellation, picker/token failure and stale completions preserve the previous approval; Stop/restart/update persistence stays intact. Block a new selection during active host work and new file requests while replacing a grant. Folder errors stay in the folder tooltip, leaving transport status accurate. Report button availability to agents without inferring it for older runtimes. Retain existing per-file Entry/Node checks and manifest permissions. Package the exact local Figma SVG as the eighth allowlisted asset.
+
 ## 0.3.12 — experimental Windows preview
 
 Add Windows UPIA onboarding, native node.exe client configuration, case-insensitive environment discovery and guarded Windows relative paths. Validate CCX archives portably in bounded Node memory without a system unzip command. Retain per-file authorization, remembered folder tokens, plugin ID and manifest permissions. Include the already published official Adobe manual search through existing reference tools. Add exact-version Windows installation instructions and a sanitized volunteer test-report template.

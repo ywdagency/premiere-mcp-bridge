@@ -1,5 +1,7 @@
 # Install with your AI agent
 
+Development 0.4.0 is an unpublished candidate: use its reviewed local CCX/checksum as described in [the candidate report](docs/release/candidate-0.4.0.md). Do not use --release for an unpublished version or silently install 0.3.12 into a 0.4.0 checkout. The public-tag examples below remain for released 0.3.12. Folder-button selection is optional for file tasks and is never an installation requirement.
+
 Give your local agent this repository URL and ask:
 
 > Study https://github.com/ywdagency/premiere-mcp-bridge and help me install Premiere MCP Bridge and connect it to this agent. Follow the installation instructions, start in read-only mode, and do not change my edit during setup.
@@ -23,7 +25,7 @@ npm ci
 npm run onboard -- --release
 ```
 
-The last command downloads only the official matching release/CCX/checksum and validates the seven-file payload against this built checkout. It does not install or configure. Report the verified version and result; missing/draft releases, hash/payload mismatch or unsupported host are failures, not reasons to use a floating latest download.
+The last command downloads only the official matching release/CCX/checksum and validates the exact allowlisted payload against this built checkout. It does not install or configure. Report the verified version and result; missing/draft releases, hash/payload mismatch or unsupported host are failures, not reasons to use a floating latest download.
 
 ## Install the plugin and prepare the client
 

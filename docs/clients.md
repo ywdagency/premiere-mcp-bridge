@@ -1,5 +1,7 @@
 # MCP client setup
 
+The 0.4.0 development panel adds an optional red/green folder-access button. It does not change agent connection: read the existing grant first and never ask for a folder just to connect. The 0.4.0 Node diagnostic reports panelFolderButtonAvailable from the running plugin; older runtimes have no button.
+
 Windows onboarding in v0.3.12 is experimental. Generators use native Windows node.exe and escaped Windows paths, but no real Windows agent/Premiere session is verified. Follow [Windows installation and testing](windows.md); the earlier native client evidence below remains scoped to macOS. Do not launch the bridge through WSL or change unrelated client entries.
 
 

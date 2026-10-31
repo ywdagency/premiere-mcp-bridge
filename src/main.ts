@@ -33,6 +33,7 @@ let connectionError = '';
 let mediaError = '';
 let accessGeneration = 0;
 let mediaRequest: Promise<void> | undefined;
+let choosingMedia = false;
 const MEDIA_TOKEN = 'premiere-mcp-media-folder';
 const mediaExtension =
   /\.(mp4|mov|mxf|avi|mkv|webm|mp3|wav|aif|aiff|flac|m4a|aac|jpg|jpeg|png|tif|tiff|webp|bmp|psd)$/i;
@@ -57,7 +58,26 @@ function render(): void {
   if (reload) reload.disabled = restarting;
   const reloadControl = document.getElementById('reload-control');
   if (reloadControl) reloadControl.className = restarting ? 'action reload disabled' : 'action reload';
-  const message = connectionError || mediaError;
+  const folderControl = document.getElementById('folder-control');
+  const folderButton = document.getElementById('choose-media-folder') as HTMLButtonElement | null;
+  const folderDisabled = restarting || choosingMedia;
+  const folderName = (typeof mediaFolder?.name === 'string' ? mediaFolder.name : 'Approved folder')
+    .replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 160);
+  const folderHint = choosingMedia ? 'Choosing a folder…'
+    : mediaError || (mediaFolder
+      ? `Folder access granted\n${folderName} · Click to choose another folder.`
+      : 'Choose a folder\nAllow a folder for import and file output. Timeline tools remain available.');
+  if (folderControl) {
+    folderControl.className = `action folder${mediaFolder ? ' granted' : ''}${folderDisabled ? ' disabled' : ''}`;
+    folderControl.setAttribute('title', folderHint);
+    folderControl.setAttribute('data-access', mediaFolder ? 'granted' : 'missing');
+  }
+  if (folderButton) {
+    folderButton.disabled = folderDisabled;
+    folderButton.setAttribute('title', folderHint);
+    folderButton.setAttribute('aria-label', folderHint);
+  }
+  const message = connectionError;
   const state = !connectionEnabled ? 'Stopped' : restarting ? activityText : connected ? 'Running' : 'Waiting for agent';
   const status = document.getElementById('status');
   if (status) {
@@ -122,6 +142,8 @@ async function resolveApiPath(
     );
   if (!connected || !connectionEnabled)
     throw new BridgeError('WRITES_DISABLED', 'Launch Premiere MCP Bridge first.');
+  if (choosingMedia && mediaFolder)
+    throw new BridgeError('FILE_ACCESS_PENDING', 'Folder selection is open. Finish or cancel it before a new file request. This request did not access a file.');
   if (!mediaFolder) {
     const generation = accessGeneration;
     await restoreMediaAccess(generation);
@@ -282,9 +304,21 @@ function forgetMediaAccess(): void {
   mediaError = '';
   render();
 }
-function requestMediaAccess(): void {
+function requestMediaAccess(explicit = false): void {
   if (mediaRequest) return;
-  mediaRequest = chooseMedia().finally(() => { mediaRequest = undefined; });
+  if (explicit && bridge.requestActive) {
+    mediaError = 'The agent is busy. Choose a folder after its current command finishes.';
+    render();
+    return;
+  }
+  choosingMedia = true;
+  mediaError = '';
+  render();
+  mediaRequest = chooseMedia().finally(() => {
+    mediaRequest = undefined;
+    choosingMedia = false;
+    render();
+  });
 }
 async function chooseMedia(): Promise<void> {
   const generation = accessGeneration;
@@ -292,6 +326,7 @@ async function chooseMedia(): Promise<void> {
     const folder = await fs.getFolder({ initialDomain: storage.domains?.userDocuments });
     if (generation !== accessGeneration) return;
     if (folder) {
+      if (!folder.isFolder) throw new BridgeError('INVALID_FILE_GRANT', 'Expected a folder.');
       if (typeof localStorage !== 'undefined') {
         const saved = await fs.createPersistentToken(folder);
         if (generation !== accessGeneration) return;
@@ -300,13 +335,10 @@ async function chooseMedia(): Promise<void> {
       mediaFolder = folder;
       mediaError = '';
       render();
-    } else {
-      mediaError = 'File access was not granted.';
-      render();
-    }
+    } // Cancellation keeps the previous folder/token and normal bridge status.
   } catch {
     if (generation !== accessGeneration) return;
-    mediaError = 'File access failed. Retry the file request.';
+    mediaError = 'Folder selection failed. Click the folder button to try again.';
     render();
   }
 }
@@ -338,6 +370,7 @@ function wire(): void {
     else void connect();
   });
   wireAction('reload-bridge', 'reload-control', () => void reloadBridge(), () => !restarting);
+  wireAction('choose-media-folder', 'folder-control', () => requestMediaAccess(true), () => !restarting && !choosingMedia);
   const version = document.getElementById('plugin-version');
   version?.addEventListener('click', event => {
     event.preventDefault();

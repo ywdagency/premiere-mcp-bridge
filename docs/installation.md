@@ -1,5 +1,7 @@
 # Install and connect from the CLI
 
+Development 0.4.0 is not yet published. Its reviewed local CCX includes the folder SVG as an eighth allowlisted file. Use the local CCX/checksum route with its exact source; --release must fail until that version is published. Public examples below continue to target released 0.3.12.
+
 Version 0.3.12 provides macOS onboarding and **experimental Windows onboarding**. Windows installation, filesystem behavior and native Premiere calls are not yet verified; start with the [Windows guide](windows.md). Earlier native reference evidence is from macOS Apple Silicon / Premiere 26.5 on 0.3.11 and prior builds, not a native 0.3.12 regression.
 
 Both routes require native Node.js 22+, Git, Creative Cloud Desktop and Premiere (manifest minimum 25.6). The plugin, local server and agent must run on the same computer/account. Creative Cloud supplies Adobe's Unified Plugin Installer Agent (UPIA); UXP Developer Tools is optional for development.
@@ -45,7 +47,7 @@ npm run onboard -- --ccx /path/to/reviewed.ccx --sha256 HASH_FROM_REVIEWED_CHECK
 
 Use the checksum supplied with the reviewed artifact. Computing a checksum from
 an unknown download is not an independent trust check. The local validator checks
-the hash, seven-file allowlist, version and payload bytes against this built
+the hash, exact file allowlist, version and payload bytes against this built
 checkout. UDT's JSON-only manifest normalization is accepted structurally; changed
 permissions/content, extra files, duplicate archive entries and source/runtime
 mismatches reject before installation. A private temporary snapshot is installed,

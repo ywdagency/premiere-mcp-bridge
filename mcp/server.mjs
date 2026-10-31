@@ -9,7 +9,7 @@ import { formatClipPage } from './timecode.mjs';
 import catalog from '../build/lib/command-catalog.cjs';
 import protocol from '../build/lib/bridge-protocol.cjs';
 
-const FILE_ACCESS_INSTRUCTIONS = 'Since 0.3.10, Stop/Launch/Reload and normal same-ID updates/restarts preserve folder approval. Use premiere_forget_file_access only after an explicit human revocation request, with confirm=true, active project ID and operation UUID. The panel has no file-path setting or folder button. Connection, timeline inspection, sequence backups and ordinary clip edits need no external-folder grant. For a deliberate import/file/output task, first call premiere_get_file_access; if granted=true, reuse that grant and request includePath=true only when mapping private paths is necessary. Never ask the human to recall or configure a saved path. When a default destination is needed, read premiere_get_project with includePath=true and prefer the saved .prproj parent only if it is inside the approved folder; convert to a path relative to that grant. The project path is not permission, media need not live beside the project, and an unsaved project has no reliable project-folder default. If no grant exists, the actual file request opens Adobe native approval; explain that dialog only, never a removed panel setting. Do not trigger a picker during setup or diagnostics, silently switch an existing grant, grant full-disk access or bypass Entry/Node checks.';
+const FILE_ACCESS_INSTRUCTIONS = 'Since 0.3.10, Stop/Launch/Reload and normal same-ID updates/restarts preserve folder approval. Use premiere_forget_file_access only after an explicit human revocation request, with confirm=true, active project ID and operation UUID. Since 0.4.0 the panel has a red/green folder button for explicit approval or replacement; earlier runtimes do not. There is no editable path setting. Connection, timeline inspection, sequence backups and ordinary clip edits need no external-folder grant. For a deliberate import/file/output task, first call premiere_get_file_access; if granted=true, reuse that grant and request includePath=true only when mapping private paths is necessary. Never ask the human to recall or configure a saved path. When a default destination is needed, read premiere_get_project with includePath=true and prefer the saved .prproj parent only if it is inside the approved folder; convert to a path relative to that grant. The project path is not permission, media need not live beside the project, and an unsaved project has no reliable project-folder default. If no grant exists for a deliberate file task, the human may click the folder button when available, or the actual file request opens Adobe native approval. Never require a folder for connection, timeline reads or ordinary clip edits. Do not trigger a picker during setup or diagnostics, ask for a saved grant again, silently switch an existing grant, grant full-disk access or bypass Entry/Node checks.';
 
 function inputSchema(fields) {
   const shape = {};
@@ -69,7 +69,7 @@ export function createServer(
       `premiere_${spec.command}`,
       {
         description: spec.description + (spec.command === 'get_file_access'
-          ? ' There is no folder/path setting in the panel. Reuse granted=true without another selection; a missing grant is approved only through the actual file request.' : ''),
+          ? ' Reuse granted=true without another selection. Since plugin 0.4.0 a human can explicitly approve or change a folder with its red/green folder button; actual file requests can also open native approval. Never require this for connection or timeline work.' : ''),
         inputSchema: inputSchema(spec.fields),
         annotations: {
           readOnlyHint: spec.readOnly,
@@ -94,10 +94,13 @@ export function createServer(
           const result = spec.command === 'get_sequence_clips' ? formatClipPage(raw)
             : spec.command === 'get_file_access' ? { ...raw, guidance: {
               panelFolderSettingAvailable: false,
+              panelFolderButtonAvailable: raw.folderButtonAvailable === true,
               pathBase: 'approved-folder',
               nextAction: raw.granted
                 ? 'Reuse this grant without another folder selection. If mapping is needed, request includePath=true. Prefer the saved project parent only when it is inside this grant; all tool paths remain relative to the grant.'
-                : 'No approval exists. Only an actual authorized file operation opens Adobe native folder approval. There is no path to configure in the panel; project location alone does not grant access.',
+                : raw.folderButtonAvailable === true
+                  ? 'No approval exists. For an actual authorized file operation, the human can click the red folder button in Premiere MCP Bridge, or let that file request open Adobe native approval. Connection and timeline tools need no folder. Project location alone does not grant access.'
+                  : 'No approval exists. Only an actual authorized file operation opens Adobe native folder approval in this older runtime; it has no folder button. Project location alone does not grant access.',
             } } : raw;
           return {
             content: [{ type: 'text', text: JSON.stringify(result) }],

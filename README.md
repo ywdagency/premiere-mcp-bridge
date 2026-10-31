@@ -1,5 +1,7 @@
 # Premiere MCP Bridge
 
+**Development candidate 0.4.0:** adds the approved red/green folder-access button and explicit folder selection. This candidate is not published; use a reviewed local CCX and checksum, not --release. The public preview instructions below still target immutable v0.3.12. See [0.4.0 verification](docs/release/candidate-0.4.0.md).
+
 **Windows support is experimental in v0.3.12.** The installer and client configuration have automated platform tests on macOS, but installation and Premiere behavior on Windows are not yet verified. [Try it and help test](docs/windows.md).
 
 **Give your AI agent a documented connection to Adobe Premiere.** Inspect timelines, work on sequence copies and build creative tools through local MCP—using the agent you choose.

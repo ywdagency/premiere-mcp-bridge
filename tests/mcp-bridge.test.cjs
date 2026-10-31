@@ -241,7 +241,7 @@ async function bundledPanel(t, options = {}) {
   });
   t.after(() => entrypoints.plugin.destroy());
   entrypoints.panels.premiereAutoEditorPanel.create();
-  return { bridge, FileBridge, directory, elements, entrypoints, storage, saved, mediaFolder,
+  return { bridge, FileBridge, directory, elements, entrypoints, storage, saved, mediaFolder, project,
     pickerCalls: () => pickerCalls };
 }
 
@@ -305,7 +305,7 @@ test('declining a browser launch leaves connection and update state unchanged', 
   assert.equal(panel.elements.get('error').style.display, 'none');
 });
 
-test('bundled plugin reports absent and restored file access without adding controls or opening a picker', async (t) => {
+test('bundled plugin reports absent and restored file access without opening a picker', async (t) => {
   const fresh = await bundledPanel(t);
   const none = await fresh.bridge.call('get_file_access', { includePath: true });
   assert.equal(none.granted, false);
@@ -322,11 +322,123 @@ test('bundled plugin reports absent and restored file access without adding cont
   assert.equal(restored.saved.size, 1);
 });
 
+test('folder button grants explicitly once, updates its status and keeps the bridge running', async t => {
+  const p = await bundledPanel(t);
+  await p.bridge.call('get_capabilities');
+  const control = p.elements.get('folder-control'), button = p.elements.get('choose-media-folder');
+  assert.equal(control.attributes['data-access'], 'missing');
+  assert.match(button.attributes['aria-label'], /Timeline tools remain available/);
+  assert.equal(p.pickerCalls(), 0);
+  button.listeners.click(); button.listeners.click();
+  await delay(0);
+  assert.equal(p.pickerCalls(), 1, 'Repeated activation cannot open a second picker');
+  assert.equal(control.attributes['data-access'], 'granted');
+  assert.match(control.className, /granted/);
+  assert.match(control.attributes.title, /Private fixture folder/);
+  assert.equal(button.disabled, false);
+  assert.equal(p.saved.get('premiere-mcp-media-folder'), 'saved-media');
+  assert.equal(p.elements.get('status').textContent, 'Running');
+  assert.equal(p.elements.get('error').style.display, 'none');
+  assert.equal((await p.bridge.call('get_file_access')).folderButtonAvailable, true);
+});
+
+test('cancelling or failing a replacement keeps the old grant/token and does not hide Running', async t => {
+  const p = await bundledPanel(t, { savedMedia: true });
+  await p.bridge.call('get_capabilities');
+  const button = p.elements.get('choose-media-folder');
+  for (const failure of ['cancel', 'picker', 'token', 'not-folder']) {
+    p.storage.getFolder = async () => failure === 'cancel' ? null
+      : failure === 'picker' ? Promise.reject(new Error('Private picker details'))
+      : failure === 'not-folder' ? { ...p.mediaFolder, isFolder: false } : p.mediaFolder;
+    p.storage.createPersistentToken = async () => { throw new Error('Private token details'); };
+    button.listeners.click(); await delay(0);
+    assert.equal((await p.bridge.call('get_file_access')).granted, true);
+    assert.equal(p.saved.get('premiere-mcp-media-folder'), 'saved-media');
+    assert.equal(p.elements.get('folder-control').attributes['data-access'], 'granted');
+    assert.equal(p.elements.get('status').textContent, 'Running');
+    assert.equal(p.elements.get('error').style.display, 'none');
+    assert.equal(button.disabled, false);
+    assert.doesNotMatch(button.attributes.title, /Private (picker|token) details/);
+  }
+});
+
+test('explicit replacement persists the chosen root and its files still pass Entry and Node checks', async t => {
+  const p = await bundledPanel(t, { savedMedia: true });
+  await p.bridge.call('get_capabilities');
+  const root = join(p.directory, 'chosen-folder');
+  await fs.mkdir(root); await fs.writeFile(join(root, 'fixture.txt'), 'New approved folder');
+  const chosen = { ...folderAdapter(root), name: 'Chosen fixture', nativePath: root, isFolder: true };
+  const list = chosen.getEntries;
+  chosen.getEntries = async () => (await list()).map(entry => ({ ...entry,
+    nativePath: join(root, entry.name), getMetadata: async () => ({ size: 19 }),
+  }));
+  p.storage.getFolder = async () => chosen;
+  p.storage.createPersistentToken = async folder => { assert.equal(folder, chosen); return 'chosen-token'; };
+  p.elements.get('choose-media-folder').listeners.click(); await delay(0);
+  assert.equal(p.saved.get('premiere-mcp-media-folder'), 'chosen-token');
+  assert.equal((await p.bridge.call('get_file_access', { includePath: true })).folder.nativePath, root);
+  assert.equal((await p.bridge.call('api_load_text', { path: 'fixture.txt' })).characters, 19);
+  p.entrypoints.plugin.destroy();
+  const next = await bundledPanel(t, { saved: p.saved, storage: {
+    getEntryForPersistentToken: async saved => { assert.equal(saved, 'chosen-token'); return chosen; },
+  } });
+  assert.equal((await next.bridge.call('get_file_access', { includePath: true })).folder.nativePath, root);
+  assert.equal(next.elements.get('folder-control').attributes['data-access'], 'granted');
+  assert.equal(next.pickerCalls(), 0);
+});
+
+test('an open replacement picker blocks new file work without dropping the previous grant', async t => {
+  const p = await bundledPanel(t, { savedMedia: true });
+  await p.bridge.call('get_capabilities');
+  let finish;
+  p.storage.getFolder = () => new Promise(resolve => { finish = resolve; });
+  p.elements.get('choose-media-folder').listeners.click();
+  assert.equal(p.elements.get('choose-media-folder').disabled, true);
+  await assert.rejects(p.bridge.call('api_load_text', { path: 'fixture.txt' }), { code: 'FILE_ACCESS_PENDING' });
+  assert.equal((await p.bridge.call('get_file_access')).granted, true);
+  finish(null); await delay(0);
+  assert.equal(p.elements.get('choose-media-folder').disabled, false);
+  assert.equal(p.saved.get('premiere-mcp-media-folder'), 'saved-media');
+});
+
+test('folder selection cannot begin during an active host command', async t => {
+  const p = await bundledPanel(t);
+  await p.bridge.call('get_capabilities');
+  let entered, finish;
+  const started = new Promise(resolve => { entered = resolve; });
+  let first = true;
+  p.project.getActiveSequence = () => {
+    if (!first) return Promise.resolve(null);
+    first = false; entered(); return new Promise(resolve => { finish = resolve; });
+  };
+  const reading = p.bridge.call('get_active_sequence'); await started;
+  p.elements.get('choose-media-folder').listeners.click();
+  assert.equal(p.pickerCalls(), 0);
+  assert.match(p.elements.get('folder-control').attributes.title, /agent is busy/);
+  finish(null); await reading;
+  p.elements.get('choose-media-folder').listeners.click(); await delay(0);
+  assert.equal(p.pickerCalls(), 1);
+});
+
+test('explicit forgetting invalidates a late button selection instead of silently regranting access', async t => {
+  const p = await bundledPanel(t, { savedMedia: true });
+  await p.bridge.call('get_capabilities');
+  let entered, finish;
+  const started = new Promise(resolve => { entered = resolve; });
+  p.storage.createPersistentToken = () => { entered(); return new Promise(resolve => { finish = resolve; }); };
+  p.elements.get('choose-media-folder').listeners.click(); await started;
+  await p.bridge.call('forget_file_access', { projectId: 'project-fixture', operationId: randomUUID(), confirm: true });
+  finish('late-button-token'); await delay(0);
+  assert.equal((await p.bridge.call('get_file_access')).granted, false);
+  assert.equal(p.saved.size, 0);
+  assert.equal(p.elements.get('folder-control').attributes['data-access'], 'missing');
+});
+
 test('Stop blocks transport while preserving the folder approval and Launch reuses it without a picker', async (t) => {
   const { bridge, FileBridge, directory, elements, entrypoints, saved, pickerCalls } = await bundledPanel(t);
   assert.equal((await bridge.call('get_capabilities')).writesEnabled, true);
   assert.equal(pickerCalls(), 0, 'Launching must not ask for file access');
-  assert.deepEqual([...elements.keys()], ['connection-control', 'toggle-connection', 'connection-label', 'reload-control', 'reload-bridge', 'bridge-status', 'status', 'error', 'plugin-version']);
+  assert.deepEqual([...elements.keys()], ['connection-control', 'toggle-connection', 'connection-label', 'reload-control', 'reload-bridge', 'folder-control', 'choose-media-folder', 'bridge-status', 'status', 'error', 'plugin-version']);
   assert.equal(elements.get('toggle-connection').textContent, 'Stop');
   assert.equal(elements.get('status').textContent, 'Running');
   assert.equal(elements.get('plugin-version').textContent, 'v' + JSON.parse(await fs.readFile(resolve(__dirname, '../manifest.json'), 'utf8')).version);
@@ -476,10 +588,12 @@ test('invalid paths do not open a picker; picker cancellation/failure leaves tra
   assert.equal(pickerCalls(), 0);
   storage.getFolder = async () => null;
   await assert.rejects(bridge.call('api_load_text', { path: 'grant.txt' }), { code: 'MEDIA_FOLDER_REQUIRED' });
-  assert.equal(elements.get('error').textContent, 'File access was not granted.');
+  assert.equal(elements.get('error').style.display, 'none');
+  assert.equal(elements.get('status').textContent, 'Running');
   storage.getFolder = async () => { throw new Error('Private native details'); };
   await assert.rejects(bridge.call('api_load_text', { path: 'grant.txt' }), { code: 'MEDIA_FOLDER_REQUIRED' });
-  assert.equal(elements.get('error').textContent, 'File access failed. Retry the file request.');
+  assert.equal(elements.get('error').style.display, 'none');
+  assert.match(elements.get('folder-control').attributes.title, /Folder selection failed/);
   const c = await bridge.call('get_capabilities');
   assert.equal(c.mediaFolderGranted, false);
   assert.equal(c.writesEnabled, true);

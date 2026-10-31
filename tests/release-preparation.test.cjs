@@ -6,13 +6,13 @@ const { tmpdir } = require('node:os');
 const { spawnSync } = require('node:child_process');
 const { createHash } = require('node:crypto');
 const root = join(__dirname, '..');
-const files = ['manifest.json', 'index.html', 'styles.css', 'dist/main.js', 'LICENSE',
+const files = ['manifest.json', 'index.html', 'styles.css', 'dist/main.js', 'LICENSE', 'assets/folder.svg',
   'data/ADOBE-LICENSE.txt', 'data/ADOBE-COPYRIGHT.txt'];
 
 async function fixture(t) {
   const dir = await fs.mkdtemp(join(tmpdir(), 'bridge-release-'));
   t.after(() => fs.rm(dir, { recursive: true, force: true }));
-  for (const path of ['scripts', 'build/lib', 'dist', 'data'])
+  for (const path of ['scripts', 'build/lib', 'dist', 'data', 'assets'])
     await fs.mkdir(join(dir, path), { recursive: true });
   await fs.copyFile(join(root, 'scripts/stage-release.mjs'), join(dir, 'scripts/stage-release.mjs'));
   await fs.writeFile(join(dir, 'package.json'), JSON.stringify({version: '1.2.3', type: 'module'}));
@@ -38,7 +38,7 @@ test('release identity and public entry documents match the built candidate', as
   assert.ok(readme.includes(`**${COMMAND_LIST.length + 3} MCP tools**`));
 });
 
-test('release stage copies only seven plugin inputs, records matching hashes and refuses overwrite', async (t) => {
+test('release stage copies only eight plugin inputs, records matching hashes and refuses overwrite', async (t) => {
   const f = await fixture(t);
   await fs.writeFile(join(f.dir, '.env'), 'PRIVATE_TEST_SENTINEL');
   await fs.writeFile(join(f.dir, 'private.prproj'), 'PRIVATE_TEST_SENTINEL');
@@ -51,7 +51,7 @@ test('release stage copies only seven plugin inputs, records matching hashes and
   assert.deepEqual(inventory.files.map(f => f.path), files);
   const staged = (await fs.readdir(join(parent, 'plugin'), {recursive: true, withFileTypes: true}))
     .filter(f => f.isFile());
-  assert.equal(staged.length, 7);
+  assert.equal(staged.length, 8);
   for (const entry of inventory.files) {
     const bytes = await fs.readFile(join(parent, 'plugin', entry.path));
     assert.equal(entry.sha256, createHash('sha256').update(bytes).digest('hex'));

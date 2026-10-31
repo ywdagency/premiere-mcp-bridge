@@ -9,6 +9,7 @@ export interface FileAccessFolder {
 export function describeFileAccess(folder: FileAccessFolder | undefined, includePath = false): Record<string, unknown> {
   const result: Record<string, unknown> = {
     granted: !!folder,
+    folderButtonAvailable: true,
     pathIncluded: !!folder && includePath,
     approvalRequiredOnFileRequest: !folder,
     validation: 'Session grant only; each file operation still validates its Entry and Node broker authorization.',
