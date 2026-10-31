@@ -48,7 +48,11 @@ The server derives `premiere_get_sequence_summary` and its strict empty-argument
 
 ### Review workflow
 
-Use a focused branch and linked TODO under `docs/tasks/`. Keep a PR limited to one outcome, explain user-visible behavior and record verification plus remaining limits. Fixture tests run on Linux/macOS in CI; neither platform entry proves a live Premiere session. Report security issues privately using [SECURITY.md](SECURITY.md). Bug reports and feature requests should use synthetic projects and sanitized evidence.
+Use a focused branch and linked TODO under `docs/tasks/`. Keep a PR limited to one outcome, explain user-visible behavior and record verification plus remaining limits. Routine CI runs on Ubuntu with Node.js 22 and 24 for pull requests and pushes to main. Feature-branch pushes do not launch a duplicate workflow. Superseded runs for the same event and PR/ref are cancelled. Node setup has a two-minute limit within the existing five-minute job limit.
+
+The manual `Bridge checks` workflow adds macOS only when `full_compatibility` is selected; the default manual run uses Ubuntu. This preserves the four-job Linux/macOS compatibility matrix for deliberate release checks while routine PR updates use two Linux jobs instead of eight duplicated jobs. Neither platform entry proves a live Premiere session. Path filters are intentionally omitted so documentation-only PRs still report checks when branch protection requires them. Prefer local `npm test`, `node scripts/stage-release.mjs` and `npm pack --dry-run --json` while Actions usage is restricted; do not push or dispatch a workflow under a local-only instruction.
+
+Report security issues privately using [SECURITY.md](SECURITY.md). Bug reports and feature requests should use synthetic projects and sanitized evidence.
 
 For release/documentation work, use [the release review checklist](docs/release/README.md). Do not perform native writes, exports or saves merely to validate wording. Record the exact tested commit/build before distributing a package.
 
