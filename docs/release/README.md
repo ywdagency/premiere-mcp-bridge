@@ -34,3 +34,5 @@ The staging helper checks source/build version identity and copies exactly seven
 | Public protections and publication | Account-only controls and the anonymous published-download check remain publication-time steps. No merge, tag/assets, visibility change or release is performed here. |
 
 Keep raw projects, paths, receipts and run files private. Retain backups and saved synthetic results. No AE operation, owner-project save, global cache/preference change, existing AME queue work, arbitrary-code endpoint or automatic updater is part of preparation. Historical [0.3.6 audit](public-readiness.md) and [CLI report](onboarding.md) retain their original scopes.
+
+For the final owner-controlled publication sequence, use the [publication handoff](publish-checklist.md). The prepared [GitHub release text](github-release-body.md) is not proof that a release is published. [User operation](../user-guide.md), [agent workflows](../agent-workflows.md) and [MIT/third-party boundaries](../../OPEN_SOURCE.md) are part of the source package.

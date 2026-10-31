@@ -36,3 +36,5 @@ Do not ask the owner to remember a hidden saved folder or restore a removed pane
 setting. The diagnostic does not open a picker or grant access. If no grant
 exists, explain the native approval required by the deliberate file request;
 connection/setup alone must not trigger it. Never bypass the normal path checks.
+
+For actual editing tasks, follow the [agent operating guide](agent-workflows.md): current identity and paging, verified INPUT/BACKUP/WORK, exact ticks and write UUIDs, limited in-place consent, file grants, job/recovery semantics and result reporting. These workflows are reference instructions, not permission to edit during installation. The human-facing [user guide](user-guide.md) explains panel/client controls and example requests.

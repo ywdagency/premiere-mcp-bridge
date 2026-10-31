@@ -52,10 +52,19 @@
     "tsconfig.json",
     "AGENTS.md",
     "INDEX.md",
+    "OPEN_SOURCE.md",
     "CONTRIBUTING.md",
     "CHANGELOG.md",
     "SECURITY.md",
     "LICENSE",
     "data/"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ywdagency/premiere-uxp-bridge.git"
+  },
+  "homepage": "https://github.com/ywdagency/premiere-uxp-bridge#readme",
+  "bugs": {
+    "url": "https://github.com/ywdagency/premiere-uxp-bridge/issues"
+  }
 }

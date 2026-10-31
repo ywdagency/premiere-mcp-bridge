@@ -28,6 +28,7 @@ use disposable fixtures; never use the user's working timeline as an install tes
 This onboarding is Premiere-only. Do not configure another Adobe application or
 combine bridge servers as part of installation.
 
+Read docs/agent-workflows.md for task execution and recovery.
 Read INDEX.md and docs/premiere-control-reference.md before Premiere API work.
 Verify exact methods against Adobe's current official UXP documentation and record
 minimum versions. The baseline is Premiere 25.6; pages mentioning 27.0 do not

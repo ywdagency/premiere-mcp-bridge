@@ -2,9 +2,9 @@
 
 **Give your AI agent a documented connection to Adobe Premiere.** Inspect timelines, work on sequence copies and build creative tools through local MCP—using the agent you choose.
 
-Built by **YWD Agency** for editors, creative technologists and developers connecting AI workflows to desktop production tools. The bridge exposes explicit operations; you direct the edit. It does not choose a story, analyze footage for an automatic montage or replace editorial judgment.
+MIT-licensed bridge built by **YWD Agency** for editors, creative technologists and developers connecting AI workflows to desktop production tools. The bridge exposes explicit operations; you direct the edit. It does not choose a story, analyze footage for an automatic montage or replace editorial judgment.
 
-[Client setup](docs/clients.md) · [Tools](docs/commands.md) · [Native API](docs/native-api.md) · [Troubleshooting](docs/troubleshooting.md) · [Documentation index](INDEX.md)
+[User guide](docs/user-guide.md) · [Agent workflows](docs/agent-workflows.md) · [Client setup](docs/clients.md) · [Tools](docs/commands.md) · [Native API](docs/native-api.md) · [Troubleshooting](docs/troubleshooting.md) · [Documentation index](INDEX.md)
 
 **Release candidate 0.3.8 — source preview.** Native checks use Premiere 26.5 on macOS Apple Silicon; manifest minimum is 25.6 and the server requires Node.js 22+. Windows host behavior is unverified. Installed 0.3.8 passes doctor, a ten-file batch, file-denial recovery, backup/edit/marker checks and readable XML/OTIO outputs. Earlier versioned tests cover persistence and clean lifecycle. The current Node budget is 30 seconds; use the matching updated checkout/client. Explicit source authorization, one-frame A/V editing, revocation and renewed protection also pass on an owner-approved synthetic fixture. Broader asset-dependent scenarios remain separately unverified. No downloadable installer release is published. See [current evidence](docs/release/native-check-0.3.8.md) and [release gates](docs/release/README.md).
 
@@ -103,4 +103,4 @@ Automated tests cover contracts, ownership guards, real local IPC and MCP SDK st
 
 Native UXP button rendering can vary by host. Release review materials and outstanding gates are in [docs/release](docs/release/README.md).
 
-Bridge code is [MIT licensed](LICENSE). The bundled Adobe reference retains its [Apache-2.0 license](data/ADOBE-LICENSE.txt) and [copyright notice](data/ADOBE-COPYRIGHT.txt); see [license boundaries](docs/third-party-notices.md). Adobe Premiere is an Adobe product. Premiere MCP Bridge is an independent YWD Agency project, not an Adobe product or Marketplace listing.
+Bridge code is [MIT licensed](LICENSE); see the [open-source model](OPEN_SOURCE.md) for reuse, contributions and third-party boundaries. The bundled Adobe reference retains its [Apache-2.0 license](data/ADOBE-LICENSE.txt) and [copyright notice](data/ADOBE-COPYRIGHT.txt); see [license boundaries](docs/third-party-notices.md). Adobe Premiere is an Adobe product. Premiere MCP Bridge is an independent YWD Agency project, not an Adobe product or Marketplace listing.
