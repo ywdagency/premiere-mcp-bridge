@@ -30,7 +30,8 @@ test('release identity and public entry documents match the built candidate', as
   assert.equal(pkg.version, require('../package-lock.json').packages[''].version);
   assert.equal(pkg.version, PLUGIN_VERSION);
   assert.equal(pkg.private, true);
-  assert.deepEqual(manifest.requiredPermissions, {localFileSystem: 'request'});
+  assert.deepEqual(manifest.requiredPermissions, { localFileSystem: 'request',
+    network: { domains: ['https://raw.githubusercontent.com'] }, launchProcess: { schemes: ['https'] } });
   for (const path of ['README.md', 'docs/release/README.md', 'docs/release/release-notes.md', 'docs/release/public-readiness.md'])
     assert.ok((await fs.readFile(join(root, path), 'utf8')).includes(pkg.version), `${path} must identify this candidate`);
   const readme = await fs.readFile(join(root, 'README.md'), 'utf8');

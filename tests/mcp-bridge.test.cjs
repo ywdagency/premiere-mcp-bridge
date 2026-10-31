@@ -186,7 +186,7 @@ async function bundledPanel(t, options = {}) {
     addEventListener(name, listener) { this.listeners[name] = listener; },
   }]));
   const document = { getElementById: (id) => elements.get(id) ?? null };
-  const saved = new Map(options.savedMedia ? [['premiere-mcp-media-folder', 'saved-media']] : []);
+  const saved = options.saved ?? new Map(options.savedMedia ? [['premiere-mcp-media-folder', 'saved-media']] : []);
   const localStorage = { getItem: (key) => saved.get(key) ?? null,
     setItem: (key, value) => saved.set(key, value), removeItem: (key) => saved.delete(key) };
   let entrypoints;
@@ -203,11 +203,13 @@ async function bundledPanel(t, options = {}) {
   const readEntries = dataFolder.getEntries;
   dataFolder.getEntries = async () => [...await readEntries(), { ...folderAdapter(directory), name: 'mcp-bridge', isFolder: true, isFile: false }];
   vm.runInNewContext(await fs.readFile(resolve(__dirname, "../dist/main.js"), "utf8"), {
-    document, localStorage, console, setTimeout, clearTimeout,
+    document, localStorage, console, setTimeout, clearTimeout, AbortController,
+    ...(options.fetch ? { fetch: options.fetch } : {}),
     require(name) {
       if (name === "premierepro") return { Project: { getActiveProject: host.getActiveProject },
         Constants: { TrackItemType: { CLIP: 1 }, VideoDisplayFormatType: host.clipConstants.displayFormats } };
       if (name === "uxp") return { host, versions: { uxp: host.uxpVersion },
+        shell: { openExternal: options.openExternal ?? (() => assert.fail('Browser opens only after a user click')) },
         entrypoints: { setup(value) {
           // Observed in Premiere 26.5: setup throws before registering commands
           // if plugin.destroy is supplied without plugin.create.
@@ -225,6 +227,56 @@ async function bundledPanel(t, options = {}) {
   return { bridge, FileBridge, directory, elements, entrypoints, storage, saved, mediaFolder,
     pickerCalls: () => pickerCalls };
 }
+
+test('bundled version checks once and opens repository or release only on click/Enter', async t => {
+  const { REPOSITORY_URL, UPDATES_URL, UPDATE_CACHE_KEY } = require('../build/lib/updates.cjs');
+  for (const state of ['neutral', 'update', 'critical']) {
+    let checks = 0;
+    const opened = [];
+    const metadata = { schemaVersion: 1, latest: {
+      version: state === 'neutral' ? '0.3.8' : '0.3.10', minimumPremiereVersion: '25.6.0',
+      releaseUrl: REPOSITORY_URL + '/releases/tag/v' + (state === 'neutral' ? '0.3.8' : '0.3.10') },
+      criticalBelow: state === 'critical' ? '0.3.9' : null };
+    const panel = await bundledPanel(t, { fetch: async (url, init) => {
+      checks++; assert.equal(url, UPDATES_URL); assert.equal(init.method, 'GET');
+      assert.equal(init.credentials, 'omit'); assert.equal('body' in init, false);
+      return new Response(JSON.stringify(metadata));
+    }, openExternal: async (url, context) => { opened.push({ url, context }); return ''; } });
+    await panel.bridge.call('get_capabilities');
+    const version = panel.elements.get('plugin-version');
+    const destination = state === 'neutral' ? REPOSITORY_URL : metadata.latest.releaseUrl;
+    assert.equal(version.attributes['data-update'], state);
+    assert.equal(version.attributes.href, destination);
+    assert.equal(version.textContent, 'v0.3.8');
+    assert.equal(checks, 1); assert.equal(opened.length, 0); assert.equal(panel.pickerCalls(), 0);
+    assert.ok(panel.saved.has(UPDATE_CACHE_KEY));
+    let prevented = 0;
+    version.listeners.click({ preventDefault() { prevented++; } });
+    await new Promise(setImmediate);
+    assert.equal(prevented, 1); assert.equal(opened.length, 1); assert.equal(opened[0].url, destination);
+    assert.match(opened[0].context, /browser/);
+    version.listeners.keydown({ key: 'Enter', preventDefault() { prevented++; } });
+    await new Promise(setImmediate);
+    assert.equal(prevented, 2); assert.equal(opened.length, 2);
+    panel.entrypoints.panels.premiereAutoEditorPanel.show(); assert.equal(checks, 1);
+    assert.equal(panel.elements.get('status').textContent, 'Running');
+    assert.equal(panel.elements.get('error').style.display, 'none');
+    const reloaded = await bundledPanel(t, { saved: panel.saved, fetch: async () => assert.fail('Cached check must survive reload') });
+    await reloaded.bridge.call('get_capabilities');
+    assert.equal(reloaded.elements.get('plugin-version').attributes['data-update'], state);
+  }
+});
+
+test('declining a browser launch leaves connection and update state unchanged', async t => {
+  const panel = await bundledPanel(t, { openExternal: async () => 'User cancelled' });
+  await panel.bridge.call('get_capabilities');
+  const version = panel.elements.get('plugin-version');
+  version.listeners.click({ preventDefault() {} }); await new Promise(setImmediate);
+  assert.match(version.attributes.title, /Could not open GitHub/);
+  assert.equal(version.attributes['data-update'], 'neutral');
+  assert.equal(panel.elements.get('status').textContent, 'Running');
+  assert.equal(panel.elements.get('error').style.display, 'none');
+});
 
 test('bundled plugin reports absent and restored file access without adding controls or opening a picker', async (t) => {
   const fresh = await bundledPanel(t);

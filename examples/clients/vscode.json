@@ -3,7 +3,7 @@
     "premiere": {
       "type": "stdio",
       "command": "node",
-      "args": ["/absolute/path/to/premiere-uxp-bridge/mcp/server.mjs"]
+      "args": ["/absolute/path/to/premiere-mcp-bridge/mcp/server.mjs"]
     }
   }
 }
