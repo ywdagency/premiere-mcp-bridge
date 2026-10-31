@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "latest": {
-    "version": "0.3.8",
+    "version": "0.3.11",
     "minimumPremiereVersion": "25.6.0",
-    "releaseUrl": "https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.8"
+    "releaseUrl": "https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.11"
   },
   "criticalBelow": null
 }

@@ -400,5 +400,19 @@
     "fixtureYellowRedVerified": true,
     "fileGrantRestoredWithoutPicker": true,
     "doctorConnectionVersionPassed": true
+  },
+  "previewPublication0311": {
+    "sourceTag": "v0.3.11",
+    "sourceCommit": "a69e5e22bf0829c1846afc25131f39b47f852547",
+    "prerelease": true,
+    "ccxSha256": "f9385fba1601ce0db331e5dff133e6a119cda6d2171b4c00264cad524ffbbe2d",
+    "fixtureTestsPassed": 178,
+    "anonymousPublishedDownloadVerified": true,
+    "freshTaggedSourceRebuildVerified": true,
+    "downloadedPluginFiles": 7,
+    "publicValidationInstalled": false,
+    "publicValidationConfigured": false,
+    "pristineMachineInstallVerified": false,
+    "report": "docs/release/candidate-0.3.11.md"
   }
 }
