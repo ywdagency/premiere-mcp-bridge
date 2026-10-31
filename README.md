@@ -20,6 +20,8 @@ Prefer to install the plugin yourself? Download the [CCX and SHA-256](https://gi
 
 ## What you can do
 
+The current Node source also searches 806 official Premiere Help articles through the existing `premiere_api_search` (`source: "manual"` or `"all"`) and reads cited passages through `premiere_api_describe`. Default API behavior and tool counts are unchanged. Search uses offline navigation metadata; reading article text contacts Adobe. See [manual reference](docs/manual-reference.md). This Node-only feature needs a client reconnect after updating the source/dependencies, with no UXP reinstall.
+
 Ask an agent to report the active sequence, inspect paginated clips with exact ticks/timecodes, or read existing transcript data where the host supports it. Prepare a named working copy and make deliberate clip, marker, effect or keyframe changes through documented tools. Develop a custom assistant that can discover exact native signatures and probe the installed runtime before calling them.
 
 Timeline mutations default to sequences created or duplicated by this bridge in the current plugin session. With explicit owner instruction, `premiere_authorize_sequence` permits one existing sequence after a verified direct-clone backup; `premiere_revoke_sequence_authorization` removes that permission. Retained backups, original-sequence deletion and shared source media stay protected. Project saves, global settings, Source Monitor changes and native export jobs are separate, explicit operations with their own side effects. See [tools and arguments](docs/commands.md).

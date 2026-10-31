@@ -1,5 +1,7 @@
 # Complete Adobe API knowledge and typed control
 
+The existing search/describe tools also provide [official user-guide references](manual-reference.md). Search defaults to the API; choose source=manual or source=all explicitly. Manual IDs use the manual: prefix, return documentation-only text and cannot be passed to native tools. No additional MCP tools are registered.
+
 Version 0.3 includes the complete pinned Premiere DOM reference: 73 types, 570 class members (450 methods, 81 properties, 12 constructors and 27 event entries), plus 137 constants. `data/adobe-api.json` retains signatures, named parameters, return types, minimum versions, descriptions and official links. It was generated from AdobeDocs commit `fe96210fca589eec41310c8f2c7f88c9cc6edf5d`, with Adobe's Apache-2.0 notices retained alongside it. This is the Premiere DOM, not arbitrary UXP JavaScript, OS automation or every feature exposed by Premiere's UI.
 
 Knowledge is separate from execution. `premiere_api_search`, `premiere_api_describe` and `premiere_api_coverage` work without Premiere. The MCP resources `premiere://api/index` and `premiere://api/member/{id}` expose the same reference; URI-encode member IDs. Descriptions report policy, source, version compatibility and live verification separately. `premiere_api_probe` checks native presence in the connected host. A method's presence does not prove its behavior, and a reference page's `Since` label can be wrong. Compatibility corrections preserve the original label and explain the correction.
