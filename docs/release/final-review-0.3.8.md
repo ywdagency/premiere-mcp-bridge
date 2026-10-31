@@ -1,6 +1,6 @@
 # Final private review — 0.3.8
 
-Historical prepublication evidence: private/unpublished status below describes the review at that time. For the public preview, use [INSTALL.md](../../INSTALL.md) and the [release notes](release-notes.md).
+Historical prepublication evidence: private/unpublished status below describes the review at that time. For the public preview, use [INSTALL.md](../../INSTALL.md) and the [changelog](../../CHANGELOG.md).
 
 Checked 2026-10-30 America/Vancouver on macOS Apple Silicon, Node.js 24.7.0 and Premiere 26.5.0 / UXP 9.3.0-local. This is an unpublished preview. Native core behavior is recorded in the [0.3.8 report](native-check-0.3.8.md); installation/client/disclosure checks below have a different scope.
 
@@ -39,6 +39,6 @@ Before an announcement, publish the reviewed source/tag and exact CCX/checksum t
 
 ## User/agent instruction follow-up
 
-The later guide-only/package-metadata follow-up retains the tested runtime/client code and all 158 passing local tests. It adds the [user guide](../user-guide.md), [agent operating guide](../agent-workflows.md), [open-source model](../../OPEN_SOURCE.md), [publication handoff](publish-checklist.md) and prepared GitHub release text. All named guide tools match actual 42-tool SDK discovery; this check makes no native host call. The follow-up source has 141 files and its npm archive has 149; local links, credential/private-data scans and exact CCX payload checks pass. Earlier audit counts above retain their original snapshot.
+The later guide-only/package-metadata follow-up retains the tested runtime/client code and all 158 passing local tests. It adds the [user guide](../user-guide.md), [agent operating guide](../agent-workflows.md), [open-source model](../../OPEN_SOURCE.md) and [publication procedure](publish-checklist.md). All named guide tools match actual 42-tool SDK discovery; this check makes no native host call. The follow-up source has 141 files and its npm archive has 149; local links, credential/private-data scans and exact CCX payload checks pass. Earlier audit counts above retain their original snapshot.
 
 Private prepublication staging can update the existing PR with skip-ci and attach the reviewed CCX/checksum to an unpublished release draft. Draft assets must be downloaded and compared byte-for-byte; this is not proof of anonymous public download. Draft state, target commit, tag absence, private visibility and zero new Actions runs are recorded in the final task evidence. No public release, main merge or visibility change is authorized by these instructions.

@@ -42,4 +42,4 @@ The batch preflight failure was reproduced by a real IPC regression adapter
 that rejects overlapping UXP proof lifecycles. The subsequent 0.3.8 patch serializes
 those lifecycles, cancels queued checks when their originating request ends and
 rejects sparse marker arguments at both boundaries. Its automated checks are
-separate from pending native verification. See [current candidate](candidate-0.3.8.md).
+separate from pending native verification. See [0.3.8 native regression report](native-check-0.3.8.md).

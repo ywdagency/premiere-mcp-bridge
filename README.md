@@ -1,6 +1,6 @@
 # Premiere MCP Bridge
 
-**Working candidate 0.3.10 — not published or live-verified.** This checkout preserves file approval across Stop/restart/same-ID updates and adds explicit permission forgetting. See the [candidate checks](docs/release/candidate-0.3.10.md). The public installer/source below remains the separately verified v0.3.8 preview.
+**Local build 0.3.10 — not published.** This checkout preserves file approval across Stop/restart/same-ID updates and adds explicit permission forgetting. See the [candidate checks](docs/release/candidate-0.3.10.md). The public installer/source below remains the separately verified v0.3.8 preview.
 
 **Give your AI agent a documented connection to Adobe Premiere.** Inspect timelines, work on sequence copies and build creative tools through local MCP—using the agent you choose.
 
@@ -43,7 +43,7 @@ The client receives tool results, which may include project names, clip names an
 
 The CCX route uses Adobe Creative Cloud's installer; end users do not need UXP
 Developer Tools. See [CLI installation](docs/installation.md) and
-[first-run agent instructions](docs/agent-quickstart.md).
+[first-run agent instructions](INSTALL.md).
 
 Use the exact published source tag and reviewed release assets:
 

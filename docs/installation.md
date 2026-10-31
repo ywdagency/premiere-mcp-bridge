@@ -97,7 +97,7 @@ is valid. It does not print project names, file paths or raw host exceptions.
 A mismatch returns nonzero, even if Adobe lists the expected installed version.
 
 Doctor does **not** verify timeline edits, effects, import or export. Complete
-the [release-specific native plan](tasks/final-build-0.3.6.md) for its versioned native evidence. See [troubleshooting](troubleshooting.md)
+the [native test plan](live-test-plan.md) and consult the versioned native reports for actual evidence. See [troubleshooting](troubleshooting.md)
 and [release gates](release/README.md).
 
 Adobe sources:

@@ -48,7 +48,7 @@ The server derives `premiere_get_sequence_summary` and its strict empty-argument
 
 ### Review workflow
 
-Use a focused branch and linked TODO under `docs/tasks/`. Keep a PR limited to one outcome, explain user-visible behavior and record verification plus remaining limits. Routine CI runs on Ubuntu with Node.js 22 and 24 for pull requests and pushes to main. Feature-branch pushes do not launch a duplicate workflow. Superseded runs for the same event and PR/ref are cancelled. Node setup has a two-minute limit within the existing five-minute job limit.
+Use a focused branch with a linked issue or clear acceptance criteria in the PR. Keep internal task checklists and execution logs local rather than adding one document per task to the repository. Keep a PR limited to one outcome, explain user-visible behavior and record verification plus remaining limits. The configured workflow, when enabled, runs on Ubuntu with Node.js 22 and 24 for pull requests and pushes to main. Respect the current repository Actions setting; configuration is not evidence of a completed run. Feature-branch pushes do not launch a duplicate workflow. Superseded runs for the same event and PR/ref are cancelled. Node setup has a two-minute limit within the existing five-minute job limit.
 
 The manual `Bridge checks` workflow adds macOS only when `full_compatibility` is selected; the default manual run uses Ubuntu. This preserves the four-job Linux/macOS compatibility matrix for deliberate release checks while routine PR updates use two Linux jobs instead of eight duplicated jobs. Neither platform entry proves a live Premiere session. Path filters are intentionally omitted so documentation-only PRs still report checks when branch protection requires them. Prefer local `npm test`, `node scripts/stage-release.mjs` and `npm pack --dry-run --json` while Actions usage is restricted; do not push or dispatch a workflow under a local-only instruction.
 
@@ -71,3 +71,9 @@ Review `src/api-policy.ts` for new native methods. An exact generated signature 
 ## Contribution license
 
 Bridge contributions are submitted under the repository's MIT license. Retain existing copyright/license notices and identify the source/license of any new third-party material. Adobe-derived catalog/contracts keep their separate Apache-2.0 notices. See [the open-source model](OPEN_SOURCE.md).
+
+## Maintained files
+
+Keep src/ for the UXP plugin, mcp/ for the local server, scripts/ for installation/build/developer commands, tests/ for reusable behavioral checks and examples/ for portable client examples. data/ contains the pinned Adobe reference, runtime verification and required third-party notices; src/generated/api-contracts.ts is the UXP execution allowlist, while data/adobe-api.json is the Node/offline reference. Both are consumed and must remain synchronized.
+
+README.md is the product entrypoint, INSTALL.md the agent-led bootstrap, and docs/installation.md the detailed installation reference. Keep operating guidance in docs/user-guide.md and docs/agent-workflows.md. docs/release/ retains versioned real verification and one publication procedure, not superseded preparation diaries, private registry checkpoints or launch-copy drafts. Historical removed notes remain recoverable from Git. Do not remove a script or test simply because end users do not run it; inspect npm scripts, imports, CI and documented development workflows first.

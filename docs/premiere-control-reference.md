@@ -31,3 +31,5 @@ page's older label and an explicit correction note. New named import/close/
 growing-media contracts are [staged, not live-verified](api-expansion.md).
 
 For file operations, [UXP fs](https://developer.adobe.com/premiere-pro/uxp/uxp-api/reference-js/modules/fs/fs) documents scheme-based lstat. In the tested host, bare native paths fail, Entry URLs work, Stats lacks isSymbolicLink, and URL lstat follows a link. Production file metadata uses Entry.getMetadata; the Node file broker performs independent real filesystem checks before native path calls. Do not rely on UXP lstat alone for containment.
+
+For general Premiere usage, use the [official Premiere Help](https://helpx.adobe.com/premiere/desktop.html) and check the connected host version before giving version-sensitive UI advice. General Help describes the desktop application; only the documented UXP reference and actual host checks establish bridge API support.

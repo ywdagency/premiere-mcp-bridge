@@ -5,7 +5,7 @@ Premiere feature is remotely controllable. Scope: the pinned official Premiere
 DOM in `data/adobe-api.json`, 73 types and 707 entries including constants/events.
 General UXP/OS APIs and UI-only features are outside this catalog.
 
-Release candidate 0.3.8 retains **42 tools** (39 native/bridge commands and three offline reference tools). Actual 0.3.7 synthetic native workflows are [recorded separately](release/native-check-0.3.7.md); batch preflight failed and the current patch needs native rechecking. This is not a claim that every documented member or variant is behavior-tested. See [current status](release/candidate-0.3.8.md).
+The local 0.3.10 build exposes **43 tools** (40 host/bridge commands and three offline references). The [0.3.8 native report](release/native-check-0.3.8.md) records the fixed batch preflight and synthetic editing checks; [0.3.10 verification](release/candidate-0.3.10.md) records runtime activation and restored file approval. Neither report claims every documented member or variant is behavior-tested.
 
 ## New named adapters
 

@@ -1,29 +1,23 @@
-# Publication handoff — 0.3.8
+# Publication procedure
 
-This is a maintainer procedure, not authorization for a new release. The owner explicitly authorized free MIT public preview 0.3.8; the publication task applies the checks below without starting Actions. Future releases, visibility changes and workflow dispatches still require the applicable owner request.
+Obtain the owner's authorization for each release, tag, visibility change or workflow dispatch. This document is a maintainer procedure, not that authorization. The project is free under MIT with separate Adobe notices; no npm-registry publication or automatic updater is required.
 
-## Reviewed input
+## Review the exact source and assets
 
-Use the reviewed release PR/commit and [final private review](final-review-0.3.8.md). Code/client snapshot aef00ea passes 158 tests and actual fresh-checkout installation/SDK checks. Later guide/package-metadata changes receive separate local checks. The reviewed plugin is exactly seven files; CCX SHA-256 is 7153825fb11b08423a138b37833ef557f7e7280d7c01293a4a896b5cca0218b1.
+Use the version in package.json, manifest.json and the built protocol; they must agree. Run local tests and the [release checks](README.md), then read the versioned verification report. Preserve its distinction between fixtures, native behavior and platform/client limits. Stage only the seven allowlisted plugin files. The release attaches premiere-mcp-bridge-VERSION.ccx and its matching .ccx.sha256 file; verify checksum, exact filenames, manifest permissions and rebuilt payload before installation or upload. A matching version string alone is insufficient.
 
-Required release assets are premiere-mcp-bridge-0.3.8.ccx and premiere-mcp-bridge-0.3.8.ccx.sha256. Keep the checksum's exact filename entry and match both source and compiled payload; version equality alone is insufficient. Do not upload npm caches, receipts, raw logs, Adobe packager binaries or private audit archives. No npm registry publication is needed.
+Review the intended public refs/history, source and npm archive, commit/discussion metadata, release assets and existing Actions logs/artifacts/caches for private data. Exclude local configuration, projects/media, transcripts, credentials, receipts, raw audits and extracted Adobe packaging tools. Push only the reviewed branch/tag, never all local refs or a mirror. Preserve private local work. Retain MIT/Adobe license notices and read back available branch/security protections.
 
-## At authorized publication
+## Bind the release to the reviewed commit
 
-Update candidate-only installation/status wording and land the reviewed PR on main. Preserve the reviewed runtime/client tree and retain the same version across package, manifest, built protocol and CCX. If GitHub Actions must remain suppressed, use its documented skip-ci commit marker for the push/merge; never describe skipped checks as passing or disable protections to force a merge.
+Land the reviewed source on main and target its exact commit before creating vVERSION or publishing the matching draft. Never let a new draft silently target older main. Use an appropriate preview flag until the supported scope justifies stable status. Write release notes around the concrete user-visible change, exact installation route, tested scope/limits and links to maintained docs; old release-body drafts are not a template for a new version.
 
-Review current intended remote refs, history, logs/artifacts/caches and license notices before changing visibility. Push only the reviewed branch/tag, never all local refs or a mirror. Unrelated local branches are not part of this release. The private repository's unavailable plan-dependent protections must be rechecked when public access is authorized; configure available main protections and private vulnerability reporting without silently adding runner workflows.
+When Actions must remain suppressed, verify repository Actions is disabled for publication and use skip-ci on the reviewed push/merge. Compare run IDs/attempts before and after; do not dispatch or rerun workflows. Do not disable required protection to force a merge or claim intentionally skipped checks passed. Preserve/report the repository's resulting Actions setting.
 
-Bind the release draft's target to the exact reviewed source commit on main before publishing v0.3.8. Do not let it point to the old main snapshot. Keep prerelease:true for the first macOS/Premiere 26.5 preview. Confirm both uploaded asset names and SHA-256 by downloading them with the maintainer's authenticated access. This is an asset-integrity check, not a public-download test.
+Download uploaded draft assets with maintainer access and compare their bytes. This proves integrity but not anonymous availability. Visibility changes and publication require the owner's request; public copies/forks can persist, so visibility is not a reversible privacy test.
 
-Make public visibility and release publication only under the owner's publication request. A source/public release cannot be used as a reversible privacy test: copies and forks can persist.
+## Verify the actual public installation
 
-## Before the announcement
+From a new directory without GitHub credentials, clone the exact published vVERSION tag, run npm ci and npm run onboard -- --release without --install. Require the real matching assets, checksum/seven-file/payload checks and installed:false/configured:false. Missing/draft releases must fail without a floating-latest fallback. Never substitute an authenticated draft download for this public-route check.
 
-From a new directory and without GitHub credentials, clone the actual v0.3.8 tag, run npm ci and npm run onboard -- --release without --install. It must download the two official matching assets, verify the checksum/allowlist/payload and report installed:false/configured:false. A draft or missing release must remain an explicit failure. Do not use the maintainer's authenticated draft download as evidence of this anonymous route.
-
-Open the published README links and check the user guide, agent guide, platform limits and security contact. The fresh-clone test on the maintainer's existing Adobe host is already recorded; a separate pristine-Mac test remains unclaimed until someone performs it. No screenshot, production editing demonstration or every-client certification is required to label this a scoped preview.
-
-## Maintenance model
-
-Keep MIT for bridge code/documentation and separate Apache-2.0 Adobe notices. Use explicit versioned manual updates; an automatic updater is not a launch requirement. Collect synthetic installation/bug reports before expanding the supported-platform statement or marking the preview stable.
+Check the published README, INSTALL.md, user/agent/client guides, tested limits and private security reporting. A fresh source checkout on the maintainer's existing Mac is not a pristine new-Mac installation. Record only the clients/platforms and native operations actually verified. Keep private logs local and make a concise versioned report or release note sufficient for users and contributors.

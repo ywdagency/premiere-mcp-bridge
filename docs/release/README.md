@@ -1,18 +1,20 @@
-# Working candidate 0.3.10
+# Release verification and maintenance
 
-The [persistent file-approval patch](candidate-0.3.10.md) is local and not published/live-verified. It exposes 43 full tools (40 host commands) and 19 read-only tools. Published v0.3.8 evidence below remains historical and does not verify this candidate.
+The public preview is [v0.3.8](https://github.com/ywdagency/premiere-uxp-bridge/releases/tag/v0.3.8). The current local build is **0.3.10**, installed and executing on the reference Mac but not publicly released. It exposes 43 MCP tools (40 host commands and three offline references), or 19 tools in inspection-only mode.
 
-# Preview release 0.3.8
+## Evidence
 
-This Premiere-only preview retains 42 MCP tools, 39 host commands and 19 read-only tools. It fixes overlapping UXP file-proof lifecycles and rejects sparse marker argument prefixes before native calls. Automatic connection, the compact panel, request-only filesystem permission, source protection and exact-UUID recovery remain intact.
+| Report | Verified scope |
+| --- | --- |
+| [0.3.10](candidate-0.3.10.md) | Persistent folder approval, bundled lifecycle/upgrade tests, installation and real runtime/restored-grant reads |
+| [0.3.8](native-check-0.3.8.md) | Maximum-size batch, denial/recovery, backups, edits, markers, effects/keyframes, explicit source authorization/revocation and readable interchange outputs |
+| [0.3.7](native-check-0.3.7.md) | Synthetic creation/import/edit, saves, lifecycle and interchange checks; batch defect that prompted 0.3.8 |
+| [0.3.6](native-check-0.3.6.md) | Exact installer/runtime identity and bounded native read/time checks |
+| [Fresh-checkout/disclosure review](final-review-0.3.8.md) | Versioned installation, package/privacy and client evidence, with explicit pristine-machine limits |
 
-The [0.3.8 regression report](native-check-0.3.8.md) confirms actual activation, ten-file import, protection/recovery, backups/edit/marker checks and readable outputs. Node defaults to a 30-second budget; the matching-source CCX is unchanged by Node-only recovery improvements.
+Use [per-member observations](../live-verification-26.5.md), the pinned matrix and the [live test plan](../live-test-plan.md) for deeper coverage. Fixture, catalog, runtime-presence and successful native behavior are different evidence. These reports do not certify every API member, client, platform or visual/audio result.
 
-The [0.3.7 native report](native-check-0.3.7.md) records genuine isolated project creation, individual imports, verified backups, move/trim, full-argument markers, Save/Save As, selected sequence import, clean lifecycle, ownership protection and readable XML/OTIO outputs. Batch preflight failed before import. The [0.3.8 patch](candidate-0.3.8.md) is installed, activated and the native batch regression passes. A complete 707-entry or visual/audio certification is not claimed.
-
-## Preparation and installation
-
-Use Node.js 22+ in the reviewed source checkout:
+## Prepare a reviewed build
 
 ```sh
 npm ci
@@ -21,24 +23,10 @@ node scripts/stage-release.mjs
 npm pack --dry-run --json
 ```
 
-The staging helper checks source/build version identity and copies exactly seven allowlisted plugin files to artifacts/release/0.3.8/plugin with SHA-256 inventory. Package that staged manifest with Adobe UDT's supported packaging implementation, inspect the actual CCX and validate it through onboard before explicit installation. A CCX installs only the plugin; the Node server and client setup are separate. Follow [installation](../installation.md) and [agent quickstart](../agent-quickstart.md). The public v0.3.8 release supplies the reviewed CCX/checksum; use its exact matching source tag.
+The staging helper checks source/build version identity and copies exactly seven plugin/runtime/license files into a new versioned snapshot. It refuses to overwrite an existing stage. Package that staged manifest with Adobe's supported UDT packaging implementation; keep proprietary packager files outside the repository/package. Validate the resulting CCX and trusted SHA-256 through onboard before explicit installation. The CCX installs only the plugin; the source provides the Node server and client setup. Follow [INSTALL.md](../../INSTALL.md) and [installation](../installation.md).
 
-## Gates
+Preserve the plugin ID, saved token storage and durable receipts during updates; never uninstall or delete plugin data as a shortcut. Confirm the executing version through doctor after owner-controlled activation. Do not use an owner's working timeline as an installation test. Record native tests only on an explicitly authorized disposable fixture, retaining backups and exact-UUID recovery.
 
-| Gate | Status |
-| --- | --- |
-| Strict contracts, proof queue, early marker validation | Implemented; final automated checks recorded in candidate evidence. |
-| Exact 0.3.8 CCX/hash and disclosure audit | Verified seven-file payload; final source/npm/history disclosure checks recorded separately. |
-| Official install and actual executing 0.3.8 | Enabled installation and actual runtime/doctor confirmed. |
-| Maximum batch, failed-request queue release and marker guard | Native tests pass with the 30-second Node budget. |
-| Positive explicit authorization and revocation | Native grant, one-frame A/V edit, revoke, protection rejection and retained-backup checks pass on an owner-approved synthetic fixture. |
-| Dirty prompt choices, preset/MOGRT/transcription/AME fixtures | Not native-verified by this run; keep their limits explicit. |
-| Other clients, Windows host, visual/audio/interchange fidelity | Unverified beyond documented fixture/structural checks. |
-| Current private source/onboarding/disclosure review | See the [final private review](final-review-0.3.8.md); local checks only while Actions usage is restricted. |
-| Public protections and publication | Account-only controls and the anonymous published-download check remain publication-time steps. No merge, tag/assets, visibility change or release is performed here. |
+## Publish only when authorized
 
-Keep raw projects, paths, receipts and run files private. Retain backups and saved synthetic results. No AE operation, owner-project save, global cache/preference change, existing AME queue work, arbitrary-code endpoint or automatic updater is part of preparation. Historical [0.3.6 audit](public-readiness.md) and [CLI report](onboarding.md) retain their original scopes.
-
-For the final owner-controlled publication sequence, use the [publication handoff](publish-checklist.md). The prepared [GitHub release text](github-release-body.md) is not proof that a release is published. [User operation](../user-guide.md), [agent workflows](../agent-workflows.md) and [MIT/third-party boundaries](../../OPEN_SOURCE.md) are part of the source package.
-
-Publication was explicitly authorized by the owner for free MIT preview 0.3.8. The [publication task](../tasks/publish-0.3.8.md) records final remote/anonymous checks. Earlier private-stage observations remain versioned evidence.
+Use the [publication procedure](publish-checklist.md) for source/tag/asset identity, privacy review, anonymous downloads and remote settings. A local code change or successful check does not authorize a public release. Respect the owner's current Actions restrictions; skipped/disabled checks are not passing CI. Internal task logs, superseded preparation notes and promotional drafts are kept outside the tracked documentation. Git retains their history.

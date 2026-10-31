@@ -12,4 +12,4 @@ Describe version limits, side effects, uncertain outcomes or remaining release g
 
 ## Linked task
 
-Link the repository TODO under `docs/tasks/` and any issue. Keep local registry IDs, personal paths, project/media names and diagnostic dumps out of the PR body.
+Link a relevant issue or public development plan, or state the acceptance criteria here. Keep internal working TODOs local. Keep local registry IDs, personal paths, project/media names and diagnostic dumps out of the PR body.

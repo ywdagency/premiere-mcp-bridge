@@ -31,7 +31,7 @@ test('release identity and public entry documents match the built candidate', as
   assert.equal(pkg.version, PLUGIN_VERSION);
   assert.equal(pkg.private, true);
   assert.deepEqual(manifest.requiredPermissions, {localFileSystem: 'request'});
-  for (const path of ['README.md', 'docs/release/README.md', 'docs/release/release-notes.md', 'docs/release/public-readiness.md'])
+  for (const path of ['README.md', 'docs/release/README.md', `docs/release/candidate-${pkg.version}.md`])
     assert.ok((await fs.readFile(join(root, path), 'utf8')).includes(pkg.version), `${path} must identify this candidate`);
   const readme = await fs.readFile(join(root, 'README.md'), 'utf8');
   assert.ok(readme.includes(`**${COMMAND_LIST.length + 3} MCP tools**`));
