@@ -6,15 +6,14 @@ Creative Cloud supplies Adobe's Unified Plugin Installer Agent (UPIA). End users
 install the reviewed CCX with UPIA; UXP Developer Tools is a development alternative,
 not an end-user prerequisite for the CCX route.
 
-## Candidate status
+## Published preview
 
-Version 0.3.8 is still a private, unmerged candidate. No public tag/release asset is
-available yet. The commands below become the public path only after the matching
-source commit and release assets are published. For present candidate review,
-clone with `--branch release/0.3.6` and use the reviewed local installer path.
-Do not use default main's older source with a newer CCX.
+The free MIT preview is v0.3.8. Use its exact tag and official CCX/checksum. The
+[agent-led entrypoint](../INSTALL.md) lets a local agent guide the installation
+from a repository link. A cloud-only chat without local terminal/files cannot
+start the stdio server on your Mac.
 
-## Public path after the release is published
+## CLI installation
 
 ```sh
 git clone --branch v0.3.8 https://github.com/ywdagency/premiere-uxp-bridge.git
@@ -36,10 +35,10 @@ and exact assets `premiere-mcp-bridge-0.3.8.ccx` and
 No API token is required for public downloads; private candidate downloads are
 not supported by this automatic route.
 
-## Local reviewed candidate
+## Reviewed local CCX or manual Adobe installation
 
 ```sh
-git clone --branch release/0.3.6 https://github.com/ywdagency/premiere-uxp-bridge.git
+git clone --branch v0.3.8 https://github.com/ywdagency/premiere-uxp-bridge.git
 cd premiere-uxp-bridge
 npm ci
 npm run onboard -- --ccx /path/to/reviewed.ccx --sha256 HASH_FROM_REVIEWED_CHECKSUM
@@ -54,7 +53,9 @@ permissions/content, extra files, duplicate archive entries and source/runtime
 mismatches reject before installation. A private temporary snapshot is installed,
 then removed; validation never executes the downloaded plugin code.
 
-The installer invokes Adobe's documented macOS UPIA path with `--install`. It
+You can also double-click the reviewed .ccx file and confirm in Creative Cloud Desktop. This installs only the plugin; run npm run setup -- --read-only in the matching source clone to generate Codex configuration, or follow the client-specific generator/merge.
+
+The CLI installer invokes Adobe's documented macOS UPIA path with `--install`. It
 does not uninstall an older version, erase plugin data, launch/restart Premiere
 or save a project. Adobe may show its own confirmation or permission dialog.
 If Creative Cloud/UPIA is missing, install/repair Creative Cloud normally.
@@ -94,8 +95,7 @@ is valid. It does not print project names, file paths or raw host exceptions.
 A mismatch returns nonzero, even if Adobe lists the expected installed version.
 
 Doctor does **not** verify timeline edits, effects, import or export. Complete
-the [release-specific native plan](tasks/final-build-0.3.6.md) before declaring
-this candidate a tested public installer. See [troubleshooting](troubleshooting.md)
+the [release-specific native plan](tasks/final-build-0.3.6.md) for its versioned native evidence. See [troubleshooting](troubleshooting.md)
 and [release gates](release/README.md).
 
 Adobe sources:

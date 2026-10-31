@@ -10,7 +10,9 @@ The bridge uses private local file IPC with automatic discovery. It does not nee
 
 ## Install and connect
 
-After this release is published, use its exact matching source tag:
+Ask a local agent: “Study https://github.com/ywdagency/premiere-uxp-bridge and help me install the bridge and connect it to this agent, starting read-only.” The agent begins with [INSTALL.md](https://github.com/ywdagency/premiere-uxp-bridge/blob/v0.3.8/INSTALL.md). You can also verify the checksum and double-click the CCX to install the plugin; the local server/client still needs setup. Browser-only cloud chat without local computer access cannot start this stdio bridge.
+
+Use this release's exact matching source tag:
 
 ```sh
 git clone --branch v0.3.8 https://github.com/ywdagency/premiere-uxp-bridge.git
@@ -28,7 +30,7 @@ npm run doctor
 
 Doctor verifies the executing version/commands and basic context, not every edit. A normal owner-controlled Premiere quit/reopen may be necessary if an older JavaScript runtime is loaded; save your work yourself first. Transport Reload does not load newly installed JavaScript.
 
-Start by asking the agent to read capabilities/project/active-sequence status without editing. To enable the full tool surface later, run npm run setup and reconnect. There is no separate Enable Editing toggle.
+Start by asking the agent to read capabilities/project/active-sequence status without editing. To enable the full tool surface later, regenerate the chosen client configuration without --read-only, merge JSON where applicable and reconnect. There is no separate Enable Editing toggle.
 
 ## Instructions
 

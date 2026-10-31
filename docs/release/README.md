@@ -1,6 +1,6 @@
-# Release candidate 0.3.8
+# Preview release 0.3.8
 
-This unpublished Premiere-only candidate retains 42 MCP tools, 39 host commands and 19 read-only tools. It fixes overlapping UXP file-proof lifecycles and rejects sparse marker argument prefixes before native calls. Automatic connection, the compact panel, request-only filesystem permission, source protection and exact-UUID recovery remain intact.
+This Premiere-only preview retains 42 MCP tools, 39 host commands and 19 read-only tools. It fixes overlapping UXP file-proof lifecycles and rejects sparse marker argument prefixes before native calls. Automatic connection, the compact panel, request-only filesystem permission, source protection and exact-UUID recovery remain intact.
 
 The [0.3.8 regression report](native-check-0.3.8.md) confirms actual activation, ten-file import, protection/recovery, backups/edit/marker checks and readable outputs. Node defaults to a 30-second budget; the matching-source CCX is unchanged by Node-only recovery improvements.
 
@@ -17,7 +17,7 @@ node scripts/stage-release.mjs
 npm pack --dry-run --json
 ```
 
-The staging helper checks source/build version identity and copies exactly seven allowlisted plugin files to artifacts/release/0.3.8/plugin with SHA-256 inventory. Package that staged manifest with Adobe UDT's supported packaging implementation, inspect the actual CCX and validate it through onboard before explicit installation. A CCX installs only the plugin; the Node server and client setup are separate. Follow [installation](../installation.md) and [agent quickstart](../agent-quickstart.md). No tag or downloadable release exists yet; never invent published assets.
+The staging helper checks source/build version identity and copies exactly seven allowlisted plugin files to artifacts/release/0.3.8/plugin with SHA-256 inventory. Package that staged manifest with Adobe UDT's supported packaging implementation, inspect the actual CCX and validate it through onboard before explicit installation. A CCX installs only the plugin; the Node server and client setup are separate. Follow [installation](../installation.md) and [agent quickstart](../agent-quickstart.md). The public v0.3.8 release supplies the reviewed CCX/checksum; use its exact matching source tag.
 
 ## Gates
 
@@ -36,3 +36,5 @@ The staging helper checks source/build version identity and copies exactly seven
 Keep raw projects, paths, receipts and run files private. Retain backups and saved synthetic results. No AE operation, owner-project save, global cache/preference change, existing AME queue work, arbitrary-code endpoint or automatic updater is part of preparation. Historical [0.3.6 audit](public-readiness.md) and [CLI report](onboarding.md) retain their original scopes.
 
 For the final owner-controlled publication sequence, use the [publication handoff](publish-checklist.md). The prepared [GitHub release text](github-release-body.md) is not proof that a release is published. [User operation](../user-guide.md), [agent workflows](../agent-workflows.md) and [MIT/third-party boundaries](../../OPEN_SOURCE.md) are part of the source package.
+
+Publication was explicitly authorized by the owner for free MIT preview 0.3.8. The [publication task](../tasks/publish-0.3.8.md) records final remote/anonymous checks. Earlier private-stage observations remain versioned evidence.

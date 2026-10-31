@@ -6,8 +6,8 @@ Do not reintroduce an automatic editor, content-analysis service or editorial po
 
 ## First-run installation requests
 
-For a user asking to install/connect this repository, read docs/installation.md
-and docs/agent-quickstart.md first. Use the checkout's exact version, npm ci and
+For a user asking to install/connect this repository from a URL or otherwise,
+read INSTALL.md, docs/installation.md and docs/agent-quickstart.md first. Use the checkout's exact version, npm ci and
 npm run onboard. Validation is the default; --install explicitly invokes Adobe
 UPIA and configures the selected client. Only --release downloads a published
 matching release; never silently fall back to a floating latest binary or claim

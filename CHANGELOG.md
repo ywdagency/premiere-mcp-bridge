@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.8 — release candidate, unpublished
+## 0.3.8 — public preview
 
 Serialize request-bound UXP file proof lifecycles after an actual batch-import preflight failure. Release the queue on error/expiry/context end and prevent queued checks from outliving the request. Reject sparse marker argument prefixes before native calls at both boundaries. Preserve exact UUID recovery, file permissions and all 42 tools. The native ten-file batch and denied-file recovery pass on Premiere 26.5; full-argument markers, effect animation and explicit source authorization/revocation are verified on synthetic fixtures. Keep catalog coverage distinct from native coverage. The generated Codex client timeout is 45 seconds, above the bridge request deadline. Routine CI now avoids duplicate feature-branch pushes and makes macOS an explicit manual compatibility check. See the versioned release reports for current limits.
 

@@ -1,6 +1,6 @@
 # Open-source model
 
-Premiere MCP Bridge's own code and documentation use the [MIT license](LICENSE). The repository is currently private while the preview is prepared; making the reviewed source public will make this an openly available MIT project. Merely making a repository public is not a substitute for its license. package.json keeps private:true to prevent accidental npm-registry publication; that flag does not restrict the MIT license or the planned GitHub source/CCX distribution.
+Premiere MCP Bridge's own code and documentation use the [MIT license](LICENSE). The source and preview installer are publicly available on GitHub as an MIT project. Merely making a repository public is not a substitute for its license. package.json keeps private:true to prevent accidental npm-registry publication; that flag does not restrict the MIT license or the GitHub source/CCX distribution.
 
 MIT permits use, modification, redistribution and commercial use, including distributing modified versions under different terms. Redistributed copies must retain the MIT copyright/license notice. MIT does not require downstream modifications to be public and supplies no warranty. See the [MIT summary and text](https://choosealicense.com/licenses/mit/).
 

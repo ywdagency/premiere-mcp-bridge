@@ -1,5 +1,7 @@
 # Final private review — 0.3.8
 
+Historical prepublication evidence: private/unpublished status below describes the review at that time. For the public preview, use [INSTALL.md](../../INSTALL.md) and the [release notes](release-notes.md).
+
 Checked 2026-10-30 America/Vancouver on macOS Apple Silicon, Node.js 24.7.0 and Premiere 26.5.0 / UXP 9.3.0-local. This is an unpublished preview. Native core behavior is recorded in the [0.3.8 report](native-check-0.3.8.md); installation/client/disclosure checks below have a different scope.
 
 ## Fresh source checkout and connection

@@ -11,6 +11,7 @@ Run `npm ci` from the clone. Codex setup includes the build; for the other clien
 | Client | Command from the clone | Where the generated configuration goes |
 | --- | --- | --- |
 | Codex | `npm run setup` | Automatically updates this clone's `.codex/config.toml` |
+| Claude Code | `node scripts/setup.mjs --client json` | Merge printed JSON into this clone's ignored `.mcp.json`; see below |
 | Claude Desktop | `node scripts/setup.mjs --client claude` | Merge printed JSON into the desktop config described below |
 | Cursor | `node scripts/setup.mjs --client cursor` | Merge printed JSON into `.cursor/mcp.json` or the user config |
 | VS Code | `node scripts/setup.mjs --client vscode` | Merge printed JSON into `.vscode/mcp.json` |
@@ -22,11 +23,12 @@ Load the UXP plugin separately in Premiere, open its panel once, then restart/re
 | Client | Configuration supplied | Evidence and limit |
 | --- | --- | --- |
 | Codex local clients | Project `.codex/config.toml` | Config generation/merge tested; actual SDK stdio and local Premiere reads recorded. No claim of every Codex surface/version being tested. |
+| Claude Code | `mcpServers` in `.mcp.json` | Generic JSON contract checked against official project stdio format; dedicated app session unverified. |
 | Claude Desktop | `mcpServers` JSON | Format and macOS location checked against official guidance; no dedicated end-to-end client session recorded here. |
 | Cursor | `mcpServers` JSON | Format and locations checked against official guidance; no dedicated end-to-end client session recorded here. |
 | VS Code | `servers` JSON with `type: "stdio"` | VS Code format checked against official guidance; agent harness configuration differs. No dedicated end-to-end client session recorded here. |
 
-Candidate 0.3.8 retains 42 full-access or 19 inspection-only tools and the portable client generators. Actual 0.3.7 synthetic workflow evidence is recorded separately; its batch preflight failure led to the current patch. Executing 0.3.8, maximum-size imports, file denial/recovery, marker guards, effects/keyframes and explicit source authorization/revocation are verified on the documented synthetic scope. Fresh-checkout results are recorded in the [final private review](release/final-review-0.3.8.md). These are local integration paths, not vendor certification. Source pages below were checked on 2026-10-29.
+Preview 0.3.8 retains 42 full-access or 19 inspection-only tools and the portable client generators. Actual 0.3.7 synthetic workflow evidence is recorded separately; its batch preflight failure led to the current patch. Executing 0.3.8, maximum-size imports, file denial/recovery, marker guards, effects/keyframes and explicit source authorization/revocation are verified on the documented synthetic scope. Fresh-checkout results are recorded in the [final private review](release/final-review-0.3.8.md). These are local integration paths, not vendor certification. Source pages below were checked on 2026-10-29.
 
 ## Codex
 
@@ -41,6 +43,12 @@ Generated Codex configuration sets `tool_timeout_sec = 45`, leaving room above t
 To inspect only, run `npm run setup -- --read-only`. Do not copy the generated personal paths into another installation. Setup does not start Premiere or grant external-folder access.
 
 Official sources: [Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) and [trusted project configuration](https://learn.chatgpt.com/docs/config-file/config-advanced#project-config-files-codexconfigtoml).
+
+## Claude Code
+
+After the build, use node scripts/setup.mjs --client json --read-only, or use --client json with onboard --install. Merge the returned mcpServers object into .mcp.json in this clone, preserving unrelated entries. This repository ignores that machine-specific file. Open Claude Code in the clone and use its project-server approval/reconnect flow; /mcp reports server status. Generated stdio entries have command/args/env, with no remote URL. Do not use the Claude Desktop config location for Claude Code.
+
+The generic JSON generator does not itself write Claude Code configuration. A local agent with the human's install authorization can perform the merge, or show the exact change for manual application. This format check is distinct from a dedicated live Claude Code session. See [Claude Code MCP project configuration](https://code.claude.com/docs/en/mcp#project-scope).
 
 ## Claude Desktop on macOS
 

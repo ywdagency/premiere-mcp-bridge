@@ -6,7 +6,17 @@ MIT-licensed bridge built by **YWD Agency** for editors, creative technologists 
 
 [User guide](docs/user-guide.md) · [Agent workflows](docs/agent-workflows.md) · [Client setup](docs/clients.md) · [Tools](docs/commands.md) · [Native API](docs/native-api.md) · [Troubleshooting](docs/troubleshooting.md) · [Documentation index](INDEX.md)
 
-**Release candidate 0.3.8 — source preview.** Native checks use Premiere 26.5 on macOS Apple Silicon; manifest minimum is 25.6 and the server requires Node.js 22+. Windows host behavior is unverified. Installed 0.3.8 passes doctor, a ten-file batch, file-denial recovery, backup/edit/marker checks and readable XML/OTIO outputs. Earlier versioned tests cover persistence and clean lifecycle. The current Node budget is 30 seconds; use the matching updated checkout/client. Explicit source authorization, one-frame A/V editing, revocation and renewed protection also pass on an owner-approved synthetic fixture. Broader asset-dependent scenarios remain separately unverified. No downloadable installer release is published. See [current evidence](docs/release/native-check-0.3.8.md) and [release gates](docs/release/README.md).
+**Free, MIT-licensed preview 0.3.8.** Native checks use Premiere 26.5 on macOS Apple Silicon; manifest minimum is 25.6 and the server requires Node.js 22+. Windows host behavior is unverified. Installed 0.3.8 passes doctor, a ten-file batch, file-denial recovery, backup/edit/marker checks and readable XML/OTIO outputs. Earlier versioned tests cover persistence and clean lifecycle. The current Node budget is 30 seconds; use the matching updated checkout/client. Explicit source authorization, one-frame A/V editing, revocation and renewed protection also pass on an owner-approved synthetic fixture. Broader asset-dependent scenarios remain separately unverified. Download the [0.3.8 installer and checksum](https://github.com/ywdagency/premiere-uxp-bridge/releases/tag/v0.3.8). See [current evidence](docs/release/native-check-0.3.8.md) and [release gates](docs/release/README.md).
+
+## Easiest start: ask your agent
+
+Paste this into a local Codex, Claude Code or another agent with terminal/file access on the Mac running Premiere:
+
+> Study https://github.com/ywdagency/premiere-uxp-bridge and help me install Premiere MCP Bridge and connect it to this agent. Follow the repository's installation instructions, start in read-only mode, and do not change my edit during setup.
+
+The agent should begin with [INSTALL.md](INSTALL.md) and [AGENTS.md](AGENTS.md), use the published v0.3.8 source/installer, and guide you through Adobe confirmation, opening the panel, client trust and reconnecting. A browser-only/cloud chat without local computer access can explain the steps but cannot start this local bridge. Claude Desktop is also supported through the documented configuration merge.
+
+Prefer to install the plugin yourself? Download the [CCX and SHA-256](https://github.com/ywdagency/premiere-uxp-bridge/releases/tag/v0.3.8), verify the checksum, then double-click the CCX and confirm in Adobe Creative Cloud Desktop. The CCX installs the Premiere plugin; the local MCP server/client still needs the agent-led or [CLI setup](docs/installation.md). You do not need UXP Developer Tools for this route.
 
 ## What you can do
 
@@ -33,39 +43,32 @@ The CCX route uses Adobe Creative Cloud's installer; end users do not need UXP
 Developer Tools. See [CLI installation](docs/installation.md) and
 [first-run agent instructions](docs/agent-quickstart.md).
 
-**The candidate is not published yet.** For private review, use the matching
-branch and independently reviewed local CCX/checksum:
+Use the exact published source tag and reviewed release assets:
 
 ```sh
-git clone --branch release/0.3.6 https://github.com/ywdagency/premiere-uxp-bridge.git
+git clone --branch v0.3.8 https://github.com/ywdagency/premiere-uxp-bridge.git
 cd premiere-uxp-bridge
 npm ci
-npm run onboard -- --ccx /path/to/reviewed.ccx --sha256 REVIEWED_HASH
-# Once verified, repeat with --install --read-only to invoke Adobe and configure Codex.
+npm run onboard -- --release
+npm run onboard -- --release --install --read-only
 ```
 
-Validation does not install or configure anything. Explicit --install creates
-project-local Codex configuration; other clients receive JSON for manual merge.
-Enable Premiere Developer Mode in Preferences → Plugins, open Window → UXP Plugins → Premiere MCP Bridge, and reconnect the client from this trusted clone. Then run `npm run doctor`. It requires the expected version and commands to be executing; installer success alone is insufficient. First-run client paths and remaining installation limits are recorded in the [final private review](docs/release/final-review-0.3.8.md).
+Validation does not install or configure anything. Explicit --install invokes Adobe and creates project-local Codex configuration; other clients receive JSON for a controlled merge. Enable Premiere Developer Mode, open Window → UXP Plugins → Premiere MCP Bridge, open/trust this clone in the client and reconnect its MCP process. Then run npm run doctor. It checks the actual executing version/commands; installer registration alone is insufficient.
 
-After matching tagged source/assets are published,
-`npm run onboard -- --release --install` downloads/checks the checkout's exact
-release and installs/configures it. Missing releases fail, without a latest-version
-fallback. The [installation guide](docs/installation.md) distinguishes this future
-public route from today's local candidate; no public release exists yet.
+The downloader uses only the matching published version and checksum, without a floating-latest fallback. Manual CCX installation and agent-assisted client setup are described in [INSTALL.md](INSTALL.md). Known first-run/platform limits are in the [review report](docs/release/final-review-0.3.8.md).
 
 ## Development loading with UDT
 
 Install Node.js 22+, Adobe Premiere 25.6+ and Adobe UXP Developer Tools (UDT). Adobe documents Premiere support from UDT 2.2; this project's developer-load shortcut was tested with UDT 2.3.0. Premiere 26.5 is the current native reference host. A working Adobe installation/license is required separately.
 
 ```sh
-git clone --branch release/0.3.6 https://github.com/ywdagency/premiere-uxp-bridge.git
+git clone --branch v0.3.8 https://github.com/ywdagency/premiere-uxp-bridge.git
 cd premiere-uxp-bridge
 npm ci
 npm run setup
 ```
 
-Run commands from the clone. Until the repository becomes public, cloning requires access. Setup builds the plugin and creates this clone's ignored `.codex/config.toml` with absolute paths. It preserves unrelated Codex server entries, replaces this bridge's prior local registration and does not change global settings. For Claude Desktop, Cursor or VS Code, use [the client guide](docs/clients.md) instead of the default Codex setup.
+Run commands from the clone. Setup builds the plugin and creates this clone's ignored `.codex/config.toml` with absolute paths. It preserves unrelated Codex server entries, replaces this bridge's prior local registration and does not change global settings. For Claude Desktop, Cursor or VS Code, use [the client guide](docs/clients.md) instead of the default Codex setup.
 
 In Premiere, enable Developer Mode in Preferences → Plugins if needed. In UDT, add this clone's `manifest.json` and select Load. With UDT and Premiere already running, `npm run plugin:load` is an optional development shortcut; manual UDT Load is the fallback. Open **Premiere MCP Bridge** under Window → UXP Plugins once to instantiate it.
 

@@ -1,6 +1,6 @@
 # Publication handoff — 0.3.8
 
-This is a maintainer checklist, not authorization to publish. Current preparation keeps the repository private and the release draft unpublished. Do not merge, create a tag, change visibility, publish the draft or dispatch Actions until the owner requests publication.
+This is a maintainer procedure, not authorization for a new release. The owner explicitly authorized free MIT public preview 0.3.8; the publication task applies the checks below without starting Actions. Future releases, visibility changes and workflow dispatches still require the applicable owner request.
 
 ## Reviewed input
 

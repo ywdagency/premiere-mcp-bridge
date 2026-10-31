@@ -3,6 +3,7 @@
 | Topic | Document |
 | --- | --- |
 | Installation and overview | [README](README.md) |
+| Install by giving an agent the repository link | [INSTALL.md](INSTALL.md) |
 | Everyday operation and example prompts | [User guide](docs/user-guide.md) |
 | Agent edits, ownership and recovery | [Agent operating guide](docs/agent-workflows.md) |
 | Open-source license and reuse | [Open-source model](OPEN_SOURCE.md) |

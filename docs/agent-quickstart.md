@@ -1,12 +1,12 @@
 # First-run instructions for an AI agent
 
-Read the root AGENTS.md and [installation guide](installation.md). This repository
+Read [INSTALL.md](../INSTALL.md), the root AGENTS.md and [installation guide](installation.md). This repository
 connects only to Adobe Premiere; no other Adobe bridge is part of installation.
 
 Identify the checkout version from package.json and use the matching reviewed
 source/tag and CCX. Run npm ci, then the onboarding validator. Use --release only
-when that exact version is published; while it is a candidate, use the owner's
-reviewed local artifact and checksum. Do not invent a tag, download location or
+when that exact version is published, as for v0.3.8. Future unpublished
+candidates need a reviewed local artifact and checksum. Do not invent a tag, download location or
 successful installation. Ask the user for the missing reviewed artifact if needed.
 
 The first check omits --install. Explain the concrete version/checksum result,
