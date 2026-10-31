@@ -61,6 +61,12 @@ artifacts, local client configs, credentials, project names and owner paths out
 of commits and packages. Do not delegate or message other chats without direct
 owner authorization.
 
+Release review must audit the exact intended publication refs and packages.
+Unrelated local-only branches may contain private task notes; preserve them and
+never use push --all or --mirror to publish this repository. Send only the
+reviewed branch/tag. Keep current logs, caches and downloaded audit material
+private; a clean source scan does not audit those separately stored surfaces.
+
 ## Full API adapter
 
 Use premiere_api_search/describe and the pinned data/adobe-api.json before constructing a native call. Never invent a member name or assume the reference page's Since label is runtime proof. The generated src/generated/api-contracts.ts defines the allowlist and parameter schemas; src/api-policy.ts defines execution modes. Keep Node reference metadata and UXP execution contracts in sync with npm run docs:sync (ADOBE_DOCS_REF can pin an Adobe commit). Retain Adobe's license/copyright notices. Adobe W property flags mean read/write.

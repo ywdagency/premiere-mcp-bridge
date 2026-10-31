@@ -329,6 +329,26 @@
     "postRevocationWriteRejected": true,
     "nativeVerificationScope": "Scoped core release workflows on synthetic fixtures in macOS Premiere 26.5; not every catalog member, client, platform or visual/audio fidelity.",
     "finalPrivateReview": "docs/release/final-review-0.3.8.md",
-    "generatedCodexToolTimeoutSeconds": 45
+    "generatedCodexToolTimeoutSeconds": 45,
+    "finalReview": {
+      "report": "docs/release/final-review-0.3.8.md",
+      "sourceFilesAudited": 135,
+      "npmFilesAudited": 143,
+      "fixtureTestsPassed": 158,
+      "freshSourceOnboardingVerified": true,
+      "existingHostReinstallationVerified": true,
+      "pristineMachineInstallVerified": false,
+      "anonymousPublishedDownloadVerified": false,
+      "unpublishedDownloadRejected": true,
+      "readOnlySdkTools": 19,
+      "fullSdkTools": 42,
+      "oldDurableFilesUnchanged": 636,
+      "actionsLogRunsReviewed": 27,
+      "actionsLogFilesReviewed": 291,
+      "oldDependencyCachesCleared": 12,
+      "actionsCachesRemaining": 0,
+      "actionsArtifactsRemaining": 0,
+      "newActionsRunsStarted": 0
+    }
   }
 }
