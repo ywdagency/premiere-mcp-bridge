@@ -1,6 +1,6 @@
 # Install and connect from the CLI
 
-Development 0.4.0 is not yet published. Its reviewed local CCX includes the folder SVG as an eighth allowlisted file. Use the local CCX/checksum route with its exact source; --release must fail until that version is published. Public examples below continue to target released 0.3.12.
+Development 0.4.1 is not yet published. Its reviewed local CCX includes the folder SVG as an eighth allowlisted file. Use the local CCX/checksum route with its exact source; --release must fail until that version is published. Public examples below continue to target released 0.3.12.
 
 Version 0.3.12 provides macOS onboarding and **experimental Windows onboarding**. Windows installation, filesystem behavior and native Premiere calls are not yet verified; start with the [Windows guide](windows.md). Earlier native reference evidence is from macOS Apple Silicon / Premiere 26.5 on 0.3.11 and prior builds, not a native 0.3.12 regression.
 

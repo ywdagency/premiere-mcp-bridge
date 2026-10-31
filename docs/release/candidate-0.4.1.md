@@ -1,0 +1,9 @@
+# Candidate 0.4.1 — Files beside the connection status
+
+This local unpublished refinement follows the owner's [updated Figma panel](https://www.figma.com/design/af5pH0tpFiZo83tYlEUywB?node-id=30-101). Stop and Reload again share the full top row. A 96×44 Files button with the existing 24×24 folder SVG sits before the Running status block in the lower row. The panel retains its 360×152 normal size and supports 320px width.
+
+The button keeps the red/green approval states, adds a brighter hover state and a visible Files label. A real in-panel tooltip on hover and keyboard focus explains file access, shows the approved folder name and tells the user how to select/change it. Escape dismisses it. Names are bounded plain text, not markup or absolute paths. The tooltip stays within the panel, above the lower controls. Existing picker cancellation, persistence, stale-completion and in-flight file guards are unchanged.
+
+Native read-only MCP confirmed the preceding 0.4.0 runtime and remembered approval after the owner's restart. That is not 0.4.1 native activation evidence. Local automated and browser checks, reviewed eight-file CCX identity and actual installed files are recorded separately; native 0.4.1 tooltip/SVG behavior requires owner activation. Windows remains experimental. No GitHub publication/feed update or Actions run is part of this change.
+
+All 205 automated tests pass with no failures/skips. Headless checks at 320/360px verify the two 158/138px toolbar controls, 96×44 Files button, 24×24 local SVG, lower-row placement, visible tooltip bounds, hover/focus/Escape, long plain-text names and grant retention on cancel/failure. Native tooltip behavior is still unverified. The reviewed eight-file CCX SHA-256 is 36630d71a028fe9ab2cb4f55424f7b522c25f1c94082e8dd0d00e9d610d11b9a.

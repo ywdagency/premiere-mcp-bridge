@@ -17,18 +17,25 @@
           <button id="reload-bridge" type="button">Reload</button>
           <span class="action-face" aria-hidden="true">Reload</span>
         </div>
-        <div id="folder-control" class="action folder" title="Choose a folder for import and file output. Timeline tools remain available.">
-          <button id="choose-media-folder" type="button" aria-label="Choose a folder for file access"></button>
-          <span class="action-face" aria-hidden="true"><img class="folder-icon" src="assets/folder.svg" alt="" width="24" height="24" /></span>
-        </div>
       </section>
-      <section id="bridge-status" class="status-box" aria-label="Bridge status">
-        <div class="status-copy">
-          <p id="status" role="status" aria-live="polite">Starting…</p>
-          <p id="error" class="error" role="alert"></p>
+      <div class="status-row">
+        <div id="folder-control" class="action folder">
+          <button id="choose-media-folder" type="button" aria-label="Choose a folder for file access" aria-describedby="file-tooltip"></button>
+          <span class="action-face" aria-hidden="true"><img class="folder-icon" src="assets/folder.svg" alt="" width="24" height="24" /><span class="folder-label">Files</span></span>
         </div>
-        <a id="plugin-version" class="version" href="https://github.com/ywdagency/premiere-mcp-bridge" tabindex="0" aria-label="Plugin version" title="Open GitHub"></a>
-      </section>
+        <section id="bridge-status" class="status-box" aria-label="Bridge status">
+          <div class="status-copy">
+            <p id="status" role="status" aria-live="polite">Starting…</p>
+            <p id="error" class="error" role="alert"></p>
+          </div>
+          <a id="plugin-version" class="version" href="https://github.com/ywdagency/premiere-mcp-bridge" tabindex="0" aria-label="Plugin version" title="Open GitHub"></a>
+        </section>
+      </div>
+      <div id="file-tooltip" class="file-tooltip" role="tooltip" aria-hidden="true">
+        <p id="file-tooltip-title" class="tooltip-title"></p>
+        <p id="file-tooltip-folder" class="tooltip-folder"></p>
+        <p id="file-tooltip-help" class="tooltip-help"></p>
+      </div>
     </main>
     <script src="dist/main.js"></script>
   </body>

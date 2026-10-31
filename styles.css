@@ -1,7 +1,7 @@
 :root { color: #f2f2f2; background: #1e1e1e; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 13px; }
 * { box-sizing: border-box; }
 body { margin: 0; }
-.panel-shell { display: flex; flex-direction: column; padding: 16px; }
+.panel-shell { position: relative; display: flex; flex-direction: column; padding: 16px; }
 p { margin: 0; }
 .controls { display: flex; flex-direction: row; margin-bottom: 12px; }
 /* Draw one opaque face above the native button; its skin cannot bleed through. */
@@ -11,12 +11,22 @@ button, .action-face { position: absolute; top: 0; left: 0; width: 100%; height:
 .action-face { display: flex; align-items: center; justify-content: center; border: 0; border-radius: 5px; background: #913d44; }
 .action.reload .action-face { background: #385f9d; }
 .action.launch .action-face { background: #28704f; }
-.action.folder { flex-grow: 0; flex-shrink: 0; flex-basis: 64px; width: 64px; }
+.status-row { display: flex; align-items: flex-start; }
+.action.folder { flex-grow: 0; flex-shrink: 0; flex-basis: 96px; width: 96px; height: 44px; font-size: 12px; }
+.folder-label { margin-left: 6px; }
 .action.folder.granted .action-face { background: #28704f; }
+.action.folder[data-hover="true"] .action-face { background: #a94b53; }
+.action.folder.granted[data-hover="true"] .action-face { background: #328c62; }
+.action.folder.disabled .action-face { background: #2a2a2a; }
+.action.folder.disabled[data-hover="true"] .action-face { background: #2a2a2a; }
 .folder-icon { width: 24px; height: 24px; flex-shrink: 0; }
 .action.disabled .action-face { color: #858585; background: #2a2a2a; }
 .action[data-focus="true"] .action-face { border: 2px solid #aab8ff; }
-.status-box { display: flex; align-items: flex-start; min-height: 44px; padding: 11px 12px; border: 1px solid #3b3b3b; border-radius: 5px; background: #242424; color: #c8c8c8; font-size: 12px; line-height: 20px; }
+.status-box { display: flex; flex-grow: 1; flex-basis: 0; min-width: 0; align-items: flex-start; min-height: 44px; margin-left: 12px; padding: 11px 12px; border: 1px solid #3b3b3b; border-radius: 5px; background: #242424; color: #c8c8c8; font-size: 12px; line-height: 20px; }
+.file-tooltip { display: none; position: absolute; z-index: 2; left: 16px; right: 16px; top: 14px; padding: 8px 10px; border: 1px solid #525252; border-radius: 5px; background: #303030; color: #c8c8c8; font-size: 11px; line-height: 16px; pointer-events: none; }
+.tooltip-title { color: #f2f2f2; font-size: 12px; font-weight: 500; }
+.tooltip-folder { margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tooltip-help { margin-top: 2px; }
 .status-copy { flex-grow: 1; flex-basis: 0; min-width: 0; overflow-wrap: break-word; }
 .version { margin-left: 12px; flex-shrink: 0; color: #8b8b8b; white-space: nowrap; text-decoration: none; cursor: pointer; }
 .version[data-update="update"] { color: #e8c15a; }

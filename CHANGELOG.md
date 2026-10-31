@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 — development candidate
+
+Move the folder button into the lower row before the Running status block and restore equal full-width Stop/Reload controls. Add a visible Files label, hover color and an in-panel tooltip on hover/keyboard focus with file-access state, approved folder name and purpose. Escape dismisses the tooltip; folder names remain plain bounded text. Keep the0.4.0 grant/picker protections and unchanged permissions.
+
 ## 0.4.0 — development candidate
 
 Add the approved compact folder button: red without usable access, green with a remembered folder, and a status/name tooltip. A human can explicitly select or replace a folder without an agent file request. Cancellation, picker/token failure and stale completions preserve the previous approval; Stop/restart/update persistence stays intact. Block a new selection during active host work and new file requests while replacing a grant. Folder errors stay in the folder tooltip, leaving transport status accurate. Report button availability to agents without inferring it for older runtimes. Retain existing per-file Entry/Node checks and manifest permissions. Package the exact local Figma SVG as the eighth allowlisted asset.

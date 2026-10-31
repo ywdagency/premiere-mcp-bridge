@@ -34,6 +34,8 @@ let mediaError = '';
 let accessGeneration = 0;
 let mediaRequest: Promise<void> | undefined;
 let choosingMedia = false;
+let folderHover = false;
+let folderFocus = false;
 const MEDIA_TOKEN = 'premiere-mcp-media-folder';
 const mediaExtension =
   /\.(mp4|mov|mxf|avi|mkv|webm|mp3|wav|aif|aiff|flac|m4a|aac|jpg|jpeg|png|tif|tiff|webp|bmp|psd)$/i;
@@ -69,14 +71,31 @@ function render(): void {
       : 'Choose a folder\nAllow a folder for import and file output. Timeline tools remain available.');
   if (folderControl) {
     folderControl.className = `action folder${mediaFolder ? ' granted' : ''}${folderDisabled ? ' disabled' : ''}`;
-    folderControl.setAttribute('title', folderHint);
     folderControl.setAttribute('data-access', mediaFolder ? 'granted' : 'missing');
+    folderControl.setAttribute('data-hover', String(folderHover));
   }
   if (folderButton) {
     folderButton.disabled = folderDisabled;
-    folderButton.setAttribute('title', folderHint);
     folderButton.setAttribute('aria-label', folderHint);
   }
+  const tooltip = document.getElementById('file-tooltip');
+  const tooltipVisible = folderHover || folderFocus;
+  if (tooltip) {
+    tooltip.style.display = tooltipVisible ? 'block' : 'none';
+    tooltip.setAttribute('aria-hidden', String(!tooltipVisible));
+  }
+  const tooltipTitle = document.getElementById('file-tooltip-title');
+  const tooltipFolder = document.getElementById('file-tooltip-folder');
+  const tooltipHelp = document.getElementById('file-tooltip-help');
+  if (tooltipTitle) tooltipTitle.textContent = choosingMedia ? 'Choosing a folder…'
+    : mediaError ? 'File access' : mediaFolder ? 'File access granted' : 'File access not granted';
+  if (tooltipFolder) {
+    tooltipFolder.textContent = folderName;
+    tooltipFolder.style.display = mediaFolder && !mediaError && !choosingMedia ? 'block' : 'none';
+  }
+  if (tooltipHelp) tooltipHelp.textContent = choosingMedia ? 'Finish or cancel the Adobe folder dialog.'
+    : mediaError || (mediaFolder ? 'Click to choose another folder.'
+      : 'Choose a folder for import and file output. Timeline tools remain available.');
   const message = connectionError;
   const state = !connectionEnabled ? 'Stopped' : restarting ? activityText : connected ? 'Running' : 'Waiting for agent';
   const status = document.getElementById('status');
@@ -371,6 +390,15 @@ function wire(): void {
   });
   wireAction('reload-bridge', 'reload-control', () => void reloadBridge(), () => !restarting);
   wireAction('choose-media-folder', 'folder-control', () => requestMediaAccess(true), () => !restarting && !choosingMedia);
+  const folderControl = document.getElementById('folder-control');
+  const folderButton = document.getElementById('choose-media-folder');
+  folderControl?.addEventListener('mouseenter', () => { folderHover = true; render(); });
+  folderControl?.addEventListener('mouseleave', () => { folderHover = false; render(); });
+  folderButton?.addEventListener('focus', () => { folderFocus = true; render(); });
+  folderButton?.addEventListener('blur', () => { folderFocus = false; render(); });
+  folderButton?.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { folderHover = false; folderFocus = false; render(); }
+  });
   const version = document.getElementById('plugin-version');
   version?.addEventListener('click', event => {
     event.preventDefault();

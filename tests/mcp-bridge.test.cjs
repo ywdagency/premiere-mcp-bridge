@@ -200,7 +200,7 @@ async function bundledPanel(t, options = {}) {
   const elements = new Map([...html.matchAll(/id="([^"]+)"/g)].map(([, id]) => [id, {
     textContent: '', style: {}, attributes: {}, listeners: {},
     setAttribute(name, value) { this.attributes[name] = value; },
-    addEventListener(name, listener) { this.listeners[name] = listener; },
+    addEventListener(name, listener) { const old = this.listeners[name]; this.listeners[name] = old ? event => { old(event); listener(event); } : listener; },
   }]));
   const document = { getElementById: (id) => elements.get(id) ?? null };
   const saved = options.saved ?? new Map(options.savedMedia ? [['premiere-mcp-media-folder', 'saved-media']] : []);
@@ -334,12 +334,43 @@ test('folder button grants explicitly once, updates its status and keeps the bri
   assert.equal(p.pickerCalls(), 1, 'Repeated activation cannot open a second picker');
   assert.equal(control.attributes['data-access'], 'granted');
   assert.match(control.className, /granted/);
-  assert.match(control.attributes.title, /Private fixture folder/);
+  assert.match(button.attributes['aria-label'], /Private fixture folder/);
   assert.equal(button.disabled, false);
   assert.equal(p.saved.get('premiere-mcp-media-folder'), 'saved-media');
   assert.equal(p.elements.get('status').textContent, 'Running');
   assert.equal(p.elements.get('error').style.display, 'none');
   assert.equal((await p.bridge.call('get_file_access')).folderButtonAvailable, true);
+});
+
+test('Files tooltip follows hover/focus, reports the current grant and dismisses with Escape', async t => {
+  const p = await bundledPanel(t);
+  await p.bridge.call('get_capabilities');
+  const control = p.elements.get('folder-control'), button = p.elements.get('choose-media-folder');
+  const tooltip = p.elements.get('file-tooltip'), title = p.elements.get('file-tooltip-title');
+  assert.equal(tooltip.style.display, 'none');
+  assert.equal(title.textContent, 'File access not granted');
+  control.listeners.mouseenter();
+  assert.equal(control.attributes['data-hover'], 'true');
+  assert.equal(tooltip.style.display, 'block');
+  assert.match(p.elements.get('file-tooltip-help').textContent, /import and file output/);
+  assert.equal(p.pickerCalls(), 0, 'Hover is not approval');
+  button.listeners.focus(); control.listeners.mouseleave();
+  assert.equal(tooltip.style.display, 'block', 'Keyboard focus keeps help visible');
+  button.listeners.keydown({ key: 'Escape' });
+  assert.equal(tooltip.style.display, 'none');
+  p.mediaFolder.name = '<img onerror=untrusted>\n' + 'x'.repeat(300);
+  button.listeners.click(); await delay(0);
+  button.listeners.focus();
+  assert.equal(title.textContent, 'File access granted');
+  const name = p.elements.get('file-tooltip-folder');
+  assert.equal(name.style.display, 'block');
+  assert.ok(name.textContent.length <= 160);
+  assert.doesNotMatch(name.textContent, /\n/);
+  assert.match(name.textContent, /^<img onerror=untrusted>/);
+  assert.equal(tooltip.attributes['aria-hidden'], 'false');
+  button.listeners.blur();
+  assert.equal(tooltip.style.display, 'none');
+  assert.equal(p.elements.get('status').textContent, 'Running');
 });
 
 test('cancelling or failing a replacement keeps the old grant/token and does not hide Running', async t => {
@@ -358,7 +389,7 @@ test('cancelling or failing a replacement keeps the old grant/token and does not
     assert.equal(p.elements.get('status').textContent, 'Running');
     assert.equal(p.elements.get('error').style.display, 'none');
     assert.equal(button.disabled, false);
-    assert.doesNotMatch(button.attributes.title, /Private (picker|token) details/);
+    assert.doesNotMatch(button.attributes['aria-label'], /Private (picker|token) details/);
   }
 });
 
@@ -414,7 +445,7 @@ test('folder selection cannot begin during an active host command', async t => {
   const reading = p.bridge.call('get_active_sequence'); await started;
   p.elements.get('choose-media-folder').listeners.click();
   assert.equal(p.pickerCalls(), 0);
-  assert.match(p.elements.get('folder-control').attributes.title, /agent is busy/);
+  assert.match(p.elements.get('choose-media-folder').attributes['aria-label'], /agent is busy/);
   finish(null); await reading;
   p.elements.get('choose-media-folder').listeners.click(); await delay(0);
   assert.equal(p.pickerCalls(), 1);
@@ -438,7 +469,7 @@ test('Stop blocks transport while preserving the folder approval and Launch reus
   const { bridge, FileBridge, directory, elements, entrypoints, saved, pickerCalls } = await bundledPanel(t);
   assert.equal((await bridge.call('get_capabilities')).writesEnabled, true);
   assert.equal(pickerCalls(), 0, 'Launching must not ask for file access');
-  assert.deepEqual([...elements.keys()], ['connection-control', 'toggle-connection', 'connection-label', 'reload-control', 'reload-bridge', 'folder-control', 'choose-media-folder', 'bridge-status', 'status', 'error', 'plugin-version']);
+  assert.deepEqual([...elements.keys()], ['connection-control', 'toggle-connection', 'connection-label', 'reload-control', 'reload-bridge', 'folder-control', 'choose-media-folder', 'bridge-status', 'status', 'error', 'plugin-version', 'file-tooltip', 'file-tooltip-title', 'file-tooltip-folder', 'file-tooltip-help']);
   assert.equal(elements.get('toggle-connection').textContent, 'Stop');
   assert.equal(elements.get('status').textContent, 'Running');
   assert.equal(elements.get('plugin-version').textContent, 'v' + JSON.parse(await fs.readFile(resolve(__dirname, '../manifest.json'), 'utf8')).version);
@@ -593,7 +624,7 @@ test('invalid paths do not open a picker; picker cancellation/failure leaves tra
   storage.getFolder = async () => { throw new Error('Private native details'); };
   await assert.rejects(bridge.call('api_load_text', { path: 'grant.txt' }), { code: 'MEDIA_FOLDER_REQUIRED' });
   assert.equal(elements.get('error').style.display, 'none');
-  assert.match(elements.get('folder-control').attributes.title, /Folder selection failed/);
+  assert.match(elements.get('choose-media-folder').attributes['aria-label'], /Folder selection failed/);
   const c = await bridge.call('get_capabilities');
   assert.equal(c.mediaFolderGranted, false);
   assert.equal(c.writesEnabled, true);
