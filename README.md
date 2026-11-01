@@ -1,6 +1,6 @@
 # Premiere MCP Bridge
 
-**Development candidate 0.4.1:** adds the approved red/green folder-access button and explicit folder selection. This candidate is not published; use a reviewed local CCX and checksum, not --release. The public preview instructions below still target immutable v0.3.12. See [0.4.1 verification](docs/release/candidate-0.4.1.md).
+**Development candidate 0.4.2:** adds visible hover, press and busy feedback to every panel control, retaining the red/green Files button. This candidate is not published; use a reviewed local CCX and checksum, not --release. The public preview instructions below still target immutable v0.3.12. See [0.4.2 verification](docs/release/candidate-0.4.2.md).
 
 **Windows support is experimental in v0.3.12.** The installer and client configuration have automated platform tests on macOS, but installation and Premiere behavior on Windows are not yet verified. [Try it and help test](docs/windows.md).
 

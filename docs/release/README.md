@@ -1,6 +1,6 @@
 # Release verification and maintenance
 
-Local candidate: [0.4.1 folder-access panel](candidate-0.4.1.md), not published or natively activated. The candidate stages eight files, including the Figma folder SVG; released 0.3.12 has seven.
+Local candidate: [0.4.2 panel interaction feedback](candidate-0.4.2.md), not published or natively activated. The preceding [0.4.1](candidate-0.4.1.md) runtime and retained grant were verified after owner activation. The candidate stages eight files, including the Figma folder SVG; released 0.3.12 has seven.
 
 The current preview is [v0.3.12](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.12), adding experimental Windows onboarding and portable CCX validation. It exposes 43 MCP tools or 19 in read-only mode. Windows has no native verification yet. Local tests/package validation are separate from the earlier native macOS 0.3.11 and editing reports; see [0.3.12 scope](candidate-0.3.12.md).
 

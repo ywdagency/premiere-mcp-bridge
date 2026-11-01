@@ -294,6 +294,73 @@ test('bundled version checks once and opens repository or release only on click/
   }
 });
 
+test('all panel controls expose hover, press, focus and bounded click feedback without acting on hover', async t => {
+  const p = await bundledPanel(t, { savedMedia: true });
+  await p.bridge.call('get_capabilities');
+  for (const [controlId, buttonId] of [['connection-control','toggle-connection'], ['reload-control','reload-bridge'], ['folder-control','choose-media-folder'], ['plugin-version','plugin-version']]) {
+    const c = p.elements.get(controlId), b = p.elements.get(buttonId);
+    c.listeners.mouseenter(); assert.equal(c.attributes['data-hover'], 'true');
+    c.listeners.mousedown({ button: 2 }); assert.notEqual(c.attributes['data-pressed'], 'true');
+    c.listeners.mousedown({ button: 0 }); assert.equal(c.attributes['data-pressed'], 'true');
+    c.listeners.mouseleave(); assert.equal(c.attributes['data-hover'], 'false');
+    assert.equal(c.attributes['data-pressed'], 'false');
+    b.listeners.focus(); assert.equal(c.attributes['data-focus'], 'true');
+    b.listeners.keydown({ key: ' ' }); assert.equal(c.attributes['data-pressed'], 'true');
+    b.listeners.keyup(); assert.equal(c.attributes['data-pressed'], 'false');
+    b.listeners.blur(); assert.equal(c.attributes['data-focus'], 'false');
+  }
+  assert.equal(p.pickerCalls(), 0);
+  assert.equal(p.elements.get('status').textContent, 'Running');
+  p.elements.get('toggle-connection').listeners.click();
+  const c = p.elements.get('connection-control');
+  assert.equal(c.attributes['data-clicked'], 'true');
+  assert.equal(p.elements.get('status').textContent, 'Stopped');
+  await delay(220); assert.equal(c.attributes['data-clicked'], 'false');
+});
+
+test('busy panel actions show their work, reject duplicate clicks and restore normal labels', async t => {
+  const p = await bundledPanel(t, { savedMedia: true });
+  await p.bridge.call('get_capabilities');
+  let restore, calls = 0;
+  const original = p.storage.getEntryForPersistentToken;
+  p.storage.getEntryForPersistentToken = () => { calls++; return new Promise(resolve => { restore = resolve; }); };
+  const reload = p.elements.get('reload-bridge'), face = p.elements.get('reload-label');
+  reload.listeners.click();
+  assert.equal(face.textContent, 'Reloading…'); assert.equal(reload.disabled, true);
+  assert.equal(reload.attributes['aria-busy'], 'true');
+  reload.listeners.click(); assert.equal(calls, 1);
+  restore(p.mediaFolder); await p.bridge.call('get_capabilities');
+  assert.equal(face.textContent, 'Reload'); assert.equal(reload.disabled, false);
+  p.storage.getEntryForPersistentToken = original;
+  let choose;
+  p.storage.getFolder = () => { calls++; return new Promise(resolve => { choose = resolve; }); };
+  const folder = p.elements.get('choose-media-folder');
+  folder.listeners.click();
+  assert.equal(p.elements.get('folder-label').textContent, 'Choosing…');
+  assert.equal(folder.attributes['aria-busy'], 'true');
+  folder.listeners.click(); assert.equal(calls, 2);
+  choose(null); await delay(0);
+  assert.equal(p.elements.get('folder-label').textContent, 'Files');
+  assert.equal((await p.bridge.call('get_file_access')).granted, true);
+});
+
+test('version link reports browser-opening progress and failure, then permits an explicit retry', async t => {
+  let finish, calls = 0;
+  const p = await bundledPanel(t, { openExternal: () => { calls++; return new Promise(resolve => { finish = resolve; }); } });
+  await p.bridge.call('get_capabilities');
+  const version = p.elements.get('plugin-version'), click = () => version.listeners.click({ preventDefault() {} });
+  click(); click();
+  assert.equal(version.textContent, 'Opening…'); assert.equal(calls, 1);
+  assert.equal(version.attributes['aria-busy'], 'true');
+  finish('Browser launch rejected'); await delay(0);
+  assert.equal(version.textContent, 'Try again');
+  assert.equal(version.attributes['data-open'], 'error');
+  click(); assert.equal(calls, 2); finish(''); await delay(0);
+  assert.equal(version.textContent, 'v' + require('../package.json').version);
+  assert.equal(version.attributes['aria-busy'], 'false');
+  assert.equal(p.elements.get('status').textContent, 'Running');
+});
+
 test('declining a browser launch leaves connection and update state unchanged', async t => {
   const panel = await bundledPanel(t, { openExternal: async () => 'User cancelled' });
   await panel.bridge.call('get_capabilities');
@@ -469,7 +536,7 @@ test('Stop blocks transport while preserving the folder approval and Launch reus
   const { bridge, FileBridge, directory, elements, entrypoints, saved, pickerCalls } = await bundledPanel(t);
   assert.equal((await bridge.call('get_capabilities')).writesEnabled, true);
   assert.equal(pickerCalls(), 0, 'Launching must not ask for file access');
-  assert.deepEqual([...elements.keys()], ['connection-control', 'toggle-connection', 'connection-label', 'reload-control', 'reload-bridge', 'folder-control', 'choose-media-folder', 'bridge-status', 'status', 'error', 'plugin-version', 'file-tooltip', 'file-tooltip-title', 'file-tooltip-folder', 'file-tooltip-help']);
+  assert.deepEqual([...elements.keys()], ['connection-control', 'toggle-connection', 'connection-label', 'reload-control', 'reload-bridge', 'reload-label', 'folder-control', 'choose-media-folder', 'folder-label', 'bridge-status', 'status', 'error', 'plugin-version', 'file-tooltip', 'file-tooltip-title', 'file-tooltip-folder', 'file-tooltip-help']);
   assert.equal(elements.get('toggle-connection').textContent, 'Stop');
   assert.equal(elements.get('status').textContent, 'Running');
   assert.equal(elements.get('plugin-version').textContent, 'v' + JSON.parse(await fs.readFile(resolve(__dirname, '../manifest.json'), 'utf8')).version);

@@ -1,6 +1,6 @@
 # Install with your AI agent
 
-Development 0.4.1 is an unpublished candidate: use its reviewed local CCX/checksum as described in [the candidate report](docs/release/candidate-0.4.1.md). Do not use --release for an unpublished version or silently install 0.3.12 into a 0.4.1 checkout. The public-tag examples below remain for released 0.3.12. Folder-button selection is optional for file tasks and is never an installation requirement.
+Development 0.4.2 is an unpublished candidate: use its reviewed local CCX/checksum as described in [the candidate report](docs/release/candidate-0.4.2.md). Do not use --release for an unpublished version or silently install 0.3.12 into a 0.4.2 checkout. The public-tag examples below remain for released 0.3.12. Folder-button selection is optional for file tasks and is never an installation requirement.
 
 Give your local agent this repository URL and ask:
 

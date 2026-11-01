@@ -46,6 +46,8 @@ const updates = new UpdateChecker({
   fetcher: typeof fetch === 'function' ? fetch : undefined, onChange: render,
 });
 let openingVersion = false;
+let versionOpenFailed = false;
+const feedbackCleanup: Array<() => void> = [];
 
 function render(): void {
   const connection = document.getElementById('toggle-connection');
@@ -55,9 +57,20 @@ function render(): void {
     if (label) label.textContent = connection.textContent;
     const control = document.getElementById('connection-control');
     if (control) control.className = connectionEnabled ? 'action' : 'action launch';
+    const hint = connectionEnabled ? 'Pause the agent connection. Folder access stays saved.' : 'Resume the agent connection.';
+    connection.setAttribute('title', hint);
+    connection.setAttribute('aria-label', `${connection.textContent}. ${hint}`);
   }
   const reload = document.getElementById('reload-bridge') as HTMLButtonElement | null;
-  if (reload) reload.disabled = restarting;
+  const reloadText = restarting ? activityText : 'Reload';
+  if (reload) {
+    reload.disabled = restarting;
+    reload.textContent = reloadText;
+    reload.setAttribute('aria-busy', String(restarting));
+    reload.setAttribute('title', 'Restart the bridge connection. Premiere stays open.');
+  }
+  const reloadLabel = document.getElementById('reload-label');
+  if (reloadLabel) reloadLabel.textContent = reloadText;
   const reloadControl = document.getElementById('reload-control');
   if (reloadControl) reloadControl.className = restarting ? 'action reload disabled' : 'action reload';
   const folderControl = document.getElementById('folder-control');
@@ -76,8 +89,11 @@ function render(): void {
   }
   if (folderButton) {
     folderButton.disabled = folderDisabled;
+    folderButton.setAttribute('aria-busy', String(choosingMedia));
     folderButton.setAttribute('aria-label', folderHint);
   }
+  const folderLabel = document.getElementById('folder-label');
+  if (folderLabel) folderLabel.textContent = choosingMedia ? 'Choosing…' : 'Files';
   const tooltip = document.getElementById('file-tooltip');
   const tooltipVisible = folderHover || folderFocus;
   if (tooltip) {
@@ -106,11 +122,14 @@ function render(): void {
   const version = document.getElementById('plugin-version');
   if (version) {
     const indicator = updates.indicator;
-    version.textContent = `v${PLUGIN_VERSION}`;
+    version.textContent = openingVersion ? 'Opening…' : versionOpenFailed ? 'Try again' : `v${PLUGIN_VERSION}`;
+    version.setAttribute('aria-busy', String(openingVersion));
+    version.setAttribute('data-open', versionOpenFailed ? 'error' : 'ready');
     version.setAttribute('data-update', indicator.state);
     version.setAttribute('href', indicator.url);
-    version.setAttribute('title', indicator.title);
-    version.setAttribute('aria-label', `Plugin version ${PLUGIN_VERSION}. ${indicator.title}`);
+    const versionHint = versionOpenFailed ? 'Could not open GitHub. Click to try again.' : indicator.title;
+    version.setAttribute('title', versionHint);
+    version.setAttribute('aria-label', `Plugin version ${PLUGIN_VERSION}. ${versionHint}`);
   }
   document.getElementById('bridge-status')?.setAttribute('data-state', message ? 'error' : state);
   const error = document.getElementById('error');
@@ -400,33 +419,69 @@ function wire(): void {
     if (event.key === 'Escape') { folderHover = false; folderFocus = false; render(); }
   });
   const version = document.getElementById('plugin-version');
+  const versionFeedback = wireFeedback(version, version, () => !openingVersion);
   version?.addEventListener('click', event => {
     event.preventDefault();
+    if (openingVersion) return;
+    versionFeedback();
     void openVersion();
   });
   version?.addEventListener('keydown', event => {
-    if (event.key === 'Enter') { event.preventDefault(); void openVersion(); }
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      if (!openingVersion) { versionFeedback(); void openVersion(); }
+    }
   });
   render();
 }
 async function openVersion(): Promise<void> {
   if (openingVersion) return;
   openingVersion = true;
+  versionOpenFailed = false;
+  render();
   const indicator = updates.indicator;
   try {
     const result = await shell.openExternal(indicator.url,
       indicator.state === 'neutral' ? 'Open the Premiere MCP Bridge repository in your browser.' : 'Open the Premiere MCP Bridge update release in your browser.');
     if (result !== '') throw new Error('Browser did not open.');
   } catch {
-    document.getElementById('plugin-version')?.setAttribute('title', `Could not open GitHub. Open in your browser: ${indicator.url}`);
-  } finally { openingVersion = false; }
+    versionOpenFailed = true;
+  } finally { openingVersion = false; render(); }
+}
+// Style the opaque face explicitly: native UXP button skins sit underneath it.
+function wireFeedback(button: HTMLElement | null, control: HTMLElement | null, enabled: () => boolean): () => void {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const release = () => control?.setAttribute('data-pressed', 'false');
+  control?.addEventListener('mouseenter', () => control.setAttribute('data-hover', 'true'));
+  control?.addEventListener('mouseleave', () => { control.setAttribute('data-hover', 'false'); release(); });
+  control?.addEventListener('mousedown', event => {
+    if (enabled() && (event.button === undefined || event.button === 0)) control.setAttribute('data-pressed', 'true');
+  });
+  control?.addEventListener('mouseup', release);
+  control?.addEventListener('pointercancel', release);
+  button?.addEventListener('focus', () => control?.setAttribute('data-focus', 'true'));
+  button?.addEventListener('blur', () => { control?.setAttribute('data-focus', 'false'); release(); });
+  button?.addEventListener('keydown', event => {
+    if (enabled() && (event.key === 'Enter' || event.key === ' ')) control?.setAttribute('data-pressed', 'true');
+    if (event.key === 'Escape') release();
+  });
+  button?.addEventListener('keyup', release);
+  feedbackCleanup.push(() => { if (timer !== undefined) clearTimeout(timer); release(); control?.setAttribute('data-clicked', 'false'); });
+  return () => {
+    release();
+    if (timer !== undefined) clearTimeout(timer);
+    control?.setAttribute('data-clicked', 'true');
+    timer = setTimeout(() => { timer = undefined; control?.setAttribute('data-clicked', 'false'); }, 180);
+  };
 }
 function wireAction(buttonId: string, controlId: string, action: () => void, enabled = () => true): void {
   const button = document.getElementById(buttonId);
   const control = document.getElementById(controlId);
+  const clicked = wireFeedback(button, control, enabled);
   const activate = () => {
     if (!enabled()) return;
     button?.focus?.();
+    clicked();
     action();
   };
   control?.addEventListener('click', activate);
@@ -434,8 +489,6 @@ function wireAction(buttonId: string, controlId: string, action: () => void, ena
     event?.stopPropagation();
     activate();
   });
-  button?.addEventListener('focus', () => control?.setAttribute('data-focus', 'true'));
-  button?.addEventListener('blur', () => control?.setAttribute('data-focus', 'false'));
 }
 entrypoints.setup({
   plugin: {
@@ -444,6 +497,7 @@ entrypoints.setup({
       void connect();
     },
     destroy() {
+      feedbackCleanup.forEach(cleanup => cleanup());
       updates.stop();
       accessGeneration++;
       connectionEnabled = false;

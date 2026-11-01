@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2 — development candidate
+
+Give Stop/Launch, Reload, Files and the version link explicit hover, pressed and keyboard-focus feedback. Keep a short click pulse visible even for fast actions. Show Reloading/Starting and Choosing labels during work, disable repeated activation while busy, and show browser-opening failure on the version link. Preserve the panel geometry, remembered folder approval and existing permissions.
+
 ## 0.4.1 — development candidate
 
 Move the folder button into the lower row before the Running status block and restore equal full-width Stop/Reload controls. Add a visible Files label, hover color and an in-panel tooltip on hover/keyboard focus with file-access state, approved folder name and purpose. Escape dismisses the tooltip; folder names remain plain bounded text. Keep the0.4.0 grant/picker protections and unchanged permissions.

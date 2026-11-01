@@ -44,6 +44,8 @@ Move/trim convenience tools affect one track item at a time and do not automatic
 
 Existing-source edits require your explicit instruction for that exact sequence and a verified direct backup created in the current session. The agent can grant that limited permission with premiere_authorize_sequence and revoke it with premiere_revoke_sequence_authorization. This does not permit deleting the source or changing shared media. Copies/authorizations are session-scoped; a saved WORK name is not permission after plugin unload.
 
+Since 0.4.2 all panel controls visibly react to hover, press and keyboard focus. Reload shows Starting/Reloading while connecting; Files shows Choosing while its dialog is open. Busy controls ignore duplicate clicks. The version link shows Opening and, if Adobe cannot open the browser, Try again. Hover alone never performs an action.
+
 ## Files, saves and exports
 
 Connection alone does not need a folder. A deliberate import/output operation needs a separate native media-folder approval. The agent can inspect the existing grant with premiere_get_file_access; it requests its private path only when needed. Approve the intended working folder in Adobe's dialog. Commands use paths relative to that folder and still validate each file. Do not grant an entire disk just to connect.
