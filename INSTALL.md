@@ -1,6 +1,6 @@
 # Install with your AI agent
 
-Development 0.4.2 is an unpublished candidate: use its reviewed local CCX/checksum as described in [the candidate report](docs/release/candidate-0.4.2.md). Do not use --release for an unpublished version or silently install 0.3.12 into a 0.4.2 checkout. The public-tag examples below remain for released 0.3.12. Folder-button selection is optional for file tasks and is never an installation requirement.
+Install preview 0.4.2 from its exact source tag and matching public CCX/checksum. See [verified scope and limits](docs/release/candidate-0.4.2.md). Folder-button selection is optional for actual file tasks and is never an installation requirement.
 
 Give your local agent this repository URL and ask:
 
@@ -12,14 +12,14 @@ This guide is the installation entrypoint for an agent receiving that request. R
 
 The plugin, Node server and client-side MCP process must run on the same computer and user account. Check local terminal/file access and identify the actual client. Browser-only/cloud chat without an appropriate local execution environment can explain installation but cannot start this stdio bridge. Do not invent a hosted URL, expose private IPC over a network or request remote-account credentials.
 
-Check macOS or native Windows, Git, Node.js 22+, Creative Cloud Desktop/UPIA and the intended Premiere installation. Windows is experimental: read [Windows setup and testing](docs/windows.md) before installation, explain that native Windows behavior has not been verified, and begin with read-only checks. The recorded native reference host is Premiere 26.5 on macOS Apple Silicon with the earlier 0.3.11 plugin; 0.3.12 does not inherit a native test result just because its payload differs only by version. If a prerequisite is absent, explain the missing normal installation instead of using sudo, untrusted shell installers or bypassing Adobe licensing.
+Check macOS or native Windows, Git, Node.js 22+, Creative Cloud Desktop/UPIA and the intended Premiere installation. Windows is experimental: read [Windows setup and testing](docs/windows.md) before installation, explain that native Windows behavior has not been verified, and begin with read-only checks. The recorded 0.4.2 native reference host is Premiere 26.5 on macOS Apple Silicon; this verifies installation, runtime, remembered approval and basic panel controls, not every editing API. If a prerequisite is absent, explain the missing normal installation instead of using sudo, untrusted shell installers or bypassing Adobe licensing.
 
 ## Get the matching public version
 
 Choose a new folder, preserving existing checkouts and work. For this preview:
 
 ```sh
-git clone --branch v0.3.12 --depth 1 https://github.com/ywdagency/premiere-mcp-bridge.git
+git clone --branch v0.4.2 --depth 1 https://github.com/ywdagency/premiere-mcp-bridge.git
 cd premiere-mcp-bridge
 npm ci
 npm run onboard -- --release
@@ -54,7 +54,7 @@ After the panel is open:
 npm run doctor
 ```
 
-Require executing version 0.3.12 and no missing commands. Discover tools in the client's actual MCP connection, then read premiere_get_capabilities and premiere_get_project, and the active sequence if relevant. Inspection-only configuration exposes 19 tools. A null project/sequence is valid. Do not create/import/edit/export/save a project or open a media-folder picker as an installation test.
+Require executing version 0.4.2 and no missing commands. Discover tools in the client's actual MCP connection, then read premiere_get_capabilities and premiere_get_project, and the active sequence if relevant. Inspection-only configuration exposes 19 tools. A null project/sequence is valid. Do not create/import/edit/export/save a project or open a media-folder picker as an installation test.
 
 Finish by reporting the actual version, doctor/first-read result, client configuration location and any remaining human action. If a client needs a new session/reconnect, state that setup is waiting for it. Follow [troubleshooting](docs/troubleshooting.md) rather than claiming success from installer registration alone.
 

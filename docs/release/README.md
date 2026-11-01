@@ -1,13 +1,12 @@
 # Release verification and maintenance
 
-Local candidate: [0.4.2 panel interaction feedback](candidate-0.4.2.md), not published or natively activated. The preceding [0.4.1](candidate-0.4.1.md) runtime and retained grant were verified after owner activation. The candidate stages eight files, including the Figma folder SVG; released 0.3.12 has seven.
-
-The current preview is [v0.3.12](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.12), adding experimental Windows onboarding and portable CCX validation. It exposes 43 MCP tools or 19 in read-only mode. Windows has no native verification yet. Local tests/package validation are separate from the earlier native macOS 0.3.11 and editing reports; see [0.3.12 scope](candidate-0.3.12.md).
+The current preview is [v0.4.2](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.2), with explicit folder access and panel interaction feedback. Its eight-file CCX includes the existing Figma folder SVG. There are 43 full MCP tools or 19 in read-only mode. Exact installed files, native runtime, remembered approval and basic panel controls are verified on macOS Premiere 26.5. Windows remains experimental with no native verification. Native hover/held-press/brief-busy rendering is not independently captured; local browser and automated tests cover those states. See [0.4.2 scope](candidate-0.4.2.md).
 
 ## Evidence
 
 | Report | Verified scope |
 | --- | --- |
+| [0.4.2](candidate-0.4.2.md) | Eight-file installer, native activation, retained grant and basic panel controls; browser/fixture interaction tests |
 | [0.3.12](candidate-0.3.12.md) | Local automated/package checks; Windows experimental and no native 0.3.12 regression |
 | [0.3.11](candidate-0.3.11.md) | Exact installer/source/installed payload, native connection, restored grant and update check |
 | [0.3.10](candidate-0.3.10.md) | Persistent folder approval, bundled lifecycle/upgrade tests, installation and real runtime/restored-grant reads |

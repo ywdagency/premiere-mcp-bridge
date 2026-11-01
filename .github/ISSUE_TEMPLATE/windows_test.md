@@ -1,7 +1,7 @@
 ---
 name: Windows experimental test report
 about: Help verify Windows installation and read-only connection, including successes
-title: "Windows 0.3.12: "
+title: "Windows: "
 labels: ""
 assignees: ""
 ---

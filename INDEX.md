@@ -29,4 +29,4 @@
 | Daily version checks and release metadata | [Updates](docs/updates.md) |
 | License boundaries and Adobe material | [Third-party notices](docs/third-party-notices.md) |
 
-Current preview: [0.3.12 experimental Windows release](docs/release/candidate-0.3.12.md). Earlier [0.3.11 native verification](docs/release/candidate-0.3.11.md) retains its original version/platform scope.
+Current preview: [0.4.2 folder-access and panel feedback](docs/release/candidate-0.4.2.md). Earlier [0.3.11 native verification](docs/release/candidate-0.3.11.md) retains its original version/platform scope.

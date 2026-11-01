@@ -1,8 +1,8 @@
 # MCP client setup
 
-The 0.4.0 development panel adds an optional red/green folder-access button. It does not change agent connection: read the existing grant first and never ask for a folder just to connect. The 0.4.0 Node diagnostic reports panelFolderButtonAvailable from the running plugin; older runtimes have no button.
+Since 0.4.0 the panel includes an optional red/green folder-access button. It does not change agent connection: read the existing grant first and never ask for a folder just to connect. The 0.4.0 Node diagnostic reports panelFolderButtonAvailable from the running plugin; older runtimes have no button.
 
-Windows onboarding in v0.3.12 is experimental. Generators use native Windows node.exe and escaped Windows paths, but no real Windows agent/Premiere session is verified. Follow [Windows installation and testing](windows.md); the earlier native client evidence below remains scoped to macOS. Do not launch the bridge through WSL or change unrelated client entries.
+Windows onboarding in v0.4.2 remains experimental. Generators use native Windows node.exe and escaped Windows paths, but no real Windows agent/Premiere session is verified. Follow [Windows installation and testing](windows.md); the earlier native client evidence below remains scoped to macOS. Do not launch the bridge through WSL or change unrelated client entries.
 
 
 The UXP plugin and the MCP client must run on the same computer and user account. Each client starts `mcp/server.mjs` as a local Node process over stdio. This is not a URL connector for a cloud-only agent. Install the matching reviewed CCX using [CLI onboarding](installation.md); UDT is an optional development alternative. Client configuration alone does not load the plugin.
@@ -33,7 +33,7 @@ Load the UXP plugin separately in Premiere, open its panel once, then restart/re
 | Cursor | `mcpServers` JSON | Format and locations checked against official guidance; no dedicated end-to-end client session recorded here. |
 | VS Code | `servers` JSON with `type: "stdio"` | VS Code format checked against official guidance; agent harness configuration differs. No dedicated end-to-end client session recorded here. |
 
-Preview 0.3.11 exposes 43 full-access or 19 inspection-only tools. The exact installer payload, executing version, restored file grant and update-check diagnostics are verified on macOS Premiere 26.5. See the [0.3.11 native verification](release/candidate-0.3.11.md) and [earlier fresh-checkout review](release/final-review-0.3.8.md) for their different scopes. These are local integration paths, not vendor certification. Client source pages below were checked on 2026-10-29.
+Preview 0.4.2 exposes 43 full-access or 19 inspection-only tools. Its exact installer payload, executing version, restored file grant and basic panel controls are verified on macOS Premiere 26.5. See the [0.4.2 verification](release/candidate-0.4.2.md) and [earlier fresh-checkout review](release/final-review-0.3.8.md) for their different scopes. These are local integration paths, not vendor certification. Client source pages below were checked on 2026-10-29.
 
 ## Codex
 

@@ -1,18 +1,18 @@
 # Windows installation — experimental
 
-Version **0.3.12** makes Windows onboarding available as an **experimental preview**. Automated Windows platform fixtures pass on macOS; no actual Windows/Premiere installation, client connection, NTFS privacy or native operation is verified yet. Use non-sensitive test material and start read-only. This is not stable Windows support. The older immutable v0.3.11 CLI accepts macOS only.
+Preview **0.4.2** retains **experimental Windows onboarding**. Automated Windows platform fixtures pass on macOS; no actual Windows/Premiere installation, client connection, NTFS privacy or native operation is verified yet. Use non-sensitive test material and start read-only. This is not stable Windows support. The older immutable v0.3.11 CLI accepts macOS only.
 
 ## Easiest start: ask your local agent
 
 Give Codex, Claude Code or another locally running agent this request:
 
-> Study https://github.com/ywdagency/premiere-mcp-bridge and help me install v0.3.12 on Windows and connect this agent. Follow INSTALL.md and docs/windows.md. I understand Windows support is experimental. Start in read-only mode; do not change or save my edit, restart Premiere or request a media folder during setup.
+> Study https://github.com/ywdagency/premiere-mcp-bridge and help me install v0.4.2 on Windows and connect this agent. Follow INSTALL.md and docs/windows.md. I understand Windows support is experimental. Start in read-only mode; do not change or save my edit, restart Premiere or request a media folder during setup.
 
 The agent needs terminal/file access on the same Windows computer and account as Premiere. A cloud-only chat cannot launch this local bridge. No bridge address, API key or connection-folder selection is needed.
 
 ## What is prepared
 
-The released 0.3.12 manifest's seven-file CCX has no OS-specific plugin binary. This source validates the archive in Node on either OS without zip/unzip, PowerShell extraction or executing downloaded contents. It checks the reviewed checksum, exact entries, duplicate/linked/encrypted entries, expanded-size bounds, consistent local/central headers, version and rebuilt bytes before invoking Adobe. The same previously reviewed macOS CCX must still match; this is not Windows host proof.
+The released 0.4.2 manifest's eight-file CCX has no OS-specific plugin binary. This source validates the archive in Node on either OS without zip/unzip, PowerShell extraction or executing downloaded contents. It checks the reviewed checksum, exact entries, duplicate/linked/encrypted entries, expanded-size bounds, consistent local/central headers, version and rebuilt bytes before invoking Adobe. The same previously reviewed macOS CCX must still match; this is not Windows host proof.
 
 The Windows installer resolves Adobe UPIA from the standard CommonProgramFiles environment locations and invokes UnifiedPluginInstallerAgent.exe with a separate /install argument and the validated private snapshot. It does not search PATH, use a shell, uninstall, erase data, elevate an agent, restart Premiere or save a project. Missing Adobe software or an installer error stops before configuration; do not retry an uncertain install blindly or try another executable after Adobe has started.
 
@@ -20,14 +20,14 @@ Automatic discovery uses the current Windows account's %APPDATA%/Adobe/UXP/Plugi
 
 Client generators use the current native node.exe and absolute server path as separate arguments; spaces/backslashes survive JSON/TOML serialization. Existing client configuration must be preserved during manual merge. Source and test paths must remain on the same Windows computer/account as Premiere. WSL/Linux, remote containers and a cloud-only chat are not supported ways to launch this local Windows bridge.
 
-File tool paths stay forward-slash relative to the deliberately approved media folder. The 0.4.0 development candidate adds an optional folder button; the released 0.3.12 panel has no button. This does not change the grant boundary. The Node broker rejects Windows device names, alternate streams, trailing-dot/space aliases and invalid characters, in addition to traversal, links/junctions, containment and no-overwrite checks. A successful read of a cached folder grant must not request it again; a missing grant prompts only for a real authorized file task.
+File tool paths stay forward-slash relative to the deliberately approved media folder. Since 0.4.0 the panel has an optional red/green Files button for deliberate folder selection; 0.4.2 adds clear hover/press/busy feedback. This does not change the grant boundary. The Node broker rejects Windows device names, alternate streams, trailing-dot/space aliases and invalid characters, in addition to traversal, links/junctions, containment and no-overwrite checks. A successful read of a cached folder grant must not request it again; a missing grant prompts only for a real authorized file task.
 
 ## Install from PowerShell or Command Prompt
 
 Install Git, native Node.js 22+, Creative Cloud Desktop and a supported native Windows Premiere (manifest minimum 25.6). Run Premiere normally at least once. Use a normal user terminal, not WSL, a remote container or an elevated agent. Commands below work in PowerShell and Command Prompt; if PowerShell blocks npm.ps1, use npm.cmd in place of npm rather than changing execution policy.
 
 ```sh
-git clone --branch v0.3.12 --depth 1 https://github.com/ywdagency/premiere-mcp-bridge.git
+git clone --branch v0.4.2 --depth 1 https://github.com/ywdagency/premiere-mcp-bridge.git
 cd premiere-mcp-bridge
 npm ci
 npm run onboard -- --release
@@ -39,7 +39,7 @@ The last command validates the exact official CCX/checksum against this source. 
 npm run onboard -- --release --install --read-only
 ```
 
-Adobe may ask for installation consent. The installer uses Adobe UPIA /install, without a shell or automatic elevation. If UPIA is missing, install/repair Creative Cloud normally; do not delete an existing plugin or bypass an installer rejection. You can instead double-click the [reviewed CCX](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.12) in Creative Cloud and run npm run setup -- --read-only in the exact source clone. Installation alone does not configure an agent.
+Adobe may ask for installation consent. The installer uses Adobe UPIA /install, without a shell or automatic elevation. If UPIA is missing, install/repair Creative Cloud normally; do not delete an existing plugin or bypass an installer rejection. You can instead double-click the [reviewed CCX](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.2) in Creative Cloud and run npm run setup -- --read-only in the exact source clone. Installation alone does not configure an agent.
 
 For Claude Code use npm run onboard -- --release --install --client json --read-only and merge the returned mcpServers object into this clone's ignored .mcp.json, preserving other servers. Other local clients use the [client guide](clients.md); generated JSON must be merged into that client's configuration, and configured:false means this manual merge is still required. Do not copy another computer's paths.
 
@@ -49,7 +49,7 @@ In Premiere enable Developer Mode under the Plugins preferences, then open Windo
 npm run doctor
 ```
 
-Success requires actual running version 0.3.12 and no missing commands. Ask your agent to list its tools (19 in read-only mode), call premiere_get_capabilities and premiere_get_project, and inspect the active sequence/clips if present. A null project/sequence is valid. Do not import, create, edit, save, export, request a media grant or revoke approval as an installation check. Never report successful connection merely because Adobe accepted the package.
+Success requires actual running version 0.4.2 and no missing commands. Ask your agent to list its tools (19 in read-only mode), call premiere_get_capabilities and premiere_get_project, and inspect the active sequence/clips if present. A null project/sequence is valid. Do not import, create, edit, save, export, request a media grant or revoke approval as an installation check. Never report successful connection merely because Adobe accepted the package.
 
 ## Help verify Windows
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.2 — development candidate
+## 0.4.2 — public preview
 
 Give Stop/Launch, Reload, Files and the version link explicit hover, pressed and keyboard-focus feedback. Keep a short click pulse visible even for fast actions. Show Reloading/Starting and Choosing labels during work, disable repeated activation while busy, and show browser-opening failure on the version link. Preserve the panel geometry, remembered folder approval and existing permissions.
 

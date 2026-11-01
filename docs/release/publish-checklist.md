@@ -4,7 +4,7 @@ Obtain the owner's authorization for each release, tag, visibility change or wor
 
 ## Review the exact source and assets
 
-Use the version in package.json, manifest.json and the built protocol; they must agree. Run local tests and the [release checks](README.md), then read the versioned verification report. Preserve its distinction between fixtures, native behavior and platform/client limits. Stage only the seven allowlisted plugin files. The release attaches premiere-mcp-bridge-VERSION.ccx and its matching .ccx.sha256 file; verify checksum, exact filenames, manifest permissions and rebuilt payload before installation or upload. A matching version string alone is insufficient.
+Use the version in package.json, manifest.json and the built protocol; they must agree. Run local tests and the [release checks](README.md), then read the versioned verification report. Preserve its distinction between fixtures, native behavior and platform/client limits. Stage only the eight allowlisted plugin files. The release attaches premiere-mcp-bridge-VERSION.ccx and its matching .ccx.sha256 file; verify checksum, exact filenames, manifest permissions and rebuilt payload before installation or upload. A matching version string alone is insufficient.
 
 Review the intended public refs/history, source and npm archive, commit/discussion metadata, release assets and existing Actions logs/artifacts/caches for private data. Exclude local configuration, projects/media, transcripts, credentials, receipts, raw audits and extracted Adobe packaging tools. Push only the reviewed branch/tag, never all local refs or a mirror. Preserve private local work. Retain MIT/Adobe license notices and read back available branch/security protections.
 
@@ -18,6 +18,6 @@ Download uploaded draft assets with maintainer access and compare their bytes. T
 
 ## Verify the actual public installation
 
-From a new directory without GitHub credentials, clone the exact published vVERSION tag, run npm ci and npm run onboard -- --release without --install. Require the real matching assets, checksum/seven-file/payload checks and installed:false/configured:false. Missing/draft releases must fail without a floating-latest fallback. Never substitute an authenticated draft download for this public-route check.
+From a new directory without GitHub credentials, clone the exact published vVERSION tag, run npm ci and npm run onboard -- --release without --install. Require the real matching assets, checksum/eight-file/payload checks and installed:false/configured:false. Missing/draft releases must fail without a floating-latest fallback. Never substitute an authenticated draft download for this public-route check.
 
 Check the published README, INSTALL.md, user/agent/client guides, tested limits and private security reporting. A fresh source checkout on the maintainer's existing Mac is not a pristine new-Mac installation. Record only the clients/platforms and native operations actually verified. Keep private logs local and make a concise versioned report or release note sufficient for users and contributors.

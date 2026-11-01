@@ -1,6 +1,6 @@
 # Version indicator and update metadata
 
-The panel keeps the installed version as plain text without an underline or extra icon. It is always clickable: gray opens the repository, yellow opens the newer compatible release, and red opens that release when the installed version is below an explicit critical threshold. Hover text and the accessible link name explain the state and destination. Click or Enter asks UXP to open the approved HTTPS URL in the browser; Adobe may show its own consent dialog. Nothing downloads or installs automatically.
+At rest, the panel keeps the installed version as plain text without an underline or extra icon. Since 0.4.2, hover underlines/brightens it, clicking gives brief feedback, and an in-progress browser launch shows Opening; failure shows Try again. It is always clickable: gray opens the repository, yellow opens the newer compatible release, and red opens that release when the installed version is below an explicit critical threshold. Hover text and the accessible link name explain the state and destination. Click or Enter asks UXP to open the approved HTTPS URL in the browser; Adobe may show its own consent dialog. Nothing downloads or installs automatically.
 
 The plugin requests the fixed public [updates.json](https://raw.githubusercontent.com/ywdagency/premiere-mcp-bridge/main/updates.json) directly, independently of agent connection or Stop/Launch. Each attempt is persisted before the request, limiting checks to once every 24 hours, including failures and runtime reloads. A timer checks again if the plugin stays open for a day. Cached results are re-evaluated against the installed plugin and Premiere versions. Offline, invalid, oversized, timed-out or expired results leave a neutral version without changing bridge status. If cache writes fail, requests are skipped to avoid checking on every reload.
 
@@ -12,9 +12,9 @@ Publish and verify the exact release and matching CCX/checksum first, then updat
 {
   "schemaVersion": 1,
   "latest": {
-    "version": "0.3.11",
+    "version": "0.4.2",
     "minimumPremiereVersion": "25.6.0",
-    "releaseUrl": "https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.3.11"
+    "releaseUrl": "https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.2"
   },
   "criticalBelow": null
 }

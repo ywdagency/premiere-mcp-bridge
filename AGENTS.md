@@ -33,7 +33,7 @@ use disposable fixtures; never use the user's working timeline as an install tes
 This onboarding is Premiere-only. Do not configure another Adobe application or
 combine bridge servers as part of installation.
 
-Windows experimental preview: read docs/windows.md. v0.3.12 onboarding accepts native
+Windows experimental preview: read docs/windows.md. v0.4.2 onboarding accepts native
 Windows Node and documented UPIA /install; immutable v0.3.11 remains a macOS-only
 CLI. Explain experimental status and start read-only. Platform fixtures on a Mac
 are not native Windows certification. Keep ZIP validation portable and bounded,
