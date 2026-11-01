@@ -414,5 +414,52 @@
     "publicValidationConfigured": false,
     "pristineMachineInstallVerified": false,
     "report": "docs/release/candidate-0.3.11.md"
+  },
+  "projectOrganization044": {
+    "checkedAt": "2026-10-31 America/Vancouver",
+    "bridgeVersion": "0.4.4",
+    "hostVersion": "26.5.0",
+    "platform": "macOS ARM64",
+    "report": "docs/release/candidate-0.4.4.md",
+    "ownerAuthorized": true,
+    "source043PayloadMatchedInstalledFiles": 8,
+    "ccxSha256": "bf578942cb1eb9de0e4e6677d860fe23940e27f5310bd3a662543d60500e1fe8",
+    "installedPayloadFilesVerified": 8,
+    "storageFilesVerifiedUnchangedImmediatelyAfterInstall": 752,
+    "ownerRestartedPremiere": true,
+    "rememberedFileGrantRestoredWithoutPicker": true,
+    "doctorPassed": true,
+    "automatedTestsPassed": 232,
+    "originalItemsMovedAndVerified": 218,
+    "newBinsCreatedAndVerified": 9,
+    "undoTransactions": 14,
+    "originalIdsAndNamesPreserved": true,
+    "sequenceIdentitiesAndNamesPreserved": 12,
+    "activeSequenceMetadataAndPlayheadPreserved": true,
+    "activeClipCount": 208,
+    "activeClipsComparedUnchanged": 207,
+    "videoClipsComparedUnchanged": 135,
+    "unchangedPreexistingAudioReadError": {
+      "globalOffset": 207,
+      "code": "HOST_READ_FAILED"
+    },
+    "nativeMembersExercised": [
+      "Project#getRootItem",
+      "ProjectItem.cast",
+      "ProjectItem#getId",
+      "ProjectItem#getParentBin",
+      "FolderItem.cast",
+      "FolderItem#getItems",
+      "FolderItem#createBinAction",
+      "FolderItem#createMoveItemAction"
+    ],
+    "nativeBinRenameVerified": false,
+    "nativePopulatedBinMoveVerified": false,
+    "nativeUndoVerified": false,
+    "genericAssetOrTimelinePermissionsWidened": false,
+    "sourceFileOrTimelineContentMutationInvoked": false,
+    "projectSavedByAgent": false,
+    "published": false,
+    "limits": "Owner-authorized existing-project organization only. One pre-existing audio item cannot be inspected through the convenience getter. No picture/sound review, source-file content hashes, native rename/populated-bin move/Undo or new scoped timeline edit check."
   }
 }

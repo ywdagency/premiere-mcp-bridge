@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.4 — public preview
+
+Retain all 0.4.3 selected-video-track authorization and verification checks. Add `get_project_items` and `organize_project` for explicit Project-panel sorting of existing shared media, sequence items and populated bins. Create/rename bins and move existing items by exact IDs in bounded undoable batches, with stale-parent/name, root, cycle, name-conflict and readback checks. Preserve disk files, timeline content, media names, selection, source edit/deletion protections and no implicit saving. Add strict Node/UXP contracts and durable IPC/MCP regression coverage. The reviewed same-ID eight-file candidate is installed and running on Premiere 26.5; native creation and existing-item moves are verified. Bin rename, populated-bin moves and Undo remain pending; see the 0.4.4 candidate report. Publication uses the reviewed matching source tag, installer and checksum.
+
 ## 0.4.2 — public preview
 
 Give Stop/Launch, Reload, Files and the version link explicit hover, pressed and keyboard-focus feedback. Keep a short click pulse visible even for fast actions. Show Reloading/Starting and Choosing labels during work, disable repeated activation while busy, and show browser-opening failure on the version link. Preserve the panel geometry, remembered folder approval and existing permissions.

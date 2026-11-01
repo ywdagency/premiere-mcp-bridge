@@ -160,6 +160,10 @@ export function validateArgs(command: unknown, value: unknown): BridgeArgs {
       validateJson(entry);
       valid = true;
     }
+    if (field.type === 'binActions') {
+      validateBinActions(entry);
+      valid = true;
+    }
     if (!valid)
       throw new BridgeError(
         'INVALID_REQUEST',
@@ -202,6 +206,29 @@ export function validateArgs(command: unknown, value: unknown): BridgeArgs {
   if (command === 'project_open' && args.createNew && args.openOptions !== undefined)
     throw new BridgeError('INVALID_API_ARGUMENT', 'openOptions applies to opening, not creating a project.');
   return args as BridgeArgs;
+}
+
+export type BinAction =
+  | { type: 'create_bin'; parentBinId: string; name: string }
+  | { type: 'move_item'; itemId: string; expectedParentBinId: string; destinationBinId: string }
+  | { type: 'rename_bin'; binId: string; expectedName: string; name: string };
+
+// Validated by Node before IPC and independently by the UXP dispatcher/adapter.
+export function validateBinActions(value: unknown): asserts value is BinAction[] {
+  if (!Array.isArray(value) || value.length < 1 || value.length > 20)
+    throw new BridgeError('INVALID_REQUEST', 'Provide 1–20 bin organization actions.');
+  const bounded = (v: unknown, max = 128) => typeof v === 'string' && v.length > 0 && v.length <= max && !v.includes('\u0000');
+  for (const raw of value) {
+    const a = object(raw);
+    const keys = a.type === 'create_bin' ? ['type', 'parentBinId', 'name']
+      : a.type === 'move_item' ? ['type', 'itemId', 'expectedParentBinId', 'destinationBinId']
+      : a.type === 'rename_bin' ? ['type', 'binId', 'expectedName', 'name'] : [];
+    if (!keys.length || keys.some((key) => !bounded(a[key], key === 'expectedName' ? 256 : 128)))
+      throw new BridgeError('INVALID_REQUEST', 'Invalid bin organization action.');
+    onlyKeys(a, keys);
+    if ('name' in a && !(a.name as string).trim())
+      throw new BridgeError('INVALID_REQUEST', 'A bin name cannot be blank.');
+  }
 }
 
 export function utf8ByteLength(text: string): number {

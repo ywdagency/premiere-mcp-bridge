@@ -44,6 +44,12 @@ paths, project/media names, tokens and raw diagnostics. Experimental publication
 does not authorize a stable Windows claim or native edits during installation.
 
 Read docs/agent-workflows.md for task execution and recovery.
+For a human-requested Project-panel sorting task, use get_project_items and
+organize_project. This dedicated path may create/rename bins and move existing
+items (including shared sources, sequence items and populated bins), without
+media-file operations, timeline edits or additional ownership. Do not duplicate
+or authorize sequences, request a media-folder grant, rename media or save merely
+to organize bins. Keep deletion and generic asset/timeline protections intact.
 Read INDEX.md and docs/premiere-control-reference.md before Premiere API work.
 Verify exact methods against Adobe's current official UXP documentation and record
 minimum versions. The baseline is Premiere 25.6; pages mentioning 27.0 do not

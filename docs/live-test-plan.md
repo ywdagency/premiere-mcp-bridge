@@ -48,7 +48,7 @@ names or run files. Promote sanitized verified claims into
 | P05 | Effect add/order/remove and typed parameter values | IDs/counts, clamped values, source protection through MCP; rendered appearance/audio remain owner-reviewed. |
 | P06 | Scalar/point animation and supported interpolation | Key count/ticks/values, sampled values, animation enable/disable and interpolation. |
 | P07 | Transition creation/options/add/remove | Match name, alignment, duration, placement and structural boundary metadata; appearance remains owner-reviewed. |
-| P08 | Media/bins/subclips/proxy/relink/interpretation/LUT/metadata | Only intended owned assets change; shared sources/unowned descendants rejected; invalid grants/paths never reach native file operations. |
+| P08 | Media/bins/subclips/proxy/relink/interpretation/LUT/metadata | Asset-content mutations require ownership; shared sources/unowned descendants stay protected. Test dedicated non-destructive bin organization separately below. Invalid grants/paths never reach native file operations. |
 | P09 | File/library MOGRT insertion and exposed parameters | Correct template/time, parameter types through MCP; rendered appearance remains owner-reviewed. Probe version-dependent classes; missing fonts/assets recorded. |
 | P10 | Caption inventory/items/mute/rename | Actual exposed data distinguished from empty/unsupported results; no unproven caption text authoring. |
 | P11 | Marker types/color/text/timing/removal | Exact read-back, intended IDs only; returned text remains data. |
@@ -67,6 +67,36 @@ valid/invalid arguments and important variants per member. Test callback plumbin
 through its consuming operation; label declarative alternatives separately from
 native execution. Use `unsupported-host`, `blocked-by-fixture`, `failed` and
 `passed` distinctly.
+
+## Project-bin organization: pending native check
+
+The 0.4.4 `get_project_items` / `organize_project` path has automated fixture,
+IPC and MCP contract checks. Owner-authorized native creation of nine bins and
+moves of 218 existing items were checked in Premiere 26.5; see the
+[versioned report](release/candidate-0.4.4.md). Bin rename, populated-bin moves,
+Undo and broader failure variants below remain pending.
+Use a disposable project with nested/populated bins, duplicate media names,
+non-ASCII bin names, a sequence ProjectItem, shared source media used by both an
+original sequence and a retained backup, and an offline item. Record executing
+plugin/host versions and probe the exact FolderItem Actions and synchronous
+ProjectItem identity/parent getters before writing.
+
+Read all inventory pages and capture media identities/paths, clip timing/source
+ranges, tracks/effects, active sequence, selection and playhead through supported
+MCP getters. Create bins, reuse returned IDs, move existing shared media and
+sequence items, move a populated bin and rename only bins. Verify actual names,
+IDs, parents and unchanged sequence/media state. Verify that no file grant,
+picker, relink/import, implicit save or new ownership occurred and that generic
+source rename/deletion/content edits remain rejected. Test stale parents/names,
+combined cycles, root mutation, ambiguous bin names and same-UUID receipt replay.
+
+Have the owner test Premiere Undo for each batch and confirm organization returns
+without timeline/media changes. Do not use UI automation or invent an Undo API.
+Record native structure checks separately from this owner observation. A
+multi-batch sort has multiple Undo entries; a receipt replay never creates a
+second transaction. Keep results private until sanitized and versioned in a
+verification report. Source-only implementation does not authorize installation,
+application reload or tests on a private working project.
 
 ## Failure and recovery
 

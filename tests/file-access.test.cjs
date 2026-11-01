@@ -35,7 +35,7 @@ test('MCP and UXP both validate read-only file diagnostics without reading a pro
   const [a,b] = InMemoryTransport.createLinkedPair();
   await server.connect(b); await client.connect(a);
   const tools = (await client.listTools()).tools;
-  assert.equal(tools.length, 19);
+  assert.equal(tools.length, 20);
   assert.equal(tools.find(x => x.name === 'premiere_get_file_access').annotations.readOnlyHint, true);
   const bad = await client.callTool({ name: 'premiere_get_file_access', arguments: { includePath: 'yes' } });
   assert.equal(bad.isError, true); assert.equal(calls, 0);

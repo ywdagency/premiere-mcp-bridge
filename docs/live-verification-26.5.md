@@ -37,3 +37,16 @@ On 2026-10-29, installed External-channel 0.3.3 replaced the faint native skin w
 The exact seven-file CCX (SHA-256 f9385fba1601ce0db331e5dff133e6a119cda6d2171b4c00264cad524ffbbe2d) matches the rebuilt release source and installed External-channel payload. Earlier owner-authorized Adobe UPIA installation preserved 703 durable receipts; release preparation rechecked those same files unchanged without reinstalling or downgrading. Fresh doctor and MCP reads confirm executing 0.3.11, all 40 host commands, an open project/active sequence and a restored external-folder grant without a picker.
 
 Native update diagnostics report a successful public GitHub request, one attempt, the prior published 0.3.8 metadata and a neutral repository destination. Repeated reads preserve the request count and last attempt; the next attempt is exactly 86,400,000 ms later. Earlier same-payload owner confirmation records the gray version label opening the expected GitHub repository. This does not claim a new native color review, elapsed-day test or live yellow/red transition. No timeline edit, save, restart, picker, UI automation or new installation was part of the release check. See the [0.3.11 report](release/candidate-0.3.11.md); older editing/export checks retain their original versioned scopes.
+
+## Local candidate 0.4.4 project organization
+
+On 2026-10-31 (America/Vancouver), the owner authorized updating the installed
+bridge while preserving 0.4.3 and organizing the existing open project. The
+exact eight-file 0.4.4 package is installed and active, with remembered folder
+approval restored after the owner restart. Nine bins were created and 218
+existing project items moved through 14 verified transactions. All original
+IDs/names and 12 sequence identities remained intact. Active-sequence metadata,
+playhead and 207 readable clip records were unchanged; one pre-existing audio
+read failure persisted. No source-file/timeline-content operation or save was
+invoked. Native bin rename, populated-bin moves and Undo were not exercised.
+See the [0.4.4 report](release/candidate-0.4.4.md) for exact verification limits.

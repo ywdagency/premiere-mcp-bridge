@@ -538,7 +538,7 @@ test("real MCP discovers all six named contracts, validates composition names an
       tools.length,
       readOnly
         ? tools.filter((tool) => tool.annotations.readOnlyHint).length
-        : 43,
+        : 45,
     );
     const matrix = await client.readResource({
       uri: "premiere://api/coverage-matrix",

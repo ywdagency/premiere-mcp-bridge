@@ -69,6 +69,8 @@ export interface ApiScope {
   sequenceId?: string;
   assetId?: string;
   ownedValue?: boolean;
+  trackType?: 'video' | 'audio';
+  trackIndex?: number;
   clip?: ClipObservation;
 }
 export interface ClipObservation {

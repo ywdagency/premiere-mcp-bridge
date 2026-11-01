@@ -33,6 +33,24 @@ Import paths are relative to the user-granted media folder. Absolute paths, trav
 
 Only the explicitly named `save_project` and `save_project_as` tools save the project; no tool saves as a side effect. Timeline actions use named undoable transactions; native creation/import/open APIs have their own Premiere behavior and are not represented as one synthetic transaction.
 
+## Project-panel organization
+
+`get_project_items` requires the active `projectId` and accepts `offset` and `limit` (1–50). It reads the recursive Project-panel hierarchy without changing selection or active sequence. The result contains `rootBin`, a page of `items` (`id`, `name`, `parentBinId`, `kind: "bin" | "item"`) and `page.totalItems`/`nextOffset`. These are persistent project-item IDs, not native handles, filenames or bin paths. The root is separate from the item pages. The traversal supports at most 10000 items and 64 bin levels; invalid/repeated identities or a larger hierarchy fail explicitly. Pages are fresh observations, not a frozen snapshot; re-read if the project changes.
+
+`organize_project` requires the common write arguments plus an `actions` array of 1–20 strict descriptors:
+
+| Type | Fields | Result |
+| --- | --- | --- |
+| `create_bin` | `parentBinId`, `name` | Create a bin with a distinct sibling-bin name; return its real ID |
+| `move_item` | `itemId`, `expectedParentBinId`, `destinationBinId` | Move an existing item or populated bin; preserve identity and name |
+| `rename_bin` | `binId`, `expectedName`, `name` | Rename only a bin, preserving contents and identity |
+
+IDs are 1–128 characters; new bin names are 1–128 nonblank characters. `expectedName` accepts existing names up to 256 characters. No additional descriptor fields are allowed. Targets/destinations must exist in this exact project's fresh inventory; names are never resolved as IDs. An existing item can be targeted once per batch. Create missing bins in a separate batch, then use their returned IDs. The root cannot be moved/renamed. Same-parent moves, stale parents/names, combined cycles, excessive resulting depth/item counts and conflicting sibling bin names are rejected before the transaction.
+
+Existing shared media, original/backup sequence project items and populated bins are eligible for this dedicated organization path. It grants no asset/sequence ownership and does not widen generic native mutation/deletion access. The native calls are only `FolderItem#createBinAction(name, false)`, `createMoveItemAction(item, newParent)` on the current parent, and `createRenameBinAction(name)` inside one synchronous locked undo transaction. The bridge rechecks affected hierarchy/name observations inside the lock and reads actual IDs/parents/names afterward. Confirmed results include `results`, `verified: true`, `assetOwnershipGranted: false`, `saved: false` and the invalidated project scope. Native methods returning false, exceptions or an incomplete result remain `OPERATION_OUTCOME_UNKNOWN`, with normal same-UUID receipt recovery and no automatic rollback/retry.
+
+Organization does not move/rename disk files, relink media, rename clips, modify timeline contents, change selection/playback, activate a sequence, open a folder picker or save. No sequence backup/authorization or file grant is required. Each batch is one undoable transaction; multiple batches are separate transactions. All project native handles expire after native organization, including uncertain outcomes. Minimum documented Premiere version is 25.6; this local adapter has fixture/IPC/MCP coverage and versioned 0.4.4 native bin-creation/item-move evidence. Bin rename, populated-bin moves and Undo remain unverified; see [the report](release/candidate-0.4.4.md).
+
 ## Complete native API surface
 
 Six staged project adapters (`import_ae_comps`, `import_all_ae_comps`,
@@ -52,6 +70,10 @@ Additional lifecycle tools are `sequence_from_media` (`items`: ClipProjectItem h
 The catalog exposes every documented member, including reference-only callback/lifecycle APIs and newer APIs absent from the connected host. This is not a claim that every API is callable or live-tested. Dedicated property assignment accepts `parameters: {"value": ...}` only for owned draft/value objects. All Native Action creation/consumption remains within the bridge's synchronous lock/transaction. Timeline edits require a working copy or explicit existing-sequence authorization; retained backups and shared source media are protected. Global UI/application settings and explicit saves have their own documented side effects. Source Monitor commands may seek/play/change its UI. Native sequence creation may activate the new sequence according to Premiere behavior.
 
 ## Explicit existing-sequence authorization
+
+For a change confined to one video track, pass optional zero-based `videoTrackIndex` to `premiere_authorize_sequence`. The same explicit owner instruction, verified direct backup, `confirm:true` and `backupVerified:true` remain required. Source/backup/source comparisons then enumerate only that video track, plus sequence timing and track counts; unrelated track contents are not read. An unavailable audio clip therefore does not block a video-only edit. The grant records the live source video track ID and is limited to that track, not the whole sequence.
+
+This scope supports video-clip and clip-effect actions, video-only overwrite with `audioTrackIndex:-1`, and exact-track video removal with both ripple/overlap shifting disabled. Moving a referenced clip to another track or replacing the indexed track invalidates the observed context. Audio, other video tracks, cloning across tracks, and sequence-wide operations remain protected. Shared-source metadata, source deletion and retained backups are still protected. Omit `videoTrackIndex` when the requested operation genuinely requires full-sequence verification. Native read failures during verification report `BACKUP_VERIFICATION_FAILED` before any timeline edit or authorization, rather than an uncertain write outcome.
 
 Default source protection remains enabled. Call `premiere_authorize_sequence` only after the human owner explicitly requests edits to that exact existing sequence. Supply `projectId`, `sequenceId`, `backupSequenceId`, a UUID-v4 `operationId`, `confirm: true` and `backupVerified: true`. The last assertion means the caller independently verified the retained backup, including settings, markers/captions and relevant effects/keyframes. A filename or a BACKUP label is not evidence.
 

@@ -17,7 +17,7 @@ export interface ControlHost {
 export class PremiereControl {
   private readonly working = new Map<string, Set<string>>();
   private readonly cloneSources = new Map<string, string>();
-  private readonly authorized = new Map<string, { projectId: string; id: string; backupSequenceId: string }>();
+  private readonly authorized = new Map<string, { projectId: string; id: string; backupSequenceId: string; videoTrackIndex?: number; videoTrackId?: number }>();
   private readonly protectedBackups = new Set<string>();
   constructor(private readonly host: ControlHost) {}
   private key(projectId: string, sequenceId: string): string { return JSON.stringify([projectId, sequenceId]); }
@@ -26,7 +26,25 @@ export class PremiereControl {
   }
   mayEdit(projectId: string, sequenceId: string): boolean {
     const key = this.key(projectId, sequenceId);
-    return !this.protectedBackups.has(key) && (this.isWorking(projectId, sequenceId) || this.authorized.has(key));
+    const grant = this.authorized.get(key);
+    return !this.protectedBackups.has(key) && (this.isWorking(projectId, sequenceId) || (!!grant && grant.videoTrackIndex === undefined));
+  }
+  videoTrackGrant(projectId: string, sequenceId: string): { videoTrackIndex: number; videoTrackId: number } | undefined {
+    const key = this.key(projectId, sequenceId), grant = this.authorized.get(key);
+    if (this.protectedBackups.has(key) || grant?.videoTrackIndex === undefined || grant.videoTrackId === undefined) return;
+    return { videoTrackIndex: grant.videoTrackIndex, videoTrackId: grant.videoTrackId };
+  }
+  mayEditTrack(projectId: string, sequenceId: string, type?: string, index?: number): boolean {
+    return this.mayEdit(projectId, sequenceId) || (type === 'video' && index !== undefined && this.videoTrackGrant(projectId, sequenceId)?.videoTrackIndex === index);
+  }
+  async verifyVideoTrackGrant(projectId: string, sequenceId: string): Promise<void> {
+    const grant = this.videoTrackGrant(projectId, sequenceId);
+    if (!grant) return;
+    const project = await this.project({ projectId });
+    const sequence = await this.sequence(project, { sequenceId });
+    const track = await sequence.getVideoTrack(grant.videoTrackIndex);
+    if (!track || track.id !== grant.videoTrackId)
+      throw new BridgeError('ACTIVE_CONTEXT_CHANGED', 'The authorized video track changed identity. Verify a current backup before authorizing it again.');
   }
   forgetWorking(projectId:string,sequenceId:string):void { this.working.get(projectId)?.delete(sequenceId); }
   forgetProject(projectId: string): void {
@@ -55,7 +73,7 @@ export class PremiereControl {
   private async sequence(project: Project, args: BridgeArgs, editable = false): Promise<Sequence> {
     const sequence = (await project.getSequences()).find((item) => item.guid.toString() === args.sequenceId);
     if (!sequence) throw new BridgeError("SEQUENCE_NOT_FOUND", "The requested sequence does not exist in the active project.");
-    if (editable && !this.mayEdit(project.guid.toString(), sequence.guid.toString())) {
+    if (editable && !this.mayEditTrack(project.guid.toString(), sequence.guid.toString(), args.trackType as string, args.trackIndex as number)) {
       throw new BridgeError("SOURCE_SEQUENCE_PROTECTED", "Timeline edits require a bridge working copy or explicit sequence authorization with a verified backup.");
     }
     return sequence;
@@ -142,19 +160,39 @@ export class PremiereControl {
           throw new BridgeError('INVALID_SEQUENCE_BACKUP', 'Use a distinct backup cloned directly from this sequence by this bridge session. Retained backups cannot be authorized.');
         const backup = (await project.getSequences()).find((seq) => seq.guid.toString() === backupId);
         if (!backup) throw new BridgeError('INVALID_SEQUENCE_BACKUP', 'The retained backup no longer exists.');
-        const before = await authorizationSnapshot(sequence, this.host.clipType);
+        const videoTrackIndex = args.videoTrackIndex as number | undefined;
+        let videoTrackId: number | undefined;
+        if (videoTrackIndex !== undefined) {
+          if (videoTrackIndex >= await sequence.getVideoTrackCount())
+            throw new BridgeError('TRACK_NOT_FOUND', 'The requested video track does not exist.');
+          const track = await sequence.getVideoTrack(videoTrackIndex);
+          if (!track || !Number.isSafeInteger(track.id)) throw new BridgeError('TRACK_NOT_FOUND', 'The requested video track cannot be identified.');
+          videoTrackId = track.id;
+        }
+        const snapshot = async (target: Sequence): Promise<string> => {
+          try { return await authorizationSnapshot(target, this.host.clipType, videoTrackIndex); }
+          catch (error) {
+            if (error instanceof BridgeError) throw error;
+            throw new BridgeError('BACKUP_VERIFICATION_FAILED', 'Premiere could not read the requested verification scope. No timeline edit or authorization was applied.');
+          }
+        };
+        const before = await snapshot(sequence);
         this.beforeWrite(expiresAt);
-        if (before !== await authorizationSnapshot(backup, this.host.clipType))
+        if (before !== await snapshot(backup))
           throw new BridgeError('BACKUP_MISMATCH', 'The backup does not match the current sequence. Create and verify a fresh backup.');
-        if (before !== await authorizationSnapshot(sequence, this.host.clipType) ||
+        if (before !== await snapshot(sequence) ||
           (await this.host.getActiveProject())?.guid.toString() !== projectId)
           throw new BridgeError('ACTIVE_CONTEXT_CHANGED', 'The sequence or project changed during authorization. No permission was granted.');
         this.beforeWrite(expiresAt);
         this.protectedBackups.add(backupKey);
         this.working.get(projectId)?.delete(backupId);
-        this.authorized.set(key, { projectId, id, backupSequenceId: backupId });
+        this.working.get(projectId)?.delete(id);
+        this.authorized.set(key, { projectId, id, backupSequenceId: backupId,
+          ...(videoTrackIndex === undefined ? {} : { videoTrackIndex, videoTrackId }) });
         return { ...this.ref(project, sequence), backupSequenceId: backupId,
-          authorization: 'explicit-current-session', verification: 'clip-layout-source-ranges-speed-timebase; caller verified other relevant state' };
+          authorization: 'explicit-current-session',
+          ...(videoTrackIndex === undefined ? {} : { videoTrackIndex, videoTrackId, trackEditable: true }),
+          verification: videoTrackIndex === undefined ? 'clip-layout-source-ranges-speed-timebase; caller verified other relevant state' : 'selected-video-track-layout-source-ranges-speed-timebase; other tracks remain protected' };
       }
       if (command === "open_sequence") {
         const sequence = await this.sequence(project, args);
@@ -163,6 +201,7 @@ export class PremiereControl {
         return this.ref(project, sequence);
       }
       const sequence = await this.sequence(project, args, true);
+      await this.verifyVideoTrackGrant(project.guid.toString(), sequence.guid.toString());
       const trackIndex = args.trackIndex as number;
       const track = args.trackType === "video" ? await sequence.getVideoTrack(trackIndex) : await sequence.getAudioTrack(trackIndex);
       if (!track) throw new BridgeError("TRACK_NOT_FOUND", "The requested track no longer exists.");

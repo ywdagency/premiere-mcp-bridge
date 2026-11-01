@@ -62,6 +62,8 @@ export function createDispatcher(
     };
   // Adding a catalog entry without a handler is a TypeScript error.
   const handlers: Record<BridgeCommand, Handler> = {
+    get_project_items: native('projectItems'),
+    organize_project: native('organizeProject'),
     forget_file_access: async ({ args, expiresAt }) => {
       if (args.confirm !== true)
         throw new BridgeError('EXPLICIT_AUTHORIZATION_REQUIRED', 'Confirm the human request to forget file access.');

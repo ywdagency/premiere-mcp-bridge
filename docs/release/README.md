@@ -1,11 +1,12 @@
 # Release verification and maintenance
 
-The current preview is [v0.4.2](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.2), with explicit folder access and panel interaction feedback. Its eight-file CCX includes the existing Figma folder SVG. There are 43 full MCP tools or 19 in read-only mode. Exact installed files, native runtime, remembered approval and basic panel controls are verified on macOS Premiere 26.5. Windows remains experimental with no native verification. Native hover/held-press/brief-busy rendering is not independently captured; local browser and automated tests cover those states. See [0.4.2 scope](candidate-0.4.2.md).
+The current preview is [v0.4.4](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.4). It combines existing-item bin organization with the 0.4.3 selected-video-track authorization scope. The eight-file installer, running version, remembered folder grant, native bin creation and item moves are verified on macOS Premiere 26.5; bin rename, populated-bin moves and Undo remain unverified. There are 45 full MCP tools or 20 in read-only mode. Windows remains experimental. See the [0.4.4 report](candidate-0.4.4.md).
 
 ## Evidence
 
 | Report | Verified scope |
 | --- | --- |
+| [0.4.4](candidate-0.4.4.md) | Combined installer/source/runtime, retained grant, bin creation and existing-item moves; 0.4.3 scope checks retained |
 | [0.4.2](candidate-0.4.2.md) | Eight-file installer, native activation, retained grant and basic panel controls; browser/fixture interaction tests |
 | [0.3.12](candidate-0.3.12.md) | Local automated/package checks; Windows experimental and no native 0.3.12 regression |
 | [0.3.11](candidate-0.3.11.md) | Exact installer/source/installed payload, native connection, restored grant and update check |

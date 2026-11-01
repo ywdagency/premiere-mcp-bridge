@@ -6,6 +6,7 @@ import { boundedJson, parametersFor, referenceIds, resolveValue } from './api-va
 import { PremiereControl } from './premiere-control';
 import { ImportDiagnostics } from './import-diagnostics';
 import { prepareProjectOperation, ProjectOperation, PROJECT_OPERATION_MEMBERS } from './project-operations';
+import { getProjectItems, organizeProject } from './project-organization';
 export interface ApiHost {
   module: Record<string, any>;
   version: string;
@@ -153,11 +154,23 @@ export class PremiereApi {
     if ([...this.jobs.values()].some((job) => job.exclusiveProject && job.state === 'running'))
       throw new BridgeError('PROJECT_OPERATION_IN_PROGRESS', 'A project import/lifecycle job is still running. Poll its existing jobId before another write.');
   }
+  async projectItems(args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
+    const project = await this.requireProject(args.projectId);
+    return getProjectItems(this.host, project, args, () => {
+      if (Date.now() >= expiresAt) throw new BridgeError('REQUEST_EXPIRED', 'The project inventory request expired.');
+    });
+  }
+  async organizeProject(args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
+    this.writeGate(expiresAt);
+    const project = await this.requireProject(args.projectId);
+    return organizeProject(this.host, project, args, () => this.writeGate(expiresAt),
+      () => this.invalidate({ projectId: project.guid.toString() }));
+  }
   private editable(scope: ApiScope): boolean {
     return (
       (!!scope.sequenceId &&
         !!scope.projectId &&
-        this.control.mayEdit(scope.projectId, scope.sequenceId)) ||
+        this.control.mayEditTrack(scope.projectId, scope.sequenceId, scope.trackType, scope.trackIndex)) ||
       (!!scope.assetId &&
         !!scope.projectId &&
         this.ownedAssets.has(`${scope.projectId}:${scope.assetId}`))
@@ -201,6 +214,9 @@ export class PremiereApi {
         seen.add(h.scope.clip.object);
         const old = h.scope.clip,
           current = await this.observeClip(old.object);
+        if (h.scope.trackIndex !== undefined &&
+          await (old.object as any).getTrackIndex() !== h.scope.trackIndex)
+          throw new BridgeError('CLIP_CHANGED', 'A referenced clip moved to another track. Resolve it again before editing.');
         if (
           ['start', 'end', 'sourceIn', 'sourceOut', 'projectItemId'].some(
             (k) => old[k as keyof ClipObservation] !== current[k as keyof ClipObservation],
@@ -390,8 +406,16 @@ export class PremiereApi {
           : {}),
       };
     }
-    if (types.some((t) => ['VideoClipTrackItem', 'AudioClipTrackItem'].includes(t)))
+    if (types.some((t) => ['VideoClipTrackItem', 'AudioClipTrackItem'].includes(t))) {
       final.clip = await this.observeClip(native);
+      if (typeof native.getTrackIndex === 'function') {
+        const index = await native.getTrackIndex();
+        if (Number.isSafeInteger(index) && index >= 0) {
+          final.trackType = types.includes('VideoClipTrackItem') ? 'video' : 'audio';
+          final.trackIndex = index;
+        }
+      }
+    }
     if (types.some((t) => DRAFTS.has(t))) final = { ownedValue: true };
     if (this.handles.size >= 2000) {
       const first = this.handles.keys().next().value;
@@ -448,6 +472,8 @@ export class PremiereApi {
         sequenceId: final.sequenceId,
         assetId: final.assetId,
         ownedValue: final.ownedValue,
+        trackType: final.trackType,
+        trackIndex: final.trackIndex,
         editable: this.editable(final),
       },
     };
@@ -641,7 +667,7 @@ export class PremiereApi {
     for (const id of args.handles as string[]) if (this.handles.delete(id)) count++;
     return { released: count };
   }
-  private authorize(p: Prepared): void {
+  private async authorize(p: Prepared): Promise<void> {
     const policy = apiPolicy(p.member);
     if (p.member.kind === 'property') {
       if (!p.member.access?.includes('W') || !p.target?.scope.ownedValue)
@@ -674,8 +700,28 @@ export class PremiereApi {
       if (item && this.editable(item.scope)) return;
       throw new BridgeError(
         'SOURCE_SEQUENCE_PROTECTED',
-        'The item being removed or moved is not owned by this bridge session.',
+        'The item being removed or moved is not owned by this bridge session. For explicit non-destructive Project-panel organization, use premiere_organize_project; deletion remains protected.',
       );
+    }
+    const grant = p.scope.projectId && p.scope.sequenceId
+      ? this.control.videoTrackGrant(p.scope.projectId, p.scope.sequenceId) : undefined;
+    if (grant && !this.control.mayEdit(p.scope.projectId!, p.scope.sequenceId!)) {
+      await this.control.verifyVideoTrackGrant(p.scope.projectId!, p.scope.sequenceId!);
+      if (p.scope.trackType === 'video' && p.scope.trackIndex === grant.videoTrackIndex &&
+        p.scope.clip && ['VideoClipTrackItem', 'VideoComponentChain', 'Component', 'ComponentParam'].includes(p.member.className)) return;
+      if (p.member.id === 'SequenceEditor#createOverwriteItemAction' &&
+        p.raw.videoTrackIndex === grant.videoTrackIndex && p.raw.audioTrackIndex === -1) return;
+      if (p.member.id === 'SequenceEditor#createRemoveItemsAction' &&
+        p.raw.ripple === false && p.raw.shiftOverLapping === false &&
+        p.args[2] === this.constant('Constants.MediaType.VIDEO')) {
+        const selection = p.raw.trackItemSelection as { $selection?: string[] };
+        const selected = selection?.$selection?.map(id => this.handle(id));
+        if (selected?.length && selected.every(h => h.scope.projectId === p.scope.projectId &&
+          h.scope.sequenceId === p.scope.sequenceId && h.types.includes('VideoClipTrackItem') &&
+          h.scope.trackType === 'video' && h.scope.trackIndex === grant.videoTrackIndex)) return;
+      }
+      throw new BridgeError('VIDEO_TRACK_SCOPE_PROTECTED',
+        'This grant permits only the selected video track: clip/effect edits, video-only overwrite (audioTrackIndex:-1), and non-ripple video removal. Other tracks and sequence-wide edits remain protected.');
     }
     if (!this.editable(p.scope))
       throw new BridgeError(
@@ -806,7 +852,7 @@ export class PremiereApi {
     for (const spec of specs) {
       onlyKeys(spec, ['memberId', 'target', 'parameters']);
       const p = await this.prepare(spec as BridgeArgs, 'action');
-      this.authorize(p);
+      await this.authorize(p);
       prepared.push(p);
     }
     const scoped = prepared.map((p) => p.scope.sequenceId).filter(Boolean);
@@ -868,7 +914,7 @@ export class PremiereApi {
     this.writeGate(expiresAt);
     const project = await this.requireProject(args.projectId);
     const p = await this.prepare(args, 'mutate');
-    this.authorize(p);
+    await this.authorize(p);
     await this.validateRefs(p.refs, project.guid.toString(), p.scope.sequenceId);
     await this.protectSharedAssets(project, p);
     await this.requireProject(args.projectId);
@@ -902,7 +948,7 @@ export class PremiereApi {
     this.writeGate(expiresAt);
     const project = await this.requireProject(args.projectId);
     const p = await this.prepare(args, 'job');
-    this.authorize(p);
+    await this.authorize(p);
     await this.validateRefs(p.refs, project.guid.toString(), p.scope.sequenceId);
     await this.protectSharedAssets(project, p);
     if (

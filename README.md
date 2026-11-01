@@ -1,6 +1,6 @@
 # Premiere MCP Bridge
 
-**Windows support is experimental in v0.4.2.** The installer and client configuration have automated platform tests on macOS, but installation and Premiere behavior on Windows are not yet verified. [Try it and help test](docs/windows.md).
+**Windows support is experimental in v0.4.4.** Platform fixtures pass on macOS; native Windows installation and Premiere behavior are not verified. [Help test Windows](docs/windows.md).
 
 **Give your AI agent a documented connection to Adobe Premiere.** Inspect timelines, work on sequence copies and build creative tools through local MCP—using the agent you choose.
 
@@ -8,7 +8,7 @@ MIT-licensed bridge built by **YWD Agency** for editors, creative technologists 
 
 [User guide](docs/user-guide.md) · [Agent workflows](docs/agent-workflows.md) · [Client setup](docs/clients.md) · [Tools](docs/commands.md) · [Native API](docs/native-api.md) · [Troubleshooting](docs/troubleshooting.md) · [Documentation index](INDEX.md)
 
-**Free, MIT-licensed preview 0.4.2.** Adds a red/green Files button beside Running, clear folder-access help and visible hover, press and busy feedback across the panel. Existing approved folders survive Stop, restarts and same-ID updates. Node.js 22+ and Premiere 25.6+ are required. Installation, executing 0.4.2, retained approval and basic panel controls are verified on macOS Apple Silicon / Premiere 26.5. Windows remains experimental. Download the [0.4.2 installer and checksum](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.2). See [verification and limits](docs/release/candidate-0.4.2.md).
+**Free, MIT-licensed preview 0.4.4.** Organize existing project materials into bins without changing disk media or timeline content. Create/rename bins and move existing items through explicit, verified transactions. Includes the 0.4.3 optional video-track authorization scope, remembered folder approval and existing panel feedback. Node.js 22+ and Premiere 25.6+ are required. Installation, runtime, bin creation and existing-item moves are verified on macOS Apple Silicon / Premiere 26.5; rename, populated-bin moves and Undo remain unverified. Download the [0.4.4 installer and checksum](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.4). See [verification and limits](docs/release/candidate-0.4.4.md).
 
 ## Easiest start: ask your agent
 
@@ -16,27 +16,29 @@ Paste this into a local Codex, Claude Code or another agent with terminal/file a
 
 > Study https://github.com/ywdagency/premiere-mcp-bridge and help me install Premiere MCP Bridge and connect it to this agent. Follow the repository's installation instructions, start in read-only mode, and do not change my edit during setup.
 
-The agent should begin with [INSTALL.md](INSTALL.md) and [AGENTS.md](AGENTS.md), use the published v0.4.2 source/installer, and guide you through Adobe confirmation, opening the panel, client trust and reconnecting. A browser-only/cloud chat without local computer access can explain the steps but cannot start this local bridge. Claude Desktop is also supported through the documented configuration merge.
+The agent should begin with [INSTALL.md](INSTALL.md) and [AGENTS.md](AGENTS.md), use the published v0.4.4 source/installer, and guide you through Adobe confirmation, opening the panel, client trust and reconnecting. A browser-only/cloud chat without local computer access can explain the steps but cannot start this local bridge. Claude Desktop is also supported through the documented configuration merge.
 
-Prefer to install the plugin yourself? Download the [CCX and SHA-256](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.2), verify the checksum, then double-click the CCX and confirm in Adobe Creative Cloud Desktop. The CCX installs the Premiere plugin; the local MCP server/client still needs the agent-led or [CLI setup](docs/installation.md). You do not need UXP Developer Tools for this route.
+Prefer to install the plugin yourself? Download the [CCX and SHA-256](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.4), verify the checksum, then double-click the CCX and confirm in Adobe Creative Cloud Desktop. The CCX installs the Premiere plugin; the local MCP server/client still needs the agent-led or [CLI setup](docs/installation.md). You do not need UXP Developer Tools for this route.
 
 ## Update with your existing agent
 
 Already connected? Copy this request into the local agent you use with Premiere:
 
 ```text
-Study https://github.com/ywdagency/premiere-mcp-bridge and update both the Premiere plugin and the local MCP server to preview v0.4.2, following INSTALL.md and docs/installation.md. Preserve my existing MCP server registration, access mode, unrelated client configuration and plugin data. Do not uninstall the plugin, delete its data or revoke its folder approval. Do not change my edit or save/restart Premiere automatically. Guide me through any required Premiere restart and client reconnect, then verify the executing version with doctor and the remembered folder access with premiere_get_file_access. Reuse an existing grant without asking me to select the folder again.
+Study https://github.com/ywdagency/premiere-mcp-bridge and update both the Premiere plugin and the local MCP server to preview v0.4.4, following INSTALL.md and docs/installation.md. Preserve my existing MCP server registration, access mode, unrelated client configuration and plugin data. Do not uninstall the plugin, delete its data or revoke its folder approval. Do not change my edit or save/restart Premiere automatically. Guide me through any required Premiere restart and client reconnect, then verify the executing version with doctor and the remembered folder access with premiere_get_file_access. Reuse an existing grant without asking me to select the folder again.
 ```
 
 The CCX updates the plugin; the matching Node source and client configuration must also be updated. Normal same-ID upgrades retain folder approval, although Adobe can invalidate a saved token. Panel Reload only restarts transport. See [updating an existing installation](docs/installation.md#updating-an-existing-installation) for the exact route and recovery.
 
 ## What you can do
 
+Ask the agent to organize the open project into Sequences, Footage, Audio and Graphics bins. It can create destination bins, move existing shared items and organize sequence backups without altering disk files, media names or timeline content. Batches have stale-parent, cycle and name-conflict checks and actual hierarchy readback; no project save is implicit. No sequence backup/authorization or media-folder grant is needed for bin organization alone.
+
 The current Node source also searches 806 official Premiere Help articles through the existing `premiere_api_search` (`source: "manual"` or `"all"`) and reads cited passages through `premiere_api_describe`. Default API behavior and tool counts are unchanged. Search uses offline navigation metadata; reading article text contacts Adobe. See [manual reference](docs/manual-reference.md). This Node-only feature needs a client reconnect after updating the source/dependencies, with no UXP reinstall.
 
 Ask an agent to report the active sequence, inspect paginated clips with exact ticks/timecodes, or read existing transcript data where the host supports it. Prepare a named working copy and make deliberate clip, marker, effect or keyframe changes through documented tools. Develop a custom assistant that can discover exact native signatures and probe the installed runtime before calling them.
 
-Timeline mutations default to sequences created or duplicated by this bridge in the current plugin session. With explicit owner instruction, `premiere_authorize_sequence` permits one existing sequence after a verified direct-clone backup; `premiere_revoke_sequence_authorization` removes that permission. Retained backups, original-sequence deletion and shared source media stay protected. Project saves, global settings, Source Monitor changes and native export jobs are separate, explicit operations with their own side effects. See [tools and arguments](docs/commands.md).
+Timeline mutations default to sequences created or duplicated by this bridge in the current plugin session. With explicit owner instruction, `premiere_authorize_sequence` permits one existing sequence after a verified direct-clone backup, optionally limited to a single video track; `premiere_revoke_sequence_authorization` removes that permission. Retained backups, original-sequence deletion and shared source media stay protected. Project saves, global settings, Source Monitor changes and native export jobs are separate, explicit operations with their own side effects. See [tools and arguments](docs/commands.md).
 
 ## Two components, one local connection
 
@@ -60,7 +62,7 @@ Developer Tools. See [CLI installation](docs/installation.md) and
 Use the exact published source tag and reviewed release assets:
 
 ```sh
-git clone --branch v0.4.2 https://github.com/ywdagency/premiere-mcp-bridge.git
+git clone --branch v0.4.4 https://github.com/ywdagency/premiere-mcp-bridge.git
 cd premiere-mcp-bridge
 npm ci
 npm run onboard -- --release
@@ -69,14 +71,14 @@ npm run onboard -- --release --install --read-only
 
 Validation does not install or configure anything. Explicit --install invokes Adobe and creates project-local Codex configuration; other clients receive JSON for a controlled merge. Enable Premiere Developer Mode, open Window → UXP Plugins → Premiere MCP Bridge, open/trust this clone in the client and reconnect its MCP process. Then run npm run doctor. It checks the actual executing version/commands; installer registration alone is insufficient.
 
-The downloader uses only the matching published version and checksum, without a floating-latest fallback. Manual CCX installation and agent-assisted client setup are described in [INSTALL.md](INSTALL.md). Windows users should first read the [experimental Windows guide](docs/windows.md). Current package/runtime limits are in the [0.4.2 report](docs/release/candidate-0.4.2.md); the [earlier fresh-checkout review](docs/release/final-review-0.3.8.md) remains historical.
+The downloader uses only the matching published version and checksum, without a floating-latest fallback. Manual CCX installation and agent-assisted client setup are described in [INSTALL.md](INSTALL.md). Windows users should first read the [experimental Windows guide](docs/windows.md). Current package/runtime limits are in the [0.4.4 report](docs/release/candidate-0.4.4.md); the [earlier fresh-checkout review](docs/release/final-review-0.3.8.md) remains historical.
 
 ## Development loading with UDT
 
 Install Node.js 22+, Adobe Premiere 25.6+ and Adobe UXP Developer Tools (UDT). Adobe documents Premiere support from UDT 2.2; this project's developer-load shortcut was tested with UDT 2.3.0. Premiere 26.5 is the current native reference host. A working Adobe installation/license is required separately.
 
 ```sh
-git clone --branch v0.4.2 https://github.com/ywdagency/premiere-mcp-bridge.git
+git clone --branch v0.4.4 https://github.com/ywdagency/premiere-mcp-bridge.git
 cd premiere-mcp-bridge
 npm ci
 npm run setup
@@ -102,7 +104,7 @@ For an inspection-only client configuration, run `npm run setup -- --read-only`.
 
 ## API coverage and limits
 
-The source server exposes **43 MCP tools**: convenience project/sequence/clip operations, searchable reference tools and a typed native adapter. Six project import/lifecycle adapters are exposed; selected native checks and remaining AE/growing-media variants are separately recorded; see the [API expansion matrix and test plan](docs/api-expansion.md). Installed runtimes report their own command list through capabilities. The pinned Adobe DOM catalog covers **73 types and 707 entries**, including 137 constants. Native evidence is recorded separately for Premiere 26.5; installation/lifecycle observations must identify the actual build tested. These counts describe this checkout, not every Premiere version or full behavioral coverage.
+The source server exposes **45 MCP tools** (20 in inspection-only mode): convenience project/sequence/clip operations, searchable reference tools and a typed native adapter. The `get_project_items` / `organize_project` tools add explicit sorting of existing Project-panel materials into bins without disk-file or timeline changes; see the [organization contract and pending native check](docs/commands.md#project-panel-organization). Six project import/lifecycle adapters are exposed; selected native checks and remaining AE/growing-media variants are separately recorded; see the [API expansion matrix and test plan](docs/api-expansion.md). Installed runtimes report their own command list through capabilities. The pinned Adobe DOM catalog covers **73 types and 707 entries**, including 137 constants. Native evidence is recorded separately for Premiere 26.5; installation/lifecycle observations must identify the actual build tested. These counts describe this checkout, not every Premiere version or full behavioral coverage.
 
 Catalog membership, execution policy, native presence and live-tested behavior are different. Search and describe work without Premiere; `premiere_api_probe` checks the running host. The [native API guide](docs/native-api.md) documents opaque handles, locked action batches, file grants, jobs and events. The [live report](docs/live-verification-26.5.md) records what actually ran.
 

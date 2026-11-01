@@ -46,6 +46,14 @@ Existing-source edits require your explicit instruction for that exact sequence 
 
 Since 0.4.2 all panel controls visibly react to hover, press and keyboard focus. Reload shows Starting/Reloading while connecting; Files shows Choosing while its dialog is open. Busy controls ignore duplicate clicks. The version link shows Opening and, if Adobe cannot open the browser, Try again. Hover alone never performs an action.
 
+## Organize an existing project
+
+Agents can use the new project inventory and organization tools to create/rename bins and sort existing materials and sequence items into them. For example:
+
+> Sort this project's existing materials into Footage, Audio, Graphics and Sequences bins. Reuse suitable existing bins. Keep filenames, media links and all timelines unchanged. Do not save the project.
+
+This changes only the Project panel's folder structure. It needs no external-folder approval or sequence copies and preserves protection against source deletion/content edits. The agent works in batches of up to 20 actions, checks the actual result and reports any uncompleted batches. Keep manual project reorganization idle during the operation. Each batch has its own Premiere Undo transaction. Use a plugin and MCP server exposing these commands. Preview 0.4.4 has native creation/item-move verification on Premiere 26.5; bin rename, populated-bin moves and Undo remain unverified. See [the report](release/candidate-0.4.4.md).
+
 ## Files, saves and exports
 
 Connection alone does not need a folder. A deliberate import/output operation needs a separate native media-folder approval. The agent can inspect the existing grant with premiere_get_file_access; it requests its private path only when needed. Approve the intended working folder in Adobe's dialog. Commands use paths relative to that folder and still validate each file. Do not grant an entire disk just to connect.
