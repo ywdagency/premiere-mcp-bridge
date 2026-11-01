@@ -20,6 +20,16 @@ The agent should begin with [INSTALL.md](INSTALL.md) and [AGENTS.md](AGENTS.md),
 
 Prefer to install the plugin yourself? Download the [CCX and SHA-256](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.2), verify the checksum, then double-click the CCX and confirm in Adobe Creative Cloud Desktop. The CCX installs the Premiere plugin; the local MCP server/client still needs the agent-led or [CLI setup](docs/installation.md). You do not need UXP Developer Tools for this route.
 
+## Update with your existing agent
+
+Already connected? Copy this request into the local agent you use with Premiere:
+
+```text
+Study https://github.com/ywdagency/premiere-mcp-bridge and update both the Premiere plugin and the local MCP server to preview v0.4.2, following INSTALL.md and docs/installation.md. Preserve my existing MCP server registration, access mode, unrelated client configuration and plugin data. Do not uninstall the plugin, delete its data or revoke its folder approval. Do not change my edit or save/restart Premiere automatically. Guide me through any required Premiere restart and client reconnect, then verify the executing version with doctor and the remembered folder access with premiere_get_file_access. Reuse an existing grant without asking me to select the folder again.
+```
+
+The CCX updates the plugin; the matching Node source and client configuration must also be updated. Normal same-ID upgrades retain folder approval, although Adobe can invalidate a saved token. Panel Reload only restarts transport. See [updating an existing installation](docs/installation.md#updating-an-existing-installation) for the exact route and recovery.
+
 ## What you can do
 
 The current Node source also searches 806 official Premiere Help articles through the existing `premiere_api_search` (`source: "manual"` or `"all"`) and reads cited passages through `premiere_api_describe`. Default API behavior and tool counts are unchanged. Search uses offline navigation metadata; reading article text contacts Adobe. See [manual reference](docs/manual-reference.md). This Node-only feature needs a client reconnect after updating the source/dependencies, with no UXP reinstall.
