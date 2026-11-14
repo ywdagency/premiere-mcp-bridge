@@ -83,6 +83,7 @@ export class UxpBridge {
     if (generation !== this.generation) return false;
     this.folder = folder;
     this.marker = marker;
+    this.api?.setRenderStorage(folder);
     this.report('Connected. Ready for agent requests.');
     this.schedule(generation);
     return true;

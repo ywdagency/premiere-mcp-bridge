@@ -1,5 +1,14 @@
 # Adobe control reference
 
+The 0.4.6 source candidate refreshed the full pin on 2026-11-14 to AdobeDocs
+`ffa53e0dab56c421ef2ac665b66ed370e3a1d675`; member signatures/metadata were unchanged.
+`EncoderManager#encodeProjectItem`, full-source `workArea:0` and encoder event
+payloads were checked against the official reference and Adobe sample commit
+`ad89029bb8d587b58f8e9a86292b0aa0159dc4f4`. `jobID`/`outputFiles` are the sample's
+completion payload, not `jobId`; only exact output-file correlation is used in
+the [new coordinator](render-batches.md). Minimum version 25.6 does not establish
+native Dynamic Link/alpha behavior on 26.5. No native candidate check was run.
+
 Checked 2026-10-28 against official Adobe documentation. Use the exact method's documented minimum version before adding a tool. The bridge baseline is Premiere 25.6. A page documenting a 27.0 method does not establish support in an installed 26.x release.
 
 | Area | Official reference | Bridge use / minimum |

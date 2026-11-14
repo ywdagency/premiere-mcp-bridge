@@ -1,4 +1,4 @@
-import { BridgeError, BridgeArgs, object, onlyKeys } from './bridge-protocol';
+import { BridgeError, BridgeArgs, object, onlyKeys, validateArgs } from './bridge-protocol';
 import { API_CONTRACTS } from './generated/api-contracts';
 import { apiPolicy, VALUE_TYPES, versionSupported } from './api-policy';
 import { ApiMember, ApiScope, ApiHandle, ApiType, ClipObservation } from './api-types';
@@ -7,6 +7,8 @@ import { PremiereControl } from './premiere-control';
 import { ImportDiagnostics } from './import-diagnostics';
 import { prepareProjectOperation, ProjectOperation, PROJECT_OPERATION_MEMBERS } from './project-operations';
 import { getProjectItems, organizeProject } from './project-organization';
+import { RenderBatches, PreparedRender } from './render-batches';
+import type { UxpFolder } from './uxp-bridge';
 export interface ApiHost {
   module: Record<string, any>;
   version: string;
@@ -76,10 +78,69 @@ export class PremiereApi {
   private serial = 0;
   private readonly mediaKinds = new Map<string, string>();
   private readonly epoch = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+  private readonly renderBatches = new RenderBatches(this.epoch);
+  private renderListener?: { manager: any; event: string; callback: (event: unknown) => void };
   constructor(
     private readonly host: ApiHost,
     private readonly control: PremiereControl,
   ) {}
+  setRenderStorage(folder: UxpFolder): void { this.renderBatches.attach(folder); }
+  private listenForRenders(manager: any): void {
+    if (this.renderListener) return;
+    const event = this.host.module.EncoderManager?.EVENT_RENDER_COMPLETE;
+    const events = this.host.module.EventManager;
+    if (typeof event !== 'string' || typeof events?.addEventListener !== 'function')
+      throw new BridgeError('HOST_MEMBER_UNAVAILABLE', 'Native encoder completion events are unavailable; no batch was submitted.');
+    const callback = (data: unknown) => this.renderBatches.complete(data);
+    try { events.addEventListener(manager, event, callback, false); }
+    catch { throw nativeFailure('EncoderManager completion subscription', false); }
+    this.renderListener = { manager, event, callback };
+  }
+  async renderBatch(args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
+    validateArgs('render_batch', args);
+    this.writeGate(expiresAt);
+    const project = await this.requireProject(args.projectId);
+    this.member('EncoderManager#encodeProjectItem');
+    const managerRef = (await this.read({ memberId: 'EncoderManager.getManager' })).value as { $ref: string };
+    const entries: PreparedRender[] = [];
+    const sources = new Set<string>();
+    let manager: any;
+    for (const item of args.items as Array<{ item: string; outputPath: string }>) {
+      const handle = this.handle(item.item);
+      if (!handle.types.includes('ClipProjectItem') || handle.candidateTypes?.length)
+        throw new BridgeError('INVALID_API_ARGUMENT', 'Each render input must be an exact ClipProjectItem handle.');
+      if (!handle.scope.assetId || handle.scope.projectId !== args.projectId || sources.has(handle.scope.assetId))
+        throw new BridgeError('INVALID_API_ARGUMENT', 'Render inputs must be distinct assets in the exact project.');
+      sources.add(handle.scope.assetId);
+      // Reuse the generic native validator/file broker without changing asset ownership.
+      const p = await this.prepare({ memberId: 'EncoderManager#encodeProjectItem', target: managerRef.$ref,
+        parameters: { clipProjectItem: { $ref: item.item }, outputFile: item.outputPath,
+          presetFile: args.presetPath, workArea: 0, removeUponCompletion: false, startQueueImmediately: false } }, 'job');
+      await this.authorize(p);
+      await this.validateRefs(p.refs, project.guid.toString());
+      manager = p.receiver;
+      if (manager.isAMEInstalled !== true)
+        throw new BridgeError('ENCODER_UNAVAILABLE', 'A compatible Adobe Media Encoder is required.');
+      entries.push({ projectItemId: handle.scope.assetId, outputPath: item.outputPath, nativeOutput: p.args[1],
+        invoke: () => {
+          let result: unknown;
+          project.lockedAccess(() => { result = manager.encodeProjectItem(...p.args); });
+          return result;
+        } });
+    }
+    await this.requireProject(args.projectId);
+    this.writeGate(expiresAt);
+    this.listenForRenders(manager);
+    return this.renderBatches.start(args.operationId as string, args.projectId as string, args.presetPath as string, entries,
+      async () => { this.writeGate(expiresAt); await this.requireProject(args.projectId); this.writeGate(expiresAt); });
+  }
+  async getRenderBatch(args: BridgeArgs): Promise<Record<string, unknown>> {
+    validateArgs('get_render_batch', args);
+    await this.requireProject(args.projectId);
+    const result = await this.renderBatches.get(args.batchId as string, args.projectId as string);
+    await this.requireProject(args.projectId);
+    return result;
+  }
   private id(prefix: string): string {
     return `${prefix}-${this.epoch}-${++this.serial}`;
   }
@@ -106,6 +167,8 @@ export class PremiereApi {
       },
       apiHandles: { ttlSeconds: 600, maximum: 2000 },
       fileBrokerVersion: 1,
+      renderWorkflow: { batchSubmission: true, durableEvidence: true, completion: 'exact-output-event-match',
+        outputSuitability: 'unverified', automaticReplacement: false, nativeRenderAndReplace: false },
     };
   }
   member(id: unknown): ApiMember {
@@ -1047,6 +1110,7 @@ export class PremiereApi {
   }
   private async projectOperation(kind: ProjectOperation, args: BridgeArgs, expiresAt: number): Promise<Record<string, unknown>> {
     this.writeGate(expiresAt);
+    if (kind === 'project_close') await this.renderBatches.assertNoPending(args.projectId as string);
     this.member(PROJECT_OPERATION_MEMBERS[kind]);
     if (this.jobs.size >= 100) throw new BridgeError('JOB_LIMIT', 'Review retained jobs before restarting the plugin.');
     if ([...this.jobs.values()].some((job) => job.state === 'running' && job.scope.projectId === args.projectId))
@@ -1230,6 +1294,7 @@ export class PremiereApi {
       );
     if ([...this.jobs.values()].some((j) => j.scope.sequenceId === id && j.state === 'running'))
       throw new BridgeError('JOB_IN_PROGRESS', 'A native job still uses this sequence.');
+    await this.renderBatches.assertNoPending(project.guid.toString());
     const seq = (await project.getSequences()).find((v: any) => v.guid.toString() === id);
     if (!seq) throw new BridgeError('SEQUENCE_NOT_FOUND', 'The working sequence no longer exists.');
     this.writeGate(expiresAt);
@@ -1330,8 +1395,10 @@ export class PremiereApi {
     if (this.subscriptions.size >= 32)
       throw new BridgeError('SUBSCRIPTION_LIMIT', 'At most 32 event subscriptions are allowed.');
     const event = this.member(args.eventId);
-    if (event.kind !== 'constant' || !event.enum?.endsWith('Event'))
-      throw new BridgeError('INVALID_API_ARGUMENT', 'Use a documented Constants.*Event member ID.');
+    const classEvent = event.kind === 'event';
+    const globalClassEvent = classEvent && ['ProjectEvent', 'ProjectClosedEvent', 'OperationCompleteEvent', 'SnapEvent'].includes(event.className);
+    if (!classEvent && (event.kind !== 'constant' || !event.enum?.endsWith('Event')))
+      throw new BridgeError('INVALID_API_ARGUMENT', 'Use a documented class event or Constants.*Event member ID.');
     const target = args.target ? this.handle(args.target as string) : undefined;
     if (
       target &&
@@ -1340,8 +1407,14 @@ export class PremiereApi {
       )
     )
       throw new BridgeError('INVALID_API_ARGUMENT', 'This target does not support native events.');
+    if (globalClassEvent && target)
+      throw new BridgeError('INVALID_API_ARGUMENT', 'This documented event uses a global subscription without a target.');
+    if (classEvent && !globalClassEvent && (!target || !target.types.includes(event.className)))
+      throw new BridgeError('INVALID_API_ARGUMENT', `This event requires a ${event.className} target.`);
     const id = this.id('sub'),
-      eventName = this.constant(event.id);
+      eventName = classEvent ? this.host.module[event.className]?.[event.name] : this.constant(event.id);
+    if (typeof eventName !== 'string' || !eventName)
+      throw new BridgeError('HOST_MEMBER_UNAVAILABLE', 'This event is unavailable in the current host.');
     const callback = (data?: any) => {
       const record: Record<string, unknown> = {
         cursor: ++this.eventCounter,
@@ -1349,13 +1422,17 @@ export class PremiereApi {
         eventId: event.id,
         receivedAt: new Date().toISOString(),
       };
-      for (const key of ['id', 'state', 'progress', 'jobId', 'result']) {
+      for (const key of ['id', 'state', 'progress', 'jobId', 'jobID', 'progressAmount', 'inErrorNumber', 'result']) {
         try {
           const value = data?.[key];
-          if (['number', 'boolean'].includes(typeof value)) record[key] = value;
-          else if (typeof value === 'string' && !/[\\/]/.test(value)) record[key] = value.slice(0, 256);
+          if (typeof value === 'boolean' || typeof value === 'number' && Number.isFinite(value)) record[key] = value;
+          else if (typeof value === 'string' && !/[\\/\u0000]/.test(value)) record[key] = value.slice(0, 256);
         } catch {}
       }
+      // Adobe's encoder sample uses jobID/outputFiles, not jobId. Paths remain private.
+      try {
+        if (Array.isArray(data?.outputFiles)) record.outputFileCount = Math.min(data.outputFiles.length, 10000);
+      } catch {}
       if (this.events.length >= 100) {
         this.events.shift();
         this.droppedEvents++;
@@ -1408,6 +1485,11 @@ export class PremiereApi {
     return { readOnly: true, removed: true };
   }
   dispose(): void {
+    if (this.renderListener) {
+      const { manager, event, callback } = this.renderListener;
+      try { this.host.module.EventManager.removeEventListener(manager, event, callback, false); } catch {}
+      this.renderListener = undefined;
+    }
     for (const id of [...this.subscriptions.keys()])
       try {
         this.unsubscribe({ subscriptionId: id });

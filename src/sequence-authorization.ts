@@ -15,10 +15,18 @@ export async function authorizationSnapshot(sequence: Sequence, clipType: number
     display: metadata.videoTimeDisplay,
     tracks: value.tracks,
     clips: clips.map((clip) => ({
-      locator: clip.locator, media: clip.projectItemId,
+      locator: {
+        trackType: (clip.locator as Record<string, unknown>).trackType,
+        trackIndex: (clip.locator as Record<string, unknown>).trackIndex,
+      },
+      media: clip.projectItemId,
       start: clip.timelineStart, end: clip.timelineEnd,
       in: clip.sourceIn, out: clip.sourceOut,
       speed: clip.speed, reversed: clip.reversed,
-    })),
+    })).sort((left, right) => {
+      const a = JSON.stringify(left);
+      const b = JSON.stringify(right);
+      return a < b ? -1 : a > b ? 1 : 0;
+    }),
   });
 }

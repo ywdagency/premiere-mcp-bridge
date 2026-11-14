@@ -164,6 +164,24 @@ export function validateArgs(command: unknown, value: unknown): BridgeArgs {
       validateBinActions(entry);
       valid = true;
     }
+    if (field.type === 'renderItems') {
+      if (!Array.isArray(entry) || entry.length < 1 || entry.length > 10)
+        throw new BridgeError('INVALID_REQUEST', 'Provide 1–10 render items.');
+      const sources = new Set(), paths = new Set();
+      for (const item of entry) {
+        const r = object(item);
+        onlyKeys(r, ['item', 'outputPath']);
+        if (typeof r.item !== 'string' || !/^[a-zA-Z0-9_-]{1,128}$/.test(r.item) ||
+            typeof r.outputPath !== 'string' || r.outputPath.length > 1024 ||
+            !r.outputPath.toLowerCase().endsWith('.mov') || /[\\:\u0000]/.test(r.outputPath) ||
+            r.outputPath.split('/').some((p) => !p || p === '.' || p === '..') ||
+            !r.outputPath.split('/').pop()!.startsWith(`${args.operationId}-`) ||
+            sources.has(r.item) || paths.has(r.outputPath.toLowerCase()))
+          throw new BridgeError('INVALID_REQUEST', 'Use distinct handles and new relative .mov paths named with the operation UUID prefix.');
+        sources.add(r.item); paths.add(r.outputPath.toLowerCase());
+      }
+      valid = true;
+    }
     if (!valid)
       throw new BridgeError(
         'INVALID_REQUEST',
@@ -203,6 +221,11 @@ export function validateArgs(command: unknown, value: unknown): BridgeArgs {
   }
   if (command === 'project_close' && args.confirm !== true)
     throw new BridgeError('EXPLICIT_AUTHORIZATION_REQUIRED', 'Closing a project must be deliberate (confirm=true).');
+  if (command === 'render_batch') {
+    const p = args.presetPath as string;
+    if (!p.toLowerCase().endsWith('.epr') || /[\\:\u0000]/.test(p) || p.split('/').some((s) => !s || s === '.' || s === '..'))
+      throw new BridgeError('INVALID_REQUEST', 'Use a granted relative .epr preset path.');
+  }
   if (command === 'project_open' && args.createNew && args.openOptions !== undefined)
     throw new BridgeError('INVALID_API_ARGUMENT', 'openOptions applies to opening, not creating a project.');
   return args as BridgeArgs;

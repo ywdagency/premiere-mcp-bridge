@@ -19,6 +19,13 @@ test("exhaustive expansion matrix stays aligned with the catalog, routes, versio
   const routes = new Set(
     COMMAND_LIST.map((entry) => `premiere_${entry.command}`),
   );
+  assert.equal(matrix.workflowCoverage.adobeDocsCommit, matrix.provenance.commit);
+  for (const workflow of matrix.workflowCoverage.workflows) {
+    assert.ok(workflow.implementation && workflow.nativeVerification && workflow.missing);
+    for (const id of workflow.members) assert.ok(matrix.members.some(m => m.id === id));
+    for (const route of workflow.exposedTools) assert.ok(routes.has(route));
+  }
+  assert.equal(matrix.workflowCoverage.workflows.find(w => w.id === 'lossless-custom-replace-and-restore').exposedTools.length, 0);
   for (const member of matrix.members) {
     if (member.route)
       assert.ok(routes.has(member.route), `Unregistered route: ${member.id}`);

@@ -238,6 +238,7 @@ export function buildMatrix() {
     provenance: catalog.provenance,
     scope:
       "Pinned Premiere DOM only; routing policy is not proof of implementation behavior or native support.",
+    workflowCoverage: JSON.parse(readFileSync(new URL('../data/workflow-coverage.json', import.meta.url), 'utf8')),
     counts: {
       types: catalog.classes.length,
       members: records.length,

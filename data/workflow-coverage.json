@@ -1,0 +1,80 @@
+{
+  "auditedAt": "2026-11-14",
+  "adobeDocsCommit": "ffa53e0dab56c421ef2ac665b66ed370e3a1d675",
+  "adobeSamplesCommit": "ad89029bb8d587b58f8e9a86292b0aa0159dc4f4",
+  "scope": "Workflow coverage supplements per-member routing. No new native checks or UI parity are claimed.",
+  "workflows": [
+    {
+      "id": "full-source-render-batch",
+      "members": ["EncoderManager#encodeProjectItem", "EncoderManager!EVENT_RENDER_COMPLETE"],
+      "exposedTools": ["premiere_render_batch", "premiere_get_render_batch"],
+      "implementation": "fixture-verified-candidate",
+      "nativeVerification": "pending-disposable-host-pilot",
+      "missing": "Dynamic Link input support and exact source-range/preset behavior on the installed host remain unverified. The coordinator never starts the existing queue."
+    },
+    {
+      "id": "correlated-render-completion",
+      "members": ["EncoderManager!EVENT_RENDER_COMPLETE"],
+      "exposedTools": ["premiere_get_render_batch"],
+      "implementation": "fixture-verified-candidate",
+      "nativeVerification": "pending-disposable-host-pilot",
+      "missing": "Exact outputFiles correlation is implemented; jobID-only progress/error/cancel cannot safely identify a batch input. Promise success is not completion."
+    },
+    {
+      "id": "alpha-output-suitability",
+      "members": [],
+      "exposedTools": [],
+      "implementation": "not-implemented",
+      "nativeVerification": "not-run",
+      "missing": "No decoder/file-content verification of readability, duration, dimensions, fps or preserved transparency. A .mov extension or preset name is insufficient."
+    },
+    {
+      "id": "native-render-replace-and-restore-unrendered",
+      "members": [],
+      "exposedTools": [],
+      "implementation": "no-documented-native-entrypoint-found",
+      "nativeVerification": "not-callable-from-audited-dom",
+      "missing": "Native Render and Replace, Restore Unrendered and generic menu execution are absent from the audited official DOM. Manual native workflow remains the supported alternative."
+    },
+    {
+      "id": "lossless-custom-replace-and-restore",
+      "members": ["SequenceEditor#createOverwriteItemAction", "VideoClipTrackItem#getSpeed", "VideoClipTrackItem#isSpeedReversed", "ComponentParam#createSetInterpolationAtKeyframeAction"],
+      "exposedTools": [],
+      "implementation": "disabled-pending-lossless-strategy",
+      "nativeVerification": "not-run",
+      "missing": "Overwrite does not promise clip-state preservation. No documented clip speed/reverse setter or complete interpolation/tangent readback establishes lossless recreation. No verified clip-retention/clone strategy exists yet. Shared-source relinking is not an acceptable substitute."
+    },
+    {
+      "id": "class-event-subscriptions",
+      "members": ["EncoderManager!EVENT_RENDER_COMPLETE", "ProjectEvent!EVENT_DIRTY", "OperationCompleteEvent!EVENT_EXPORT_MEDIA_COMPLETE"],
+      "exposedTools": ["premiere_api_subscribe_events", "premiere_api_poll_events", "premiere_api_unsubscribe_events"],
+      "implementation": "all-27-event-contracts-fixture-verified",
+      "nativeVerification": "candidate-native-behavior-not-run",
+      "missing": "Exact native event presence/delivery and payload variants need version-specific tests. Encoder scalar payloads and private output-count handling are implemented."
+    },
+    {
+      "id": "full-caption-text-authoring",
+      "members": [],
+      "exposedTools": [],
+      "implementation": "not-established-by-audited-dom",
+      "nativeVerification": "not-run",
+      "missing": "Caption inventory/mute/naming routes do not establish full text authoring."
+    },
+    {
+      "id": "mask-drawing-and-tracking",
+      "members": [],
+      "exposedTools": [],
+      "implementation": "not-established-by-audited-dom",
+      "nativeVerification": "not-run",
+      "missing": "Object-mask presence queries do not establish mask drawing/tracking endpoints."
+    },
+    {
+      "id": "multicam-camera-switching",
+      "members": [],
+      "exposedTools": [],
+      "implementation": "not-established-by-audited-dom",
+      "nativeVerification": "not-run",
+      "missing": "Multicam identification does not establish a documented camera-switch operation."
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 // Serializable command contracts: shared by MCP discovery and UXP validation.
 // Handlers are statically registered; never accept source code or undocumented member names.
 export interface Field {
-  type: 'string' | 'integer' | 'boolean' | 'strings' | 'names' | 'json' | 'ids' | 'binActions';
+  type: 'string' | 'integer' | 'boolean' | 'strings' | 'names' | 'json' | 'ids' | 'binActions' | 'renderItems';
   required?: boolean;
   min?: number;
   max?: number;
@@ -45,6 +45,16 @@ const memberFields: Record<string, Field> = {
   parameters: { type: 'json' },
 };
 export const COMMANDS = {
+  render_batch: {
+    minVersion: '25.6', readOnly: false,
+    fields: { ...operation, presetPath: { ...id, max: 1024 }, items: { type: 'renderItems', required: true } },
+    description: 'Queue 1–10 distinct ClipProjectItem handles for full-source rendering using one granted relative .epr preset. Each item has item (handle ID) and outputPath (new relative .mov path; filename starts with operationId followed by a hyphen). All files pass Entry and Node checks before submission. Persists per-item submission evidence before each native call. Does NOT start AME queue, import/replace clips, verify alpha, restore originals or save. Read get_render_batch with the original operation UUID. Native acceptance is not completion; only an exact outputFiles match from the native completion event is recorded as render completion evidence. Dynamic Link and alpha need separate native verification.',
+  },
+  get_render_batch: {
+    minVersion: '25.6', readOnly: true,
+    fields: { projectId: id, batchId: { ...operation.operationId } },
+    description: 'Read durable render-batch evidence using its original operation UUID as batchId. No folder prompt, host selection or native job restart. Survives transport/plugin restart; prior-session nonterminal work stays unknown. Exact completion event evidence never proves file readability, dimensions, fps or alpha; replacementAllowed stays false. Private native output paths are omitted.',
+  },
   get_project_items: {
     minVersion: '25.6', readOnly: true,
     fields: { projectId: id, offset: { type: 'integer', max: 10000 }, limit: { type: 'integer', min: 1, max: 50 } },
@@ -110,7 +120,7 @@ export const COMMANDS = {
     readOnly: true,
     fields: { eventId: { ...id, max: 256 }, target: { ...id, required: false } },
     description:
-      'Subscribe to a documented Constants.*Event using a bridge-owned callback. Optional typed target handle; omitted target means global. Events retain only bounded scalar fields, never native event pointers or media paths.',
+      'Subscribe to a documented Constants.*Event or Class!EVENT member using a bridge-owned callback. EncoderManager/AudioTrack/VideoTrack class events require a matching target handle. ProjectEvent/ProjectClosedEvent/OperationCompleteEvent/SnapEvent use global subscriptions without a target. Constant events allow an omitted global target. Encoder payloads retain jobID/progressAmount/inErrorNumber and outputFileCount, never output paths or native event pointers.',
   },
   api_poll_events: {
     minVersion: '25.6',

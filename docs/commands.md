@@ -88,3 +88,22 @@ Native marker creation on Premiere 26.5 requires a contiguous argument prefix: w
 ## Explicit file-access revocation (candidate0.3.10)
 
 premiere_forget_file_access is a write tool requiring the exact active projectId, a new operationId and confirm:true after the human asks to forget approval. It clears only the remembered folder/token, with no file deletion, timeline edit, implicit save or new picker. Inspect premiere_get_file_access afterward. Stop/Launch/Reload, normal restarts and same-ID updates preserve remembered approval. Recover a timed-out revoke with the same arguments/UUID; replaying a completed revoke must not revoke a later newly approved folder. This command does not cancel already submitted Adobe/AME jobs.
+
+## Render-batch candidate
+
+`premiere_render_batch` queues 1–10 distinct `ClipProjectItem` handles with one
+granted `.epr` preset, full-source range and explicit new `.mov` output paths. It
+does not start AME's existing queue, replace timeline clips or verify alpha.
+Each output filename starts with the operation UUID and a hyphen. `items` is an
+array of strict `{item, outputPath}` objects. The exact active `projectId`, a new
+UUID `operationId` and relative `presetPath` are required. Each file goes through
+the normal Entry/Node checks before native submission. Native calls and per-item
+evidence are never automatically retried.
+
+`premiere_get_render_batch` reads saved status with `{projectId,batchId}`, where
+`batchId` is the submission operation UUID. A matching native `outputFiles` event
+is separate from file/alpha verification; `replacementAllowed` remains false.
+Records survive plugin restart, while unconfirmed previous-session work remains
+unknown. See [render batches](render-batches.md) for completion, partial failures,
+recovery, storage limits and the pending native pilot. These source-candidate tools
+are absent from earlier installed runtimes; inspect capabilities first.

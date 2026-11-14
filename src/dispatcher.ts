@@ -62,6 +62,8 @@ export function createDispatcher(
     };
   // Adding a catalog entry without a handler is a TypeScript error.
   const handlers: Record<BridgeCommand, Handler> = {
+    render_batch: native('renderBatch'),
+    get_render_batch: native('getRenderBatch'),
     get_project_items: native('projectItems'),
     organize_project: native('organizeProject'),
     forget_file_access: async ({ args, expiresAt }) => {

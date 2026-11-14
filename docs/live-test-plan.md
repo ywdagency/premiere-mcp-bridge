@@ -98,6 +98,42 @@ second transaction. Keep results private until sanitized and versioned in a
 verification report. Source-only implementation does not authorize installation,
 application reload or tests on a private working project.
 
+## Render batches and alpha replacement: pending native pilot
+
+The 0.4.6 candidate has automated submission/event/journal tests only. Installation
+or a change of live project context requires the owner's suitable testing window.
+Use a disposable project and known synthetic transparent composition, separate
+from the editor's active project and render work. Record exact candidate artifact
+hash, Premiere/UXP/AME versions and probe the encoder/event members first. Do not
+launch unrelated queue entries, change global preferences or operate another bridge.
+
+Queue two known distinct full-source items, one repeated/cut into different source
+ranges on the test timeline. Use a reviewed alpha-capable `.epr`, source dimensions
+and frame rate, and unique operation-prefixed outputs. Verify the explicit startQueueImmediately:false behavior in the test host;
+record actual queue state rather than inferring it from the flag. The owner can deliberately start only these disposable test
+jobs in an empty test queue. Record actual Promise and event order, including
+`jobID` and exact output-file correlation. Test cancellation/error, absent/malformed
+events, transport restart and actual plugin unload without resubmission. A
+fulfilled Promise, a 100% progress value or a stable file size is not completion.
+
+Independently inspect completed output readability, full source duration/range,
+dimensions, frame rate, alpha channel and transparency against known transparent
+and opaque pixels. Owner review of alpha edges/appearance is separate from file
+metadata. Document Dynamic Link support or the exact native failure; do not report
+it as supported based on the parameter type or use AE as an unrequested fallback.
+
+Before any replacement implementation is enabled, prove a native strategy that
+preserves or safely retains the complete original clip state. Exercise trimmed
+and repeated occurrences, non-unit/reversed speed, Motion/Opacity and other
+effects, interpolation/keys, disabled state, linked audio and exact track/ticks.
+Recreate a fresh verified direct backup and exact scoped authorization. No shared
+media relink is permitted. Restoration must reconstruct those exact original
+occurrences without disturbing unrelated edits, not merely swap the project item.
+Concurrent manual changes must reject replacement/restoration rather than revert
+the source against an old snapshot. Label any custom restoration distinctly from
+Adobe native Restore Unrendered. These replacement checks remain unimplemented,
+not fixture passes or host passes.
+
 ## Failure and recovery
 
 Stop an affected scenario at the first mismatch. Inspect state and receipts;

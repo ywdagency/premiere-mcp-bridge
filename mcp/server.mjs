@@ -32,6 +32,10 @@ function inputSchema(fields) {
       if (field.pattern) schema = schema.regex(new RegExp(field.pattern));
     }
     if (field.type === 'json') schema = z.unknown();
+    if (field.type === 'renderItems') schema = z.array(z.object({
+      item: z.string().regex(/^[a-zA-Z0-9_-]{1,128}$/),
+      outputPath: z.string().min(1).max(1024),
+    }).strict()).min(1).max(10);
     if (field.type === 'binActions') {
       const id = z.string().min(1).max(128).regex(/^[^\u0000]*$/);
       schema = z.array(z.discriminatedUnion('type', [

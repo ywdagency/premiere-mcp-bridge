@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "provenance": {
     "repository": "https://github.com/AdobeDocs/uxp-premiere-pro",
-    "commit": "fe96210fca589eec41310c8f2c7f88c9cc6edf5d",
-    "tree": "b98722d140d078950b15f6d35fca9e5732381294",
-    "fetchedAt": "2026-10-29T03:07:01.514Z",
+    "commit": "ffa53e0dab56c421ef2ac665b66ed370e3a1d675",
+    "tree": "8183fe6cbd71a6b5e126e3c66944ea336f9a13de",
+    "fetchedAt": "2026-11-14T22:33:26.301Z",
     "license": "Apache-2.0",
     "sdkVersion": "26.5.0"
   },

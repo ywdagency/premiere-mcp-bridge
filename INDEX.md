@@ -11,6 +11,7 @@
 | Experimental Windows installation and testing | [Windows guide](docs/windows.md) |
 | Codex, Claude, Cursor, VS Code | [Client setup](docs/clients.md) |
 | Full native API catalog and typed control | [Native API guide](docs/native-api.md) |
+| Durable render submissions and alpha/replace limits | [Render batches](docs/render-batches.md) |
 | Official user-guide search through existing tools | [Manual reference](docs/manual-reference.md) |
 | API expansion list and exhaustive per-member matrix | [Expansion coverage](docs/api-expansion.md) |
 | Planned native-host verification | [Live test plan](docs/live-test-plan.md) |

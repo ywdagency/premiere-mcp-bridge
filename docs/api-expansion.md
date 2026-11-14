@@ -5,7 +5,7 @@ Premiere feature is remotely controllable. Scope: the pinned official Premiere
 DOM in `data/adobe-api.json`, 73 types and 707 entries including constants/events.
 General UXP/OS APIs and UI-only features are outside this catalog.
 
-The local 0.3.10 build exposes **43 tools** (40 host/bridge commands and three offline references). The [0.3.8 native report](release/native-check-0.3.8.md) records the fixed batch preflight and synthetic editing checks; [0.3.10 verification](release/candidate-0.3.10.md) records runtime activation and restored file approval. Neither report claims every documented member or variant is behavior-tested.
+The local 0.4.6 source candidate exposes **47 tools** (44 host/bridge commands and three offline references; 21 tools in inspection-only mode). Its [render-batch/event changes](release/candidate-0.4.6.md) are fixture-verified, not native-verified. The [0.3.8 native report](release/native-check-0.3.8.md) records the fixed batch preflight and synthetic editing checks; [0.3.10 verification](release/candidate-0.3.10.md) records runtime activation and restored file approval. Neither report claims every documented member or variant is behavior-tested.
 
 ## New named adapters
 
@@ -73,6 +73,20 @@ contracts and workflows rather than duplicate each member as a separate tool.
 | Values/time | TickTime, FrameRate, Guid, Color, geometry, TimeDisplay | Types/enums, exact ticks, frame boundaries and version differences. |
 
 ## Exhaustive per-member matrix
+
+The 2026-11-14 refresh to AdobeDocs commit
+`ffa53e0dab56c421ef2ac665b66ed370e3a1d675` changed provenance only; all 707 member
+signatures/metadata matched the prior pin. Nine entries have a 27.0 minimum and
+remain ineligible on 26.5. The concrete adapter gap fixed in this candidate was
+all 27 `Class!EVENT` IDs: policy routed them to subscriptions but the validator
+only accepted constant IDs. Encoder/track events now use matching typed targets;
+project/operation/snap event classes use global subscriptions. Native presence
+and delivery are still unverified for the candidate.
+
+The matrix also embeds [workflow coverage](../data/workflow-coverage.json), which
+separates exposed candidate routes from alpha-file verification, native Render
+and Replace, lossless custom restoration and UI features with no established
+documented endpoint. `700 routed` does not imply those workflows are complete.
 
 `data/api-coverage-matrix.json` lists every ID, domain, scenario, minimum version,
 public route, adapter classification, official source and separate native evidence.
