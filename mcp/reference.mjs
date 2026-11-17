@@ -3,6 +3,7 @@ import { ResourceTemplate } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
 import policy from '../build/lib/api-policy.cjs';
 import { manualReference } from './manual.mjs';
+import { nativeObservationFields } from './native-observations.mjs';
 const catalog = JSON.parse(
   readFileSync(new URL('../data/adobe-api.json', import.meta.url), 'utf8'),
 );
@@ -41,6 +42,7 @@ function describeMember(m, hostVersion) {
           }
         : false,
       observedUnavailable: (verified.unavailable ?? []).find((item) => item.id === m.id) ?? null,
+      ...nativeObservationFields(verified, m.id),
       notice:
         'Catalog presence and policy eligibility do not prove native availability. Probe the connected runtime; current object scope and editing/file grants also apply.',
     },

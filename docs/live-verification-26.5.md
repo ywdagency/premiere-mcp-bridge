@@ -1,6 +1,12 @@
 # Premiere 26.5 live verification
 
-Current local build: installed and executing **0.3.10**, with all 40 expected host commands. Doctor and project/active-sequence reads pass. Remembered file approval is present after the owner-controlled restart without another picker from the verification. The native Stop/Launch cycle was not automated; production-bundle tests cover it. See the [0.3.10 report](release/candidate-0.3.10.md).
+Current local native check: installed and executing **0.4.6**, all 44 host commands,
+retained file grant without a picker and a disposable two-source render pilot.
+CineForm produced two correlated native codec failures despite true Promises;
+the distinct ProRes experiment remains unconfirmed. No successful alpha output,
+Dynamic Link, replacement or restoration is claimed. See the
+[0.4.6 native report](release/native-check-0.4.6.md). Earlier reports retain their
+original versions and scopes.
 
 The public **0.3.8** preview has broader synthetic native evidence: maximum-size import and denial/recovery, verified backups, aligned A/V moves, markers, effect/keyframe reads and writes, explicit source authorization/revocation and readable XML/OTIO output. [0.3.8](release/native-check-0.3.8.md), [0.3.7](release/native-check-0.3.7.md) and [0.3.6](release/native-check-0.3.6.md) reports retain their exact tested versions and limits. New activation does not relabel those operations as a complete 0.3.10 native regression.
 

@@ -2,7 +2,7 @@
 
 The current preview is [v0.4.4](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.4). It combines existing-item bin organization with the 0.4.3 selected-video-track authorization scope. The eight-file installer, running version, remembered folder grant, native bin creation and item moves are verified on macOS Premiere 26.5; bin rename, populated-bin moves and Undo remain unverified. There are 45 full MCP tools or 20 in read-only mode. Windows remains experimental. See the [0.4.4 report](candidate-0.4.4.md).
 
-Local **0.4.6 candidate**: render batches and official class-event contracts, fixture-verified; exact eight-file installer and on-disk installation verified. Native activation and render/alpha/replace/restore tests remain pending. Unpublished. See [candidate scope](candidate-0.4.6.md).
+Local **0.4.6 candidate**: render batches and official class-event contracts, fixture-verified; exact eight-file installer and on-disk installation verified. Actual runtime activation and retained approval are now verified. The [partial native pilot](native-check-0.4.6.md) found CineForm codec failures; ProRes output, alpha and replace/restore remain unverified. Unpublished. See [candidate scope](candidate-0.4.6.md).
 
 ## Evidence
 

@@ -66,10 +66,12 @@ points to the matching checkout; its environment, timeouts, access mode and
 unrelated configuration were preserved. No access reset or new grant occurred.
 Saved token bytes being preserved is separate from native grant readback.
 
-Live doctor returned `PLUGIN_NOT_LOADED` because Premiere/the installed panel were
-not open. No app was launched, quit or restarted to bypass that gate. Owner panel
-activation is required before verifying executing 0.4.6, all host commands and
-the restored grant; reconnect the client's MCP process for its refreshed tool
-schemas. The prepared synthetic alpha media/preset and guarded pilot remain
-private and unexecuted. Dynamic Link additionally needs a synthetic `.aep`
-fixture; raster-alpha encoding alone cannot certify it.
+The first live doctor returned `PLUGIN_NOT_LOADED` while Premiere was closed.
+A subsequent ordinary LaunchServices launch, without a document argument or UI
+automation, restored the installed panel automatically. Live doctor then passed:
+executing 0.4.6, all 44 host commands, no open owner project and retained folder
+approval without a picker. The [partial disposable native
+pilot](native-check-0.4.6.md) records actual submissions and CineForm terminal
+failures; successful output, ProRes completion and alpha remain unverified.
+Reconnect the client's MCP process for refreshed schemas. Dynamic Link additionally
+needs a synthetic `.aep` fixture; raster-source encoding alone cannot certify it.

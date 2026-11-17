@@ -26,8 +26,8 @@
           "premiere_get_render_batch"
         ],
         "implementation": "fixture-verified-candidate",
-        "nativeVerification": "pending-disposable-host-pilot",
-        "missing": "Dynamic Link input support and exact source-range/preset behavior on the installed host remain unverified. The coordinator never starts the existing queue."
+        "nativeVerification": "native-invocation-and-cineform-codec-failure-observed",
+        "missing": "Two raster sources submitted. CineForm preset failed with native code27 despite true Promise; distinct ProRes experiment remains unconfirmed. No Dynamic Link or successful alpha output proof."
       },
       {
         "id": "correlated-render-completion",
@@ -38,7 +38,7 @@
           "premiere_get_render_batch"
         ],
         "implementation": "fixture-verified-candidate",
-        "nativeVerification": "pending-disposable-host-pilot",
+        "nativeVerification": "native-subscription-registered-no-completion-event-observed",
         "missing": "Exact outputFiles correlation is implemented; jobID-only progress/error/cancel cannot safely identify a batch input. Promise success is not completion."
       },
       {
@@ -83,7 +83,7 @@
           "premiere_api_unsubscribe_events"
         ],
         "implementation": "all-27-event-contracts-fixture-verified",
-        "nativeVerification": "candidate-native-behavior-not-run",
+        "nativeVerification": "five-encoder-subscriptions-registered-no-delivery-proof",
         "missing": "Exact native event presence/delivery and payload variants need version-specific tests. Encoder scalar payloads and private output-count handling are implemented."
       },
       {
@@ -110,7 +110,8 @@
         "nativeVerification": "not-run",
         "missing": "Multicam identification does not establish a documented camera-switch operation."
       }
-    ]
+    ],
+    "latestNativeReport": "docs/release/native-check-0.4.6.md"
   },
   "counts": {
     "types": 73,
@@ -1773,7 +1774,15 @@
         "report": "docs/live-verification-26.5.md",
         "note": "A recorded member check is not verification of every argument, context or variant."
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/clipprojectitem#cast"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/clipprojectitem#cast",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "read-succeeded",
+        "scope": "Two uniquely imported synthetic MOV items"
+      }
     },
     {
       "id": "ClipProjectItem#attachProxy",
@@ -2141,7 +2150,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/clipprojectitem#getfootageinterpretation"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/clipprojectitem#getfootageinterpretation",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "read-succeeded",
+        "scope": "Two synthetic MOV items"
+      }
     },
     {
       "id": "ClipProjectItem#getInPoint",
@@ -2189,7 +2206,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/clipprojectitem#getmedia"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/clipprojectitem#getmedia",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "read-succeeded",
+        "scope": "Two synthetic MOV source media objects"
+      }
     },
     {
       "id": "ClipProjectItem#getMediaFilePath",
@@ -2205,7 +2230,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/clipprojectitem#getmediafilepath"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/clipprojectitem#getmediafilepath",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "read-succeeded",
+        "scope": "Verified exact synthetic source paths"
+      }
     },
     {
       "id": "ClipProjectItem#getOriginatingProjectPath",
@@ -3107,7 +3140,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#encodeprojectitem"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#encodeprojectitem",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "native-return-true-output-failed",
+        "scope": "CineForm: true native Promise with two correlated terminal codec failures; no render-success claim"
+      }
     },
     {
       "id": "EncoderManager#exportSequence",
@@ -3140,7 +3181,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#launchencoder"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#launchencoder",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "returned-true-and-process-launched",
+        "scope": "AME previously closed and queue empty"
+      }
     },
     {
       "id": "EncoderManager#setEmbeddedXMPEnabled",
@@ -3191,7 +3240,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#startbatchencode"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#startbatchencode",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "returned-true-not-completion-proof",
+        "scope": "Controlled synthetic queue only; outcome checked separately"
+      }
     },
     {
       "id": "EncoderManager!EVENT_RENDER_CANCEL",
@@ -3208,7 +3265,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#events"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#events",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "subscription-registered",
+        "scope": "No delivery observed"
+      }
     },
     {
       "id": "EncoderManager!EVENT_RENDER_COMPLETE",
@@ -3225,7 +3290,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#events"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#events",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "subscription-registered",
+        "scope": "Native delivery/payload correlation not observed"
+      }
     },
     {
       "id": "EncoderManager!EVENT_RENDER_ERROR",
@@ -3242,7 +3315,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#events"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#events",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "subscription-registered",
+        "scope": "Registered after CineForm failure; no historical-event replay claimed"
+      }
     },
     {
       "id": "EncoderManager!EVENT_RENDER_PROGRESS",
@@ -3259,7 +3340,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#events"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#events",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "subscription-registered",
+        "scope": "No delivery observed"
+      }
     },
     {
       "id": "EncoderManager!EVENT_RENDER_QUEUE",
@@ -3276,7 +3365,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#events"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/encodermanager#events",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "subscription-registered",
+        "scope": "No delivery observed"
+      }
     },
     {
       "id": "EventManager.addEventListener",
@@ -3330,7 +3427,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/eventmanager#removeeventlistener"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/eventmanager#removeeventlistener",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "five-owned-subscriptions-removed",
+        "scope": "Public probe subscriptions only; internal exact-output completion tracking retained"
+      }
     },
     {
       "id": "EventManager.removeGlobalEventListener",
@@ -3724,7 +3829,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/footageinterpretation#getalphausage"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/footageinterpretation#getalphausage",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "read-succeeded",
+        "scope": "Literal native source interpretation value only, no output alpha proof"
+      }
     },
     {
       "id": "FootageInterpretation#getFieldType",
@@ -3756,7 +3869,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/footageinterpretation#getframerate"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/footageinterpretation#getframerate",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "read-succeeded",
+        "scope": "24 and 30000/1001 source frame rates"
+      }
     },
     {
       "id": "FootageInterpretation#getIgnoreAlpha",
@@ -3772,7 +3893,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/footageinterpretation#getignorealpha"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/footageinterpretation#getignorealpha",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "read-succeeded",
+        "scope": "False on both source items"
+      }
     },
     {
       "id": "FootageInterpretation#getInputLUTID",
@@ -4721,7 +4850,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/media#getduration"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/media#getduration",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "read-succeeded",
+        "scope": "Exact source ticks matched 96 frames at24fps and90 at30000/1001"
+      }
     },
     {
       "id": "Media#getStart",
@@ -5530,7 +5667,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/project#createproject"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/project#createproject",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "created-disposable-project",
+        "scope": "New project only, no owner project opened"
+      }
     },
     {
       "id": "Project.getActiveProject",
@@ -5876,7 +6021,15 @@
       "verification": {
         "state": "pending-live-check"
       },
-      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/project#importfiles"
+      "source": "https://developer.adobe.com/premiere-pro/uxp/ppro-reference/classes/project#importfiles",
+      "latestNativeObservation": {
+        "bridgeVersion": "0.4.6",
+        "hostVersion": "26.5.0",
+        "checkedAt": "2026-11-16 America/Vancouver",
+        "report": "docs/release/native-check-0.4.6.md",
+        "outcome": "imported-two-synthetic-sources",
+        "scope": "Existing granted folder, no timeline insertion"
+      }
     },
     {
       "id": "Project#importSequences",

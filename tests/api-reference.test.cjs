@@ -4,6 +4,18 @@ const { readFileSync } = require('node:fs');
 const { resolve } = require('node:path');
 const { API_CONTRACTS, apiPolicy } = require('../build/lib/runtime.cjs');
 const catalog = JSON.parse(readFileSync(resolve(__dirname, '../data/adobe-api.json')));
+test('native accepted/failed exports and subscription registration never become full workflow verification', async () => {
+  const { describe } = await import('../mcp/reference.mjs');
+  const encoder = describe({ id: 'EncoderManager#encodeProjectItem' }).execution;
+  assert.equal(encoder.liveVerified, false);
+  assert.equal(encoder.latestNativeObservation.outcome, 'native-return-true-output-failed');
+  const completion = describe({ id: 'EncoderManager!EVENT_RENDER_COMPLETE' }).execution;
+  assert.equal(completion.liveVerified, false);
+  assert.equal(completion.latestNativeObservation.outcome, 'subscription-registered');
+  const matrix = JSON.parse(readFileSync(resolve(__dirname, '../data/api-coverage-matrix.json')));
+  assert.equal(matrix.members.find(m => m.id === 'EncoderManager#encodeProjectItem').verification.state, 'pending-live-check');
+  assert.equal(matrix.members.find(m => m.id === 'EncoderManager#encodeProjectItem').latestNativeObservation.outcome, encoder.latestNativeObservation.outcome);
+});
 test('generated execution contracts match the complete licensed Adobe catalog and retain all array/tuple signatures', async () => {
   const all = [...catalog.classes.flatMap((c) => c.members), ...catalog.constants];
   assert.equal(catalog.classes.length, 73);

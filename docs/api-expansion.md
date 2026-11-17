@@ -120,3 +120,8 @@ After Premiere verification, audit the separate AE bridge's real catalog and
 contracts. Preserve its own units, project identity and composition ownership.
 The shared [Node adapter contract](adapter-contract.md) is the composition boundary;
 no combined server is introduced. See the [live test plan](live-test-plan.md).
+
+The [0.4.6 partial native pilot](release/native-check-0.4.6.md) adds scoped
+`latestNativeObservation` data without changing historical verification flags.
+Native encode Promises returned true for outputs that the exact-path AME log
+records as codec failures. Subscription registration is separate from delivery.

@@ -461,5 +461,159 @@
     "projectSavedByAgent": false,
     "published": false,
     "limits": "Owner-authorized existing-project organization only. One pre-existing audio item cannot be inspected through the convenience getter. No picture/sound review, source-file content hashes, native rename/populated-bin move/Undo or new scoped timeline edit check."
+  },
+  "renderBatch046": {
+    "checkedAt": "2026-11-16 America/Vancouver",
+    "bridgeVersion": "0.4.6",
+    "hostVersion": "26.5.0",
+    "uxpVersion": "9.3.0-local",
+    "report": "docs/release/native-check-0.4.6.md",
+    "expectedHostCommands": 44,
+    "missingCommands": [],
+    "mcpTools": 47,
+    "fileGrantRestoredWithoutPicker": true,
+    "ordinaryHostLaunch": true,
+    "ownerProjectOpened": false,
+    "ownerProjectWrites": false,
+    "disposableProjectCreated": true,
+    "syntheticSources": {
+      "count": 2,
+      "frameRates": [
+        "24/1",
+        "30000/1001"
+      ],
+      "durationTicks": [
+        "1016064000000",
+        "762810048000"
+      ]
+    },
+    "sameUuidReplayVerified": true,
+    "sourceFilesUnchanged": true,
+    "timelineMutated": false,
+    "agentProjectSaveIssued": false,
+    "queueBeforePilot": "empty; no watch folders; AME closed",
+    "cineform": {
+      "sources": 2,
+      "nativePromiseResult": true,
+      "terminalFailures": 2,
+      "errorCode": 27,
+      "errorMessage": "Incompatible Video Codec found in the preset. Preset load failed.",
+      "evidence": "AME UTF-16 error log, exact test output paths correlated",
+      "completionEventsObserved": 0,
+      "outputsCreated": 0
+    },
+    "prores4444": {
+      "status": "native-outcome-unconfirmed",
+      "completionEventsObserved": 0,
+      "outputsCreated": 0,
+      "automaticResubmission": false
+    },
+    "nativeAlphaVerified": false,
+    "nativeDynamicLinkVerified": false,
+    "losslessReplaceVerified": false,
+    "restoreVerified": false,
+    "nativeMemberObservations": [
+      {
+        "id": "Project.createProject",
+        "outcome": "created-disposable-project",
+        "scope": "New project only, no owner project opened"
+      },
+      {
+        "id": "Project#importFiles",
+        "outcome": "imported-two-synthetic-sources",
+        "scope": "Existing granted folder, no timeline insertion"
+      },
+      {
+        "id": "ClipProjectItem.cast",
+        "outcome": "read-succeeded",
+        "scope": "Two uniquely imported synthetic MOV items"
+      },
+      {
+        "id": "ClipProjectItem#getMediaFilePath",
+        "outcome": "read-succeeded",
+        "scope": "Verified exact synthetic source paths"
+      },
+      {
+        "id": "ClipProjectItem#getFootageInterpretation",
+        "outcome": "read-succeeded",
+        "scope": "Two synthetic MOV items"
+      },
+      {
+        "id": "FootageInterpretation#getFrameRate",
+        "outcome": "read-succeeded",
+        "scope": "24 and 30000/1001 source frame rates"
+      },
+      {
+        "id": "FootageInterpretation#getAlphaUsage",
+        "outcome": "read-succeeded",
+        "scope": "Literal native source interpretation value only, no output alpha proof"
+      },
+      {
+        "id": "FootageInterpretation#getIgnoreAlpha",
+        "outcome": "read-succeeded",
+        "scope": "False on both source items"
+      },
+      {
+        "id": "ClipProjectItem#getMedia",
+        "outcome": "read-succeeded",
+        "scope": "Two synthetic MOV source media objects"
+      },
+      {
+        "id": "Media#getDuration",
+        "outcome": "read-succeeded",
+        "scope": "Exact source ticks matched 96 frames at24fps and90 at30000/1001"
+      },
+      {
+        "id": "EncoderManager#encodeProjectItem",
+        "outcome": "native-return-true-output-failed",
+        "scope": "CineForm: true native Promise with two correlated terminal codec failures; no render-success claim"
+      },
+      {
+        "id": "EncoderManager#launchEncoder",
+        "outcome": "returned-true-and-process-launched",
+        "scope": "AME previously closed and queue empty"
+      },
+      {
+        "id": "EncoderManager#startBatchEncode",
+        "outcome": "returned-true-not-completion-proof",
+        "scope": "Controlled synthetic queue only; outcome checked separately"
+      },
+      {
+        "id": "EncoderManager!EVENT_RENDER_COMPLETE",
+        "outcome": "subscription-registered",
+        "scope": "Native delivery/payload correlation not observed"
+      },
+      {
+        "id": "EncoderManager!EVENT_RENDER_ERROR",
+        "outcome": "subscription-registered",
+        "scope": "Registered after CineForm failure; no historical-event replay claimed"
+      },
+      {
+        "id": "EncoderManager!EVENT_RENDER_CANCEL",
+        "outcome": "subscription-registered",
+        "scope": "No delivery observed"
+      },
+      {
+        "id": "EncoderManager!EVENT_RENDER_PROGRESS",
+        "outcome": "subscription-registered",
+        "scope": "No delivery observed"
+      },
+      {
+        "id": "EncoderManager!EVENT_RENDER_QUEUE",
+        "outcome": "subscription-registered",
+        "scope": "No delivery observed"
+      },
+      {
+        "id": "EventManager.removeEventListener",
+        "outcome": "five-owned-subscriptions-removed",
+        "scope": "Public probe subscriptions only; internal exact-output completion tracking retained"
+      }
+    ],
+    "limits": [
+      "Native Promise true is demonstrably not encoding success.",
+      "Partial observations below do not promote historical full member-check flags.",
+      "Pending ProRes work must not be resubmitted or cleaned up as if cancelled.",
+      "No UI inspection, AE operations, owner AEP or owner timeline used."
+    ]
   }
 }

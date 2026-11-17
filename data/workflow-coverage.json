@@ -6,18 +6,28 @@
   "workflows": [
     {
       "id": "full-source-render-batch",
-      "members": ["EncoderManager#encodeProjectItem", "EncoderManager!EVENT_RENDER_COMPLETE"],
-      "exposedTools": ["premiere_render_batch", "premiere_get_render_batch"],
+      "members": [
+        "EncoderManager#encodeProjectItem",
+        "EncoderManager!EVENT_RENDER_COMPLETE"
+      ],
+      "exposedTools": [
+        "premiere_render_batch",
+        "premiere_get_render_batch"
+      ],
       "implementation": "fixture-verified-candidate",
-      "nativeVerification": "pending-disposable-host-pilot",
-      "missing": "Dynamic Link input support and exact source-range/preset behavior on the installed host remain unverified. The coordinator never starts the existing queue."
+      "nativeVerification": "native-invocation-and-cineform-codec-failure-observed",
+      "missing": "Two raster sources submitted. CineForm preset failed with native code27 despite true Promise; distinct ProRes experiment remains unconfirmed. No Dynamic Link or successful alpha output proof."
     },
     {
       "id": "correlated-render-completion",
-      "members": ["EncoderManager!EVENT_RENDER_COMPLETE"],
-      "exposedTools": ["premiere_get_render_batch"],
+      "members": [
+        "EncoderManager!EVENT_RENDER_COMPLETE"
+      ],
+      "exposedTools": [
+        "premiere_get_render_batch"
+      ],
       "implementation": "fixture-verified-candidate",
-      "nativeVerification": "pending-disposable-host-pilot",
+      "nativeVerification": "native-subscription-registered-no-completion-event-observed",
       "missing": "Exact outputFiles correlation is implemented; jobID-only progress/error/cancel cannot safely identify a batch input. Promise success is not completion."
     },
     {
@@ -38,7 +48,12 @@
     },
     {
       "id": "lossless-custom-replace-and-restore",
-      "members": ["SequenceEditor#createOverwriteItemAction", "VideoClipTrackItem#getSpeed", "VideoClipTrackItem#isSpeedReversed", "ComponentParam#createSetInterpolationAtKeyframeAction"],
+      "members": [
+        "SequenceEditor#createOverwriteItemAction",
+        "VideoClipTrackItem#getSpeed",
+        "VideoClipTrackItem#isSpeedReversed",
+        "ComponentParam#createSetInterpolationAtKeyframeAction"
+      ],
       "exposedTools": [],
       "implementation": "disabled-pending-lossless-strategy",
       "nativeVerification": "not-run",
@@ -46,10 +61,18 @@
     },
     {
       "id": "class-event-subscriptions",
-      "members": ["EncoderManager!EVENT_RENDER_COMPLETE", "ProjectEvent!EVENT_DIRTY", "OperationCompleteEvent!EVENT_EXPORT_MEDIA_COMPLETE"],
-      "exposedTools": ["premiere_api_subscribe_events", "premiere_api_poll_events", "premiere_api_unsubscribe_events"],
+      "members": [
+        "EncoderManager!EVENT_RENDER_COMPLETE",
+        "ProjectEvent!EVENT_DIRTY",
+        "OperationCompleteEvent!EVENT_EXPORT_MEDIA_COMPLETE"
+      ],
+      "exposedTools": [
+        "premiere_api_subscribe_events",
+        "premiere_api_poll_events",
+        "premiere_api_unsubscribe_events"
+      ],
       "implementation": "all-27-event-contracts-fixture-verified",
-      "nativeVerification": "candidate-native-behavior-not-run",
+      "nativeVerification": "five-encoder-subscriptions-registered-no-delivery-proof",
       "missing": "Exact native event presence/delivery and payload variants need version-specific tests. Encoder scalar payloads and private output-count handling are implemented."
     },
     {
@@ -76,5 +99,6 @@
       "nativeVerification": "not-run",
       "missing": "Multicam identification does not establish a documented camera-switch operation."
     }
-  ]
+  ],
+  "latestNativeReport": "docs/release/native-check-0.4.6.md"
 }

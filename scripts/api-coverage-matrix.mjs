@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import policy from "../build/lib/api-policy.cjs";
+import { nativeObservationFields } from '../mcp/native-observations.mjs';
 
 const catalog = JSON.parse(
   readFileSync(new URL("../data/adobe-api.json", import.meta.url), "utf8"),
@@ -222,6 +223,7 @@ export function buildMatrix() {
             }
           : { state: "pending-live-check" },
       source: member.source,
+      ...nativeObservationFields(verification, member.id),
     };
   });
   const count = (key) =>
