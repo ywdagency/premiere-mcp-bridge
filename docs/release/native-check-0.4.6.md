@@ -54,7 +54,8 @@ original installed Adobe Apple ProRes 4444 with alpha match-source preset, a new
 operation UUID and new output paths. The failed batch and inputs were retained.
 No uncertain encode was replayed under another UUID.
 
-At the latest bounded observation, both ProRes submissions remain unconfirmed;
+At the final bounded read on 2026-11-16 America/Vancouver, both ProRes submissions
+were native-accepted but rendering/completion remained unconfirmed;
 no output file or completion event was observed. A queue-start true result and
 queue-resumed/stopped log are not successful encoding. Do not resubmit these
 unknown jobs, remove their inputs or close/restart their host as cleanup. Native

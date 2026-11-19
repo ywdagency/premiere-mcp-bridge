@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.6 — public preview
+
+Add bounded full-source render batches with durable per-item submission evidence and exact-output completion-event correlation. Expose all 27 documented class-event subscriptions and encoder scalar fields. Correct sequence-backup comparisons to ignore unstable enumeration indices while retaining media, track, timing and speed checks. Preserve folder approval, per-file validation, retained backups and exact-UUID recovery. No implicit queue start, project save or automatic replacement/restoration. Installation and runtime are verified on Premiere 26.5; native CineForm tests failed with codec error 27, and ProRes completion/successful alpha output remain unverified. Windows remains experimental. See the [0.4.6 report](docs/release/candidate-0.4.6.md).
+
 ## 0.4.4 — public preview
 
 Retain all 0.4.3 selected-video-track authorization and verification checks. Add `get_project_items` and `organize_project` for explicit Project-panel sorting of existing shared media, sequence items and populated bins. Create/rename bins and move existing items by exact IDs in bounded undoable batches, with stale-parent/name, root, cycle, name-conflict and readback checks. Preserve disk files, timeline content, media names, selection, source edit/deletion protections and no implicit saving. Add strict Node/UXP contracts and durable IPC/MCP regression coverage. The reviewed same-ID eight-file candidate is installed and running on Premiere 26.5; native creation and existing-item moves are verified. Bin rename, populated-bin moves and Undo remain pending; see the 0.4.4 candidate report. Publication uses the reviewed matching source tag, installer and checksum.

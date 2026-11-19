@@ -1,7 +1,7 @@
-# 0.4.6 render-batch source candidate
+# 0.4.6 public preview
 
-This is an unpublished local development candidate, not a native
-alpha-render/replace/restore certification. The exact local installer and installed
+This preview provides render submission and evidence tracking. Successful native
+alpha-render/replace/restore behavior remains unverified. The exact local installer and installed
 payload are verified as described below. No Premiere/AE project, timeline,
 selection or render queue was changed during preparation or installation.
 
@@ -40,7 +40,7 @@ effects and animation has no verified native strategy in this candidate. The
 [live pilot](../live-test-plan.md#render-batches-and-alpha-replacement-pending-native-pilot)
 defines the remaining evidence. Native testing requires a deliberate separate
 project and a suitable time when it does not conflict with the editor's work.
-No remote reference or installer was published.
+Public installation uses the exact `v0.4.6` source tag and matching CCX/checksum.
 
 ## Local installation, 2026-11-16 America/Vancouver
 
@@ -75,3 +75,18 @@ pilot](native-check-0.4.6.md) records actual submissions and CineForm terminal
 failures; successful output, ProRes completion and alpha remain unverified.
 Reconnect the client's MCP process for refreshed schemas. Dynamic Link additionally
 needs a synthetic `.aep` fixture; raster-source encoding alone cannot certify it.
+
+## Publication review, 2026-11-18 America/Vancouver
+
+The release source passed a fresh `npm ci` and all 260 tests with no failures or
+skips. The npm archive contains 161 allowlisted files. The reviewed eight-file
+CCX still matches the rebuilt plugin payload and the hashes recorded above;
+release preparation changes documentation and update metadata only. The source
+object range, npm archive and release assets were checked for private material.
+All 27 existing Actions logs were reviewed, with no matching private-data patterns;
+no remote Actions artifacts or caches were present. Repository Actions remains
+disabled, so these are local checks rather than a new CI pass.
+
+The release is a preview. It retains the partial native pilot's limits and does
+not certify successful alpha encoding, Dynamic Link, replacement/restoration or
+native Windows behavior. Publishing does not install or restart the local plugin.

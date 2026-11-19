@@ -1,13 +1,12 @@
 # Release verification and maintenance
 
-The current preview is [v0.4.4](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.4). It combines existing-item bin organization with the 0.4.3 selected-video-track authorization scope. The eight-file installer, running version, remembered folder grant, native bin creation and item moves are verified on macOS Premiere 26.5; bin rename, populated-bin moves and Undo remain unverified. There are 45 full MCP tools or 20 in read-only mode. Windows remains experimental. See the [0.4.4 report](candidate-0.4.4.md).
-
-Local **0.4.6 candidate**: render batches and official class-event contracts, fixture-verified; exact eight-file installer and on-disk installation verified. Actual runtime activation and retained approval are now verified. The [partial native pilot](native-check-0.4.6.md) found CineForm codec failures; ProRes output, alpha and replace/restore remain unverified. Unpublished. See [candidate scope](candidate-0.4.6.md).
+The current preview is [v0.4.6](https://github.com/ywdagency/premiere-mcp-bridge/releases/tag/v0.4.6). It adds durable render batches, exact-output completion-event correlation, official class-event contracts and semantic backup comparison. The exact eight-file installer, executing runtime and retained folder approval are verified on macOS Premiere 26.5. Native CineForm tests failed; ProRes completion, successful alpha output and replacement/restoration remain unverified. Automatic replacement is disabled. There are 47 full MCP tools or 21 in read-only mode. Windows remains experimental. See the [0.4.6 report](candidate-0.4.6.md) and [partial native pilot](native-check-0.4.6.md).
 
 ## Evidence
 
 | Report | Verified scope |
 | --- | --- |
+| [0.4.6](candidate-0.4.6.md) | Exact installer/runtime/grant, partial render pilot; successful alpha and replacement/restoration unverified |
 | [0.4.4](candidate-0.4.4.md) | Combined installer/source/runtime, retained grant, bin creation and existing-item moves; 0.4.3 scope checks retained |
 | [0.4.2](candidate-0.4.2.md) | Eight-file installer, native activation, retained grant and basic panel controls; browser/fixture interaction tests |
 | [0.3.12](candidate-0.3.12.md) | Local automated/package checks; Windows experimental and no native 0.3.12 regression |
